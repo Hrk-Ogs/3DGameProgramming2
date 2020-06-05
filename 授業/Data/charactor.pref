@@ -1,0 +1,19 @@
+{
+  "Children": [
+    {
+      "Children": [],
+      "Enable": true,
+      "Name": "whepon",
+      "Pos": [0,0,0]
+    },
+    {
+      "Children": [],
+      "Enable": true,
+      "Name": "list",
+      "Pos": [0,0,0]
+    }
+  ],
+  "Enable": true,
+  "Name": "charactor",
+  "Pos": [0,0,0]
+}

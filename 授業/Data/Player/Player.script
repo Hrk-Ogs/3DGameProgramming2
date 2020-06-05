@@ -1,0 +1,69 @@
+{
+  "Animations": [
+    {
+      "Name": "Attack_Slash1_Root",
+      "Scripts": [
+        {
+          "Time": 15,
+          "Type": "Attack",
+
+          "PowerRate": 1.0,
+          "Duration": 5,
+          "HitStop": 10,
+          "HitInterval": 10
+        },
+        {
+          "Time": 30,
+          "Type": "AttackCancel",
+          "NextAnimeName": "Attack_Slash2_Root"
+        }
+      ]
+    },
+    {
+      "Name": "Attack_Slash2_Root",
+      "Scripts": [
+        {
+          "Time": 30,
+          "Type": "Attack",
+
+          "PowerRate": 1.0,
+          "Duration": 5,
+          "HitStop": 10,
+          "HitInterval": 5
+        },
+        {
+          "Time": 43,
+          "Type": "AttackCancel",
+          "NextAnimeName": "Attack_Slash3_Root"
+        }
+      ]
+    },
+    {
+      "Name": "Attack_Slash3_Root",
+      "Scripts": [
+        {
+          "Time": 27,
+          "Type": "Attack",
+
+          "PowerRate": 0.1,
+          "Duration": 15,
+          "HitStop": 3,
+          "HitInterval": 2
+        }
+      ]
+    },
+    {
+      "Name": "Die_Root",
+      "Scripts": [
+        {
+          "Time": 1,
+          "Type": "CameraEffect",
+
+          "BoneName": "Camera",
+          "Duration": 120
+        }
+      ]
+    }
+
+  ]
+}

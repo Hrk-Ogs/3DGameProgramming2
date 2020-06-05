@@ -1,0 +1,6 @@
+{
+  "Name": "Box",
+  "Enable": true,
+  "ModelFilename": "Data\\Box\\Box.gltf",
+  "Pos": [ 0, 3, 20 ]
+}
