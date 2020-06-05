@@ -1,0 +1,14 @@
+Debug/
+Release/
+*.vs
+*.tlog
+*.obj
+*.pdb
+*.ilk
+*.idb
+*.log
+*.ipch
+*.opendb
+*.db
+*.suo
+*.pch
