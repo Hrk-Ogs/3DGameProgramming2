@@ -201,6 +201,9 @@
     <ClInclude Include="Src\GameSystem\Component\ModelComponent.h">
       <Filter>Src\GameSystem\Component</Filter>
     </ClInclude>
+    <ClInclude Include="Src\GameSystem\Component\TransformComponent.h">
+      <Filter>Src\GameSystem\Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -309,6 +312,9 @@
       <Filter>Src\GameSystem\Component</Filter>
     </ClCompile>
     <ClCompile Include="Src\GameSystem\Component\ModelComponent.cpp">
+      <Filter>Src\GameSystem\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\GameSystem\Component\TransformComponent.cpp">
       <Filter>Src\GameSystem\Component</Filter>
     </ClCompile>
   </ItemGroup>

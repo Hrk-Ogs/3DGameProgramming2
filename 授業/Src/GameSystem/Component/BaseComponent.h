@@ -33,13 +33,13 @@ public:
 	// シリアライズ/デシリアライズ
 	//============================
 	// JSONデータから自分のデータを復元する
-	void Deserialize(const json11::Json& jsonObj)
+	virtual void Deserialize(const json11::Json& jsonObj)
 	{
 		KdJsonGet(jsonObj["Enable"], m_enable);
 	}
 
 	// 自分をJSONデータ化
-	void Serialize(json11::Json::object& outJsonObj)const
+	virtual void Serialize(json11::Json::object& outJsonObj)const
 	{
 		// 自分のクラス名を文字列で入れる
 		outJsonObj["ClassName"] = &typeid(*this).name()[6];

@@ -2,6 +2,12 @@
 
 #include "GameObject.h"
 
+void GameObject::Init()
+{
+	// TransformComponentの追加
+	auto comp = AddComponent("TransformCompnent");
+}
+
 void GameObject::Update()
 {
 	// 無効時はスキップする
@@ -33,6 +39,26 @@ void GameObject::Draw()
 	for (auto&& child : m_children) {
 		child->Draw();
 	}
+}
+
+void GameObject::AddComponent(const KdSptr<BaseComponent>& comp)
+{
+	// 持ち主セット
+	comp->SetOwner(shared_from_this());
+	// 追加
+	m_components.push_back(comp);
+
+}
+
+KdSptr<BaseComponent> GameObject::AddComponent(const std::string& className)
+{
+	KdSptr<BaseComponent> comp;
+	if (className == "ModelComponent") {
+		comp = std::make_shared<ModelComponent>();
+	}
+	AddComponent(comp);
+
+	return comp;
 }
 
 void GameObject::SetParent(const KdSptr<GameObject>& newParent)
@@ -74,20 +100,18 @@ void GameObject::Deserialize(const json11::Json& jsonObj)
 	KdJsonGet(jsonObj["Pos"], pos);
 	m_transform.Translation(pos);	// 座標をセット
 
-	/*
-	// モデルデータ読み込み
-	KdJsonGet(jsonObj["ModelFilename"], m_model);
-	m_nodeOL.Release();
-
-	if (m_model) {
-		// モデルのノードアウトライナーをコピーする
-		// ※モデルのノードアウトライナーは必ずコピーして使う
-		m_nodeOL = m_model->GetNodeOutlinear();
-		// アニメーターにアニメーションデータをセット
-		//m_anim.SetAnimation(m_model->GetAnimation("Stand"), true);
+	// コンポーネント
+	m_components.clear();
+	for (auto&& jsonComp : jsonObj["Components"].array_items()) {
+		// JSONデータから、コンポーネントのクラス名を取得
+		std::string className = jsonComp["ClassName"].string_value();
+		// コンポーネントを追加
+		auto comp = AddComponent(className);
+		if (comp) {
+			// デシリアライズ
+			comp->Deserialize(jsonComp);
+		}
 	}
-	*/
-
 	// 子GameObject
 	m_children.clear();
 	for (auto&& jsonChild : jsonObj["Children"].array_items()) {
@@ -163,7 +187,7 @@ void GameObject::Editor_ImGuiUpdate()
 
 		ImGui::PushID(comp.get());
 
-		if (ImGui::CollapsingHeader(&typeid(*comp).name()[6], ImGuiTreeNodeFlags_DefaultOpen)){
+		if (ImGui::CollapsingHeader(&typeid(*comp).name()[6], ImGuiTreeNodeFlags_DefaultOpen)) {
 			comp->Editor_ImGuiUpdate();
 		}
 

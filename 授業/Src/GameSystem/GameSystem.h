@@ -13,6 +13,7 @@
 // コンポーネント
 #include "Component/BaseComponent.h"
 #include "Component/ModelComponent.h"
+#include "Component/TransformComponent.h"
 
 
 // レベル

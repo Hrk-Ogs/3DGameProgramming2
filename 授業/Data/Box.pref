@@ -1,6 +1,13 @@
 {
-  "Name": "Box",
+  "Children": [],
+  "Components": [
+    {
+      "ClassName": "ModelComponent",
+      "Enable": true,
+      "ModelFilename": "Data\\Box\\Box.gltf"
+    }
+  ],
   "Enable": true,
-  "ModelFilename": "Data\\Box\\Box.gltf",
-  "Pos": [ 0, 3, 20 ]
+  "Name": "GameObject",
+  "Pos": [0,0,0]
 }
