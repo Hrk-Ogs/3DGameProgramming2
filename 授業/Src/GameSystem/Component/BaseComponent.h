@@ -53,12 +53,14 @@ public:
 	KdSptr<GameObject> GetOwner() const { return m_pOwner.lock(); }
 	// オーナーの設定
 	void SetOwner(KdSptr<GameObject>& obj) { m_pOwner = obj; }
+	// 持ち主が存在するか
+	bool ExistOwner() const { return m_pOwner.expired() == false; }
 
 	// 有効フラグの取得
-
+	void SetEnable(bool enable) { m_enable = enable; }
 
 	// 有効フラグの設定
-	
+	bool IsEnable() const { return m_enable; }
 
 protected:
 

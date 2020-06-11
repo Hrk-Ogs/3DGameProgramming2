@@ -98,7 +98,7 @@ void GameObject::Deserialize(const json11::Json& jsonObj)
 	// 座標
 	KdVec3 pos;
 	KdJsonGet(jsonObj["Pos"], pos);
-	m_transform.Translation(pos);	// 座標をセット
+	//m_transform.Translation(pos);	// 座標をセット
 
 	// コンポーネント
 	m_components.clear();
@@ -131,7 +131,7 @@ void GameObject::Serialize(json11::Json::object& outJsonObj) const
 {
 	outJsonObj["Name"] = m_name;
 	outJsonObj["Enable"] = m_enable;
-	outJsonObj["Pos"] = m_transform.Translation().ToArray();
+	//outJsonObj["Pos"] = m_transform.Translation().ToArray();
 
 	/*
 	if (m_model) {
@@ -176,7 +176,7 @@ void GameObject::Editor_ImGuiUpdate()
 	ImGui::InputText("Name", &m_name);
 
 	// 座標
-	ImGui::DragFloat3("Pos", &m_transform._41, 0.01f);
+	//ImGui::DragFloat3("Pos", &m_transform._41, 0.01f);
 
 	// 全コンポーネントを動作
 	for (auto&& comp : m_components) {

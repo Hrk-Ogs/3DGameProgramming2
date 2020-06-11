@@ -50,7 +50,6 @@ void ModelComponent::Draw()
 		m_model->GetMaterials(),	// 全マテリアル（材質）情報
 		GetOwner()->Transform()		// オブジェクトの行列
 	);
-
 }
 
 void ModelComponent::Editor_ImGuiUpdate()

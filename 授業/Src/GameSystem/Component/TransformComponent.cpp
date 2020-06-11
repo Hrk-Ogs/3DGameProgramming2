@@ -9,7 +9,7 @@ void TransformComponent::Editor_ImGuiUpdate()
 	// 座標
 	ImGui::DragFloat3(u8"座標", &m_worldMatrix._41, 0.01f);
 
-	// 回転（オイラー系）
+	// 回転（オイラー角）
 	KdVec3 angles = m_worldMatrix.ComputeAngles() * KdToDegrees;
 	if (ImGui::DragFloat3(u8"回転", &angles.x, 1)) {
 		// 一度、拡大・座標に分解し、再制作する
@@ -23,9 +23,9 @@ void TransformComponent::Editor_ImGuiUpdate()
 	KdVec3 scale = m_worldMatrix.GetScale();
 	if (ImGui::DragFloat3(u8"拡大", &scale.x, 0.001f)) {
 		// 行列のX軸ベクトルを設定
-		m_worldMatrix.CreateRotationAxis.Right(m_worldMatrix.Right().Normalize() * scale.x);
+		m_worldMatrix.Right(m_worldMatrix.Right().Normalize() * scale.x);
 		// 行列のY軸ベクトルを設定
-		m_worldMatrix.Up(m_worldMatrix.Up().Normalize * scale.y);
+		m_worldMatrix.Up(m_worldMatrix.Up().Normalize() * scale.y);
 		// 行列のZ軸ベクトルを設定
 		m_worldMatrix.Forward(m_worldMatrix.Forward().Normalize() * scale.z);
 	}

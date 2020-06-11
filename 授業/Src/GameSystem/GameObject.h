@@ -11,19 +11,20 @@ public:
 
 	// 
 	void Init();
-
+	/*
 	// TransformComponent取得
 	KdSptr<TransformComponent> Transform()
 	{
 		// 先頭のコンポーネントをTransformComponentとして取得する
 #ifdef _DEBUG
 		// ※デバッグビルド時は、ダナミックキャストで型判定も行う
-		return std::dynamic_pointer_cast<TransformComponent>(m_components.front());
+		return //std::dynamic_pointer_cast<TransformComponent>(m_components.front());
 #else
 		// ※リリースビルド時は、先頭のものがTransformと決め打ちで取得する（検索の負荷を減らすため）
 		return std::static_pointer_cast<TransformComponent>(m_components.front());
 #endif
 	}
+	*/
 
 	// 更新処理
 	void Update();
