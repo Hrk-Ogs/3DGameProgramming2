@@ -58,6 +58,9 @@
     <Filter Include="Src\GameSystem\Component">
       <UniqueIdentifier>{cce49d87-ffe8-4dba-b09b-a4721c649d60}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\Game">
+      <UniqueIdentifier>{dab83b3d-0cec-41f8-a403-4aa2cde8665e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -204,6 +207,12 @@
     <ClInclude Include="Src\GameSystem\Component\TransformComponent.h">
       <Filter>Src\GameSystem\Component</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\Game\ActioinGame.h">
+      <Filter>Src\Application\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\GameSystem\ComponentClassMaker.h">
+      <Filter>Src\GameSystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -316,6 +325,12 @@
     </ClCompile>
     <ClCompile Include="Src\GameSystem\Component\TransformComponent.cpp">
       <Filter>Src\GameSystem\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Game\ActioinGame.cpp">
+      <Filter>Src\Application\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\GameSystem\ComponentClassMaker.cpp">
+      <Filter>Src\GameSystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

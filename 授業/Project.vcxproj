@@ -163,7 +163,9 @@
     <ClInclude Include="..\Library\tinygltf\stb_image.h" />
     <ClInclude Include="..\Library\tinygltf\stb_image_write.h" />
     <ClInclude Include="..\Library\tinygltf\tiny_gltf.h" />
+    <ClInclude Include="Src\Application\Game\ActioinGame.h" />
     <ClInclude Include="Src\Application\main.h" />
+    <ClInclude Include="Src\GameSystem\ComponentClassMaker.h" />
     <ClInclude Include="Src\GameSystem\Component\BaseComponent.h" />
     <ClInclude Include="Src\GameSystem\Component\ModelComponent.h" />
     <ClInclude Include="Src\GameSystem\Component\TransformComponent.h" />
@@ -205,7 +207,9 @@
     <ClCompile Include="..\Library\imgui\imgui_stdlib.cpp" />
     <ClCompile Include="..\Library\imgui\imgui_widgets.cpp" />
     <ClCompile Include="..\Library\json11KdCustom\json11.cpp" />
+    <ClCompile Include="Src\Application\Game\ActioinGame.cpp" />
     <ClCompile Include="Src\Application\main.cpp" />
+    <ClCompile Include="Src\GameSystem\ComponentClassMaker.cpp" />
     <ClCompile Include="Src\GameSystem\Component\BaseComponent.cpp" />
     <ClCompile Include="Src\GameSystem\Component\ModelComponent.cpp" />
     <ClCompile Include="Src\GameSystem\Component\TransformComponent.cpp" />

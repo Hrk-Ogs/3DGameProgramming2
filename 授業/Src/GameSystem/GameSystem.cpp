@@ -4,6 +4,10 @@ void GameSystem::Init()
 {
 	m_editorData.LogWindow.AddLog(u8"GameSystem起動...");
 
+	// システムコンポーネント登録
+	ComponentClassMaker::GetInstance().Register<TransformComponent>();
+	ComponentClassMaker::GetInstance().Register<ModelComponent>();
+
 	// Level作成
 	m_level = std::make_shared<Level>();
 }

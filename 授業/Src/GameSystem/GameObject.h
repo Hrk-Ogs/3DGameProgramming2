@@ -1,6 +1,7 @@
 #pragma once
 
 class BaseComponent;	// クラスの仮定義
+class TransformComponent;
 
 //==============================================
 // ゲームオブジェクトクラス
@@ -11,20 +12,6 @@ public:
 
 	// 
 	void Init();
-	/*
-	// TransformComponent取得
-	KdSptr<TransformComponent> Transform()
-	{
-		// 先頭のコンポーネントをTransformComponentとして取得する
-#ifdef _DEBUG
-		// ※デバッグビルド時は、ダナミックキャストで型判定も行う
-		return //std::dynamic_pointer_cast<TransformComponent>(m_components.front());
-#else
-		// ※リリースビルド時は、先頭のものがTransformと決め打ちで取得する（検索の負荷を減らすため）
-		return std::static_pointer_cast<TransformComponent>(m_components.front());
-#endif
-	}
-	*/
 
 	// 更新処理
 	void Update();
@@ -44,6 +31,21 @@ public:
 	// 戻り値		……追加されたコンポーネント
 	KdSptr<BaseComponent> AddComponent(const std::string& className);
 
+	// 指定型のコンポーネントを検索し取得
+	template<class T>
+	KdSptr<T> GetComponent()
+	{
+		// 全コンポーネントから、型TDのクラスを見つける
+		for (auto&& comp : m_components) {
+			// ダウンキャストでT型に変換できる？
+			auto p = std::dynamic_pointer_cast<T>(comp);
+			if (p) {
+				// できた。T型と決定。
+				return p;
+			}
+		}
+		return nullptr;
+	}
 
 	//=========================================
 	// 親子構造
@@ -52,6 +54,8 @@ public:
 	const std::list<KdSptr<GameObject>>& GetChildren() { return m_children; }
 	// 親を設定
 	void SetParent(const KdSptr<GameObject>& newparent);
+	// 親を取得
+	KdSptr<GameObject> GetParent() const { return m_parent.lock(); }
 
 
 	//=========================================
@@ -74,6 +78,19 @@ public:
 	//=========================================
 	const std::string& GetName()const { return m_name; }
 	void SetName(const std::string& name) { m_name = name; }
+
+	// TransformComponent取得
+	KdSptr<TransformComponent> Transform()
+	{
+		// 先頭のコンポーネントをTransformComponentとして取得する
+#ifdef _DEBUG
+		// ※デバッグビルド時は、ダナミックキャストで型判定も行う
+		return std::dynamic_pointer_cast<TransformComponent>(m_components.front());
+#else
+		// ※リリースビルド時は、先頭のものがTransformと決め打ちで取得する（検索の負荷を減らすため）
+		return std::static_pointer_cast<TransformComponent>(m_components.front());
+#endif
+	}
 
 private:
 	// 有効フラグ

@@ -5,7 +5,9 @@
 void GameObject::Init()
 {
 	// TransformComponentの追加
-	auto comp = AddComponent("TransformCompnent");
+	m_components.clear();
+	auto trans = std::make_shared<TransformComponent>();
+	AddComponent(trans);
 }
 
 void GameObject::Update()
@@ -52,10 +54,19 @@ void GameObject::AddComponent(const KdSptr<BaseComponent>& comp)
 
 KdSptr<BaseComponent> GameObject::AddComponent(const std::string& className)
 {
-	KdSptr<BaseComponent> comp;
+	// クラス名からインスタンスを生成
+	KdSptr<BaseComponent> comp = ComponentClassMaker::GetInstance().MakeShared(className);
+	/*
 	if (className == "ModelComponent") {
 		comp = std::make_shared<ModelComponent>();
 	}
+	if (className == "ModelComponent") {
+		comp = std::make_shared<TransformComponent>();
+	}
+	*/
+
+	if (comp == nullptr)return nullptr;
+
 	AddComponent(comp);
 
 	return comp;
@@ -95,11 +106,6 @@ void GameObject::Deserialize(const json11::Json& jsonObj)
 	// 名前
 	KdJsonGet(jsonObj["Name"], m_name);
 
-	// 座標
-	KdVec3 pos;
-	KdJsonGet(jsonObj["Pos"], pos);
-	//m_transform.Translation(pos);	// 座標をセット
-
 	// コンポーネント
 	m_components.clear();
 	for (auto&& jsonComp : jsonObj["Components"].array_items()) {
@@ -131,13 +137,6 @@ void GameObject::Serialize(json11::Json::object& outJsonObj) const
 {
 	outJsonObj["Name"] = m_name;
 	outJsonObj["Enable"] = m_enable;
-	//outJsonObj["Pos"] = m_transform.Translation().ToArray();
-
-	/*
-	if (m_model) {
-		outJsonObj["ModelFilename"] = m_model->GetFilepath();
-	}
-	*/
 
 	// 子リストもシリアライズ
 	json11::Json::array jsonChildren;
@@ -175,9 +174,6 @@ void GameObject::Editor_ImGuiUpdate()
 	// 名前
 	ImGui::InputText("Name", &m_name);
 
-	// 座標
-	//ImGui::DragFloat3("Pos", &m_transform._41, 0.01f);
-
 	// 全コンポーネントを動作
 	for (auto&& comp : m_components) {
 
@@ -202,6 +198,7 @@ void GameObject::Editor_ImGuiUpdate()
 	ImGui::Button(u8"コンポーネント追加");
 	// ↑のボタンをクリックするとポップアップメニュー表示
 	if (ImGui::BeginPopupContextItem("AddComponentPopup", 0)) {
+		/*
 		// 仮
 		if (ImGui::Selectable("ModelComponent")) {
 			// コンポーネント生成
@@ -210,6 +207,15 @@ void GameObject::Editor_ImGuiUpdate()
 			comp->SetOwner(shared_from_this());
 			// リストに接続
 			m_components.push_back(comp);
+		}
+		*/
+
+		// ComponentClassMakerに登録されているクラス名を一覧で取得し、リスト表示する
+		std::vector<std::string> classList = ComponentClassMaker::GetInstance().GetClassNameList();
+		for (auto&& className : classList) {
+			if (ImGui::Selectable(className.c_str())) {
+				AddComponent(className);
+			}
 		}
 
 		ImGui::EndPopup();
@@ -295,9 +301,18 @@ void GameObject::Editor_ImGuiTree()
 		//------------------------
 		if (ImGui::Selectable(u8"新規GameObjectを作成")) {
 			KdSptr<GameObject> obj = std::make_shared<GameObject>();
+			obj->Init();
 			// 自分を親としｔ設定
 			obj->SetParent(shared_from_this());
 		}
+
+		//------------------------
+		// 複製
+		//------------------------
+		if (ImGui::Selectable(u8"複製")) {
+
+		}
+
 
 		// 必ず最後に呼ぶ
 		ImGui::EndPopup();

@@ -1,6 +1,9 @@
 // インクルードガード
 #pragma once
 
+// コンポーネントクラスメーカー
+#include "ComponentClassMaker.h"
+
 // ImGuiヘルパー
 #include "ImGuiHelper.h"
 
@@ -12,8 +15,8 @@
 
 // コンポーネント
 #include "Component/BaseComponent.h"
-#include "Component/ModelComponent.h"
 #include "Component/TransformComponent.h"
+#include "Component/ModelComponent.h"
 
 
 // レベル

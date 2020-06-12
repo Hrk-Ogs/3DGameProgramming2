@@ -63,7 +63,7 @@ inline void KdJsonGet(const json11::Json& obj, float& result)
 	// 指定型でない場合はスキップ
 	if (obj.is_number() == false)return;
 
-	result = obj.number_value();
+	result = (float)obj.number_value();
 }
 
 // objをQuaternion型の場合に限り取得し、resultに入れる
@@ -77,4 +77,13 @@ inline void KdJsonGet(const json11::Json& obj, KdQuaternion& result)
 	result.y = (float)obj.array_items()[1].number_value();
 	result.z = (float)obj.array_items()[2].number_value();
 	result.w = (float)obj.array_items()[3].number_value();
+}
+
+// objをint型の場合に限り取得し、resultに入れる
+inline void KdJsonGet(const json11::Json& obj, int& result)
+{
+	// 指定型でない場合はスキップ
+	if (obj.is_number() == false)return;
+
+	result = obj.int_value();
 }

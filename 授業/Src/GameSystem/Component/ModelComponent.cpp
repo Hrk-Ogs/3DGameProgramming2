@@ -42,13 +42,16 @@ void ModelComponent::Draw()
 	// GPUのバッファに全ボーンノードの行列を書き込む
 	m_nodeOL.WriteToBoneBuffer();
 
+	// TransformComponentを取得
+	auto trans = GetOwner()->Transform();
+
 	// 行列をセット
 	SHADER.m_standardShader.SetToDevice();
 	// 描画
 	SHADER.m_standardShader.Draw(
 		&m_nodeOL,					// 全ノード情報
 		m_model->GetMaterials(),	// 全マテリアル（材質）情報
-		GetOwner()->Transform()		// オブジェクトの行列
+		GetOwner()->Transform()->GetMatrix()		// オブジェクトの行列
 	);
 }
 

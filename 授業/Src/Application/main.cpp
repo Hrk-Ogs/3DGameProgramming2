@@ -140,6 +140,9 @@ void Application::Execute()
 	// ゲームループ
 	//===================================================================
 
+	// ゲーム用のコンポーネントクラス登録
+	ComponentClassMaker::GetInstance().Register<CharacterController>();
+
 	// 世界の初期設定をする
 	GAMESYS.Init();
 

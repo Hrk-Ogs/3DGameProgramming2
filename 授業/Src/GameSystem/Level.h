@@ -37,6 +37,7 @@ public:
 	{
 		// ‰Šúó‘Ô‚Å•K‚¸RootObject‚Í‘¶İ‚·‚é‚æ‚¤‚É
 		m_rootObject = std::make_shared<GameObject>();
+		m_rootObject->Init();
 		m_rootObject->SetName("Root");
 	}
 
