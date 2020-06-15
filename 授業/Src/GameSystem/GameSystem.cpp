@@ -7,6 +7,10 @@ void GameSystem::Init()
 	// システムコンポーネント登録
 	ComponentClassMaker::GetInstance().Register<TransformComponent>();
 	ComponentClassMaker::GetInstance().Register<ModelComponent>();
+	ComponentClassMaker::GetInstance().Register<InputComponent>();
+	ComponentClassMaker::GetInstance().Register<PlayerInputComponent>();
+	ComponentClassMaker::GetInstance().Register<SimpleAIInputComponent>();
+
 
 	// Level作成
 	m_level = std::make_shared<Level>();

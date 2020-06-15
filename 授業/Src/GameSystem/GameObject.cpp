@@ -198,18 +198,6 @@ void GameObject::Editor_ImGuiUpdate()
 	ImGui::Button(u8"コンポーネント追加");
 	// ↑のボタンをクリックするとポップアップメニュー表示
 	if (ImGui::BeginPopupContextItem("AddComponentPopup", 0)) {
-		/*
-		// 仮
-		if (ImGui::Selectable("ModelComponent")) {
-			// コンポーネント生成
-			auto comp = std::make_shared<ModelComponent>();
-			// 親を登録
-			comp->SetOwner(shared_from_this());
-			// リストに接続
-			m_components.push_back(comp);
-		}
-		*/
-
 		// ComponentClassMakerに登録されているクラス名を一覧で取得し、リスト表示する
 		std::vector<std::string> classList = ComponentClassMaker::GetInstance().GetClassNameList();
 		for (auto&& className : classList) {
@@ -251,6 +239,20 @@ void GameObject::Editor_ImGuiTree()
 	if (ImGui::BeginPopupContextItem("GameObjectPopupID", 1)) {
 
 		//------------------------
+		// 新規作成
+		//------------------------
+		if (ImGui::Selectable(u8"新規GameObjectを作成")) {
+			KdSptr<GameObject> obj = std::make_shared<GameObject>();
+			obj->Init();
+			// 自分を親としｔ設定
+			obj->SetParent(shared_from_this());
+
+			// 選択状態にする
+			GAMESYS.m_editorData.SelectObj = obj;
+
+		}
+
+		//------------------------
 		// Prefab保存
 		//------------------------
 		if (ImGui::Selectable(u8"Prefabファイルへ保存")) {
@@ -275,6 +277,38 @@ void GameObject::Editor_ImGuiTree()
 		}
 
 		//------------------------
+		// 複製
+		//------------------------
+		if (ImGui::Selectable(u8"複製")) {
+			// 自分の親
+			auto parent = GetParent();
+			if (parent) {
+
+				// 自分をシリアライズ
+				json11::Json::object serial;
+				Serialize(serial);
+
+				// GameObjectを作成（メモリ確保）
+				KdSptr<GameObject> obj = std::make_shared<GameObject>();
+
+				// JSONデータを流し込む
+				obj->Deserialize(serial);
+
+				// 兄弟として自分の親に登録
+				obj->SetParent(parent);
+
+				// 選択状態にする
+				GAMESYS.m_editorData.SelectObj = obj;
+			}
+		}
+
+
+
+		ImGui::Dummy(ImVec2(0, 2));
+		ImGui::Separator();
+		ImGui::Dummy(ImVec2(0, 5));
+
+		//------------------------
 		// Prefab読み込み
 		//------------------------
 		if (ImGui::Selectable(u8"Prefabファイルを読み込み")) {
@@ -292,25 +326,12 @@ void GameObject::Editor_ImGuiTree()
 
 					// 自分を親として設定
 					obj->SetParent(shared_from_this());
+
+					// 選択状態にする
+					GAMESYS.m_editorData.SelectObj = obj;
+
 				}
 			}
-		}
-
-		//------------------------
-		// 新規作成
-		//------------------------
-		if (ImGui::Selectable(u8"新規GameObjectを作成")) {
-			KdSptr<GameObject> obj = std::make_shared<GameObject>();
-			obj->Init();
-			// 自分を親としｔ設定
-			obj->SetParent(shared_from_this());
-		}
-
-		//------------------------
-		// 複製
-		//------------------------
-		if (ImGui::Selectable(u8"複製")) {
-
 		}
 
 

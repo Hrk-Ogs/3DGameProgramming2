@@ -213,6 +213,9 @@
     <ClInclude Include="Src\GameSystem\ComponentClassMaker.h">
       <Filter>Src\GameSystem</Filter>
     </ClInclude>
+    <ClInclude Include="Src\GameSystem\Component\InputComponent.h">
+      <Filter>Src\GameSystem\Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -331,6 +334,9 @@
     </ClCompile>
     <ClCompile Include="Src\GameSystem\ComponentClassMaker.cpp">
       <Filter>Src\GameSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\GameSystem\Component\InputComponent.cpp">
+      <Filter>Src\GameSystem\Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

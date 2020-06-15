@@ -17,6 +17,7 @@
 #include "Component/BaseComponent.h"
 #include "Component/TransformComponent.h"
 #include "Component/ModelComponent.h"
+#include "Component/InputComponent.h"
 
 
 // ƒŒƒxƒ‹

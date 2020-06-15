@@ -9,40 +9,48 @@ void CharacterController::Start()
 
 void CharacterController::Update()
 {
+	// 入力コンポーネント取得
+	auto input = GetOwner()->GetComponent<InputComponent>();
+	if (input == nullptr)return;
+
 	if (m_enable == false)return;
 
 	// ワールド行列取得
-	KdMatrix m = GetOwner()->Transform()->GetMatrix();
+	KdVec3 pos = GetOwner()->Transform()->Getposition();
+	// 回転取得
+	KdQuaternion rotation = GetOwner()->Transform()->GetRotation();
+
 
 	// 方向キーで移動
-	if (GetAsyncKeyState(VK_UP) & 0x8000)
+	if (input->GetAxis(GameAxes::L).y > 0)
 	{
-		m = KdMatrix().CreateTranslation(0, 0, 0.1f) * m;
+		pos += rotation.Forward() * 0.1f;
 	}
 
-	if (GetAsyncKeyState(VK_LEFT) & 0x8000)
+	if (input->GetAxis(GameAxes::L).x < 0)
 	{
-		m = KdMatrix().CreateTranslation(-0.1f, 0, 0) * m;
+		pos += rotation.Right() * -0.1f;
 	}
 
-	if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
+	if (input->GetAxis(GameAxes::L).x > 0)
 	{
-		m = KdMatrix().CreateTranslation(0.1f, 0, 0) * m;
+		pos += rotation.Right() * 0.1f;
 	}
 
 	// A,DでY軸回転
-	if (GetAsyncKeyState('A') & 0x8000)
+	if (input->IsButtonPressed(GameButtons::A))
 	{
-		m = KdMatrix().CreateRotationY(-1 * KdToRadians) * m;
+		rotation = KdQuaternion().CreateRotationFromAngles(0, -1 * KdToRadians, 0) * rotation;
 	}
 
-	if (GetAsyncKeyState('D') & 0x8000)
+	if (input->IsButtonPressed(GameButtons::B))
 	{
-		m = KdMatrix().CreateRotationY(1 * KdToRadians) * m;
+		rotation = KdQuaternion().CreateRotationFromAngles(0, 1 * KdToRadians, 0) * rotation;
 	}
 
 	// ワールド行列セット
-	GetOwner()->Transform()->SetMatrix(m);
+	GetOwner()->Transform()->SetPosition(pos);
+	GetOwner()->Transform()->SetRotation(rotation);
 
 	// 徐々に体力を減らす
 	m_hp--;

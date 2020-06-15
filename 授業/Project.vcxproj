@@ -167,6 +167,7 @@
     <ClInclude Include="Src\Application\main.h" />
     <ClInclude Include="Src\GameSystem\ComponentClassMaker.h" />
     <ClInclude Include="Src\GameSystem\Component\BaseComponent.h" />
+    <ClInclude Include="Src\GameSystem\Component\InputComponent.h" />
     <ClInclude Include="Src\GameSystem\Component\ModelComponent.h" />
     <ClInclude Include="Src\GameSystem\Component\TransformComponent.h" />
     <ClInclude Include="Src\GameSystem\EditorCamera.h" />
@@ -211,6 +212,7 @@
     <ClCompile Include="Src\Application\main.cpp" />
     <ClCompile Include="Src\GameSystem\ComponentClassMaker.cpp" />
     <ClCompile Include="Src\GameSystem\Component\BaseComponent.cpp" />
+    <ClCompile Include="Src\GameSystem\Component\InputComponent.cpp" />
     <ClCompile Include="Src\GameSystem\Component\ModelComponent.cpp" />
     <ClCompile Include="Src\GameSystem\Component\TransformComponent.cpp" />
     <ClCompile Include="Src\GameSystem\EditorCamera.cpp" />
