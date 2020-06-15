@@ -60,8 +60,8 @@ public:
 
 private:
 
-	// Rootオブジェクト
-	//KdSptr<GameObject>		m_rootObject;
+	// 収集GameObjectリスト
+	std::vector<GameObject*>	m_tempGameObjects;
 
 	// Level
 	KdSptr<Level>			m_level;

@@ -10,18 +10,18 @@ class GameObject final : public std::enable_shared_from_this<GameObject>
 {
 public:
 
+	// 自分や陣の子たち対象に、有効なGameObjectをgameObjectListへ登録する
+	void Collect(std::vector<GameObject*>& gameObjectList);
+
 	// 
 	void Init();
-
-	// 更新処理
-	void Update();
-	// 描画処理
-	void Draw();
-
 
 	//=========================================
 	// コンポーネント
 	//=========================================
+	// コンポーネントリスト取得
+	const std::list<KdSptr<BaseComponent>>& GetComponentList()const { return m_components; }
+
 	// コンポーネント追加関数
 	// comp		……追加するコンポーネント
 	void AddComponent(const KdSptr<BaseComponent>& comp);

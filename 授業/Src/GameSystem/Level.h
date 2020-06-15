@@ -7,20 +7,18 @@
 class Level :public std::enable_shared_from_this<Level>
 {
 public:
-	// 仮
-	void Update()
+
+	// ファイルパス取得
+	const std::string& GetFilepath() const { return m_filePath; }
+	// ファイルパス設定
+	void SetFilepath(const std::string& path) { m_filePath = path; }
+
+	// 全ての「有効」なGmaeOvject、gameObjectListを収集する
+	void CollectGameObject(std::vector<GameObject*>& gameObjectList)
 	{
 		if (m_enable == false)return;
-		m_rootObject->Update();
+		m_rootObject->Collect(gameObjectList);
 	}
-
-	// 仮
-	void Draw()
-	{
-		if (m_enable == false)return;
-		m_rootObject->Draw();
-	}
-
 
 	//============================
 	// シリアライズ/デシリアライズ

@@ -2,45 +2,30 @@
 
 #include "GameObject.h"
 
+void GameObject::Collect(std::vector<GameObject*>& gameObjectList)
+{
+	// 無効時は対象外
+	if (m_enable == false)return;
+
+	// 処理対象に登録する
+	gameObjectList.push_back(this);
+
+	// 子も再帰で実行していく（イテレータでループしてるのは、削除機能も後に実装するため）
+	for (auto it = m_children.begin(); it != m_children.end();) {
+		// 登録
+		(*it)->Collect(gameObjectList);
+
+		// 次へ
+		++it;
+	}
+}
+
 void GameObject::Init()
 {
 	// TransformComponentの追加
 	m_components.clear();
 	auto trans = std::make_shared<TransformComponent>();
 	AddComponent(trans);
-}
-
-void GameObject::Update()
-{
-	// 無効時はスキップする
-	if (!m_enable)return;
-
-	// 全コンポーネントを動作
-	for (auto&& comp : m_components) {
-		comp->Update();
-	}
-
-	// 仮　子も処理
-	for (auto&& child : m_children) {
-		child->Update();
-	}
-
-}
-
-void GameObject::Draw()
-{
-	// 無効状態はスキップする
-	if (!m_enable)return;
-
-	// 全コンポーネントを描画
-	for (auto&& comp : m_components) {
-		comp->Draw();
-	}
-
-	// 仮　子も描画
-	for (auto&& child : m_children) {
-		child->Draw();
-	}
 }
 
 void GameObject::AddComponent(const KdSptr<BaseComponent>& comp)
