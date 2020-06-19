@@ -10,6 +10,9 @@
 // エディターカメラ
 #include "EditorCamera.h"
 
+// RenderingData
+#include "RenderingData.h"
+
 // ゲームシステム系のヘッダーをインクルード
 #include "GameObject.h"
 
@@ -18,6 +21,7 @@
 #include "Component/TransformComponent.h"
 #include "Component/ModelComponent.h"
 #include "Component/InputComponent.h"
+#include "Component/SpriteComponent.h"
 
 
 // レベル
@@ -62,6 +66,8 @@ private:
 
 	// 収集GameObjectリスト
 	std::vector<GameObject*>	m_tempGameObjects;
+	// レンダリングデータ用
+	RenderingData				m_tempRenderingDate;
 
 	// Level
 	KdSptr<Level>			m_level;

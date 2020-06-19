@@ -10,6 +10,7 @@ void GameSystem::Init()
 	ComponentClassMaker::GetInstance().Register<InputComponent>();
 	ComponentClassMaker::GetInstance().Register<PlayerInputComponent>();
 	ComponentClassMaker::GetInstance().Register<SimpleAIInputComponent>();
+	ComponentClassMaker::GetInstance().Register<SpriteComponent>();
 
 
 	// Level作成
@@ -45,13 +46,11 @@ void GameSystem::Run()
 	//
 	//==========================
 
-	// Levelの更新処理
-	//m_level->Update();
-
 	// 収集したGameObjectの更新処理
 	for (auto&& gameObj : m_tempGameObjects) {
 		// 全コンポーネント実行（直接コンポーネントリストを取得し、実行していく）
 		for (auto&& comp : gameObj->GetComponentList()) {
+			comp->CallStartOnce();
 			comp->Update();
 		}
 	}
@@ -60,12 +59,26 @@ void GameSystem::Run()
 	m_editorData.Camera.Update();
 	
 
-	//==========================
-	//
-	// 描画処理
-	//
-	//==========================
+	//-----------------------
+	// 描画準備
+	//-----------------------
+	// レンダリングデータをリセット
+	m_tempRenderingDate.Reset();
 
+	// GameOvject描画準備処理
+	for (auto&& gameObj : m_tempGameObjects) {
+		// 全コンポーネント実行
+		for (auto&& comp : gameObj->GetComponentList()) {
+			comp->PrepareDraw(m_tempRenderingDate);
+		}
+	}
+
+
+	//==========================
+	//
+	// 描画
+	//
+	//==========================
 	//-----------
 	// カメラ
 	//-----------
@@ -86,17 +99,44 @@ void GameSystem::Run()
 	//-----------
 	// 描画
 	//-----------
-	// Levelの描画処理
-	//m_level->Draw();
 
-	// 収集したGameObjectの描画準備処理
-	for (auto&& gameObj : m_tempGameObjects) {
-		// 全コンポーネント実行（直接コンポーネントリストを取得し、実行していく
-		for (auto&& comp : gameObj->GetComponentList()) {
-			comp->Draw();
-		}
+	//++++++++++++++++++++
+	// 3D描画（不透明）
+	//++++++++++++++++++++
+	// ※ここで、m_tempRenderingData.m_drawListをカメラから近い順番にソートすればパフォーマンスアップ
+
+	for (auto&& comp : m_tempRenderingDate.m_drawList) {
+		comp->Draw(RenderingData::kOpaquePhase);
 	}
 
+	//++++++++++++++++++++
+	// 3D描画（半透明）
+	//++++++++++++++++++++
+	
+	for (auto&& comp : m_tempRenderingDate.m_drawTransparentList) {
+		comp->Draw(RenderingData::kTransparentPhase);
+	}
+
+	//++++++++++++++++++++
+	// 3Dエフェクト描画（半透明）
+	//++++++++++++++++++++
+	D3D.GetDevContext()->OMSetDepthStencilState(SHADER.m_ds_ZEnable_ZWriteDisable, 0);	 // Zバッファの書き込みをOFF
+	D3D.GetDevContext()->RSSetState(SHADER.m_rs_CullNone);	// カリングを無し（画面描画）
+	for (auto&& comp : m_tempRenderingDate.m_drawEffectList) {
+		comp->Draw(RenderingData::kEffectPhase);
+	}
+	D3D.GetDevContext()->OMSetDepthStencilState(SHADER.m_ds_ZEnable_ZWriteEnable, 0);	 // Zbaffa no書き込みをON
+	D3D.GetDevContext()->RSSetState(SHADER.m_rs_CullBack);
+
+
+	//++++++++++++++++++++
+	// 2D描画
+	//++++++++++++++++++++
+	SHADER.m_spriteShader.Begin(true, false);
+	for (auto&& comp : m_tempRenderingDate.m_drawSpriteList){
+		comp->Draw(RenderingData::kSpritePhase);
+	}
+	SHADER.m_spriteShader.End();
 
 	//===========================
 	// GUI処理

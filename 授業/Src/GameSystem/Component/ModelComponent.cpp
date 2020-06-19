@@ -33,7 +33,20 @@ void ModelComponent::Update()
 	m_nodeOL.CalcNodeMatrices();
 }
 
-void ModelComponent::Draw()
+void ModelComponent::PrepareDraw(RenderingData& rdate)
+{
+	// 無効時はスキップ
+	if (m_enable == false)return;
+	// 非表示時はスキップ
+	if (m_visible == false)return;
+	// モデルがないときはスキップ
+	if (m_model->IsValid() == false)return;
+
+	// 「3D不透明描画収集リスト」へ登録
+	rdate.m_drawList.push_back(this);
+}
+
+void ModelComponent::Draw(int phaseID)
 {
 	// 無効時はスキップ
 	if (m_enable == false)return;

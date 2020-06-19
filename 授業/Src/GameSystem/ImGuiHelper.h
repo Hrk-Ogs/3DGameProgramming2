@@ -60,3 +60,8 @@ inline void ImGuiShowHelp(const std::string& text, bool showIcon = false)
 
 // KdModel用ボタン
 bool ImGuiSelectModel(KdSptr<KdModel>& model);
+
+
+// KdTexture用ボタン
+bool ImGuiSelectTexture(KdSptr<KdTexture>& tex);
+

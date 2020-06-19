@@ -17,8 +17,11 @@ public:
 	//===============================
 	// 更新処理
 	virtual void Update() override;
+	// 描画準備処理
+	virtual void PrepareDraw(RenderingData& rdate) override;
 	// 描画処理
-	virtual void Draw() override;
+	// phaseID　……どのタイミングで実行されているかのフラグ
+	virtual void Draw(int phaseID) override;
 
 	//===============================
 	// シリアライズ/デシリアライズ

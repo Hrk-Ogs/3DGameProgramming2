@@ -16,6 +16,12 @@ public:
 	// 
 	void Init();
 
+	// 削除する
+	void Destroy() { m_isDestroy = true; }
+	// 削除フラグ取得
+	bool IsDestory()const { return m_isDestroy; }
+
+
 	//=========================================
 	// コンポーネント
 	//=========================================
@@ -98,6 +104,8 @@ private:
 	// 名前
 	std::string			m_name = "GameObject";
 	
+	// 削除フラグ
+	bool				m_isDestroy = false;
 
 	//=========================================
 	// 親子

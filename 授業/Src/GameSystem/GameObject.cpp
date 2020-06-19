@@ -12,6 +12,13 @@ void GameObject::Collect(std::vector<GameObject*>& gameObjectList)
 
 	// 子も再帰で実行していく（イテレータでループしてるのは、削除機能も後に実装するため）
 	for (auto it = m_children.begin(); it != m_children.end();) {
+		// 削除フラグがOn？
+		if ((*it)->IsDestory()) {
+			// リストから消す
+			it = m_children.erase(it);
+			continue;
+		}
+
 		// 登録
 		(*it)->Collect(gameObjectList);
 
@@ -160,19 +167,37 @@ void GameObject::Editor_ImGuiUpdate()
 	ImGui::InputText("Name", &m_name);
 
 	// 全コンポーネントを動作
-	for (auto&& comp : m_components) {
-
+	//for (auto&& comp : m_components) {
+	for(auto&& it=m_components.begin();it!=m_components.end();)
+	{
 		ImGui::Dummy(ImVec2(0, 2));
 		ImGui::Separator();
 		ImGui::Dummy(ImVec2(0, 2));
 
+		auto& comp = (*it);
+
 		ImGui::PushID(comp.get());
 
-		if (ImGui::CollapsingHeader(&typeid(*comp).name()[6], ImGuiTreeNodeFlags_DefaultOpen)) {
+		bool bOpen = ImGui::CollapsingHeader(&typeid(*comp).name()[6], ImGuiTreeNodeFlags_DefaultOpen);
+
+		// メニュー
+		if (ImGui::BeginPopupContextItem("ComponentMenuPopup")) {
+			if (ImGui::Selectable(u8"削除")) {
+				it = m_components.erase(it);
+				bOpen = false;
+			}
+
+			ImGui::EndPopup();
+		}
+
+		if (bOpen) {
 			comp->Editor_ImGuiUpdate();
 		}
 
 		ImGui::PopID();
+
+		if (it == m_components.end())break;
+		++it;
 	}
 
 	// コンポーネント追加ボタン
@@ -210,6 +235,40 @@ void GameObject::Editor_ImGuiTree()
 
 	// GameObject
 	bool bOpen = ImGui::TreeNodeEx(m_name.c_str(), flags);
+
+	//---------------------
+	// Drag & Drop
+	//---------------------
+	//Drag
+	if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None)) {
+		// GameObjectのアドレスを数値として記憶しておく
+		intptr_t n = (intptr_t)this;
+		ImGui::SetDragDropPayload("GameObjectDragDrop", &n, sizeof(n));
+		ImGui::Text(u8"親となるGameObjectを選択してください");
+		ImGui::EndDragDropSource();
+	}
+	// Drop
+	if (ImGui::BeginDragDropTarget()) {
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObjectDragDrop")) {
+			IM_ASSERT(payload->DataSize == sizeof(intptr_t));
+			// int型で記憶していたアドレスをOjbectに復元
+			GameObject* srcObj = (GameObject*)(*(intptr_t*)payload->Data);
+
+			// 親子構造チェック（親から子へのドロップダウンはまずいのでそれをチェック!）
+			GameObject* o = this;
+			while (o != nullptr) {
+				if (o == srcObj)break;
+				// 一つ上の親へ
+				o = o->GetParent().get();
+			}
+			if (o == nullptr) {
+				// そいつの子になる
+				srcObj->SetParent(shared_from_this());
+			}
+		}
+		ImGui::EndDragDropTarget();
+	}
+
 
 	// クリック判定
 	if (ImGui::IsItemClicked()) {
@@ -319,6 +378,16 @@ void GameObject::Editor_ImGuiTree()
 			}
 		}
 
+		ImGui::Dummy(ImVec2(0, 2));
+		ImGui::Separator();
+		ImGui::Dummy(ImVec2(0, 5));
+
+		//------------------------
+		// 削除
+		//------------------------
+		if (ImGui::Selectable(u8"削除")) {
+			Destroy();
+		}
 
 		// 必ず最後に呼ぶ
 		ImGui::EndPopup();

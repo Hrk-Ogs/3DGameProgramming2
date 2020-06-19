@@ -17,9 +17,23 @@ public:
 	virtual void Start() {}
 	// 毎回実行される更新処理
 	virtual void Update() {}
-	// 毎回実行される描画関数
-	virtual void Draw() {}
 
+	// 描画準備処理
+	virtual void PrepareDraw(RenderingData& rdata) {}
+
+	// 毎回実行される描画関数
+	// phaseID ……殿タイミングで実行されているかのフラグ　RenderingData構造体の「Phase定数」を指定する
+	virtual void Draw(int phaseID) {}
+
+	// 初回のみStart関数を呼び出す
+	void CallStartOnce()
+	{
+		// 初回フラグがOnの時のみ
+		if (m_isNew) {
+			Start();		// Start実行
+			m_isNew = false;
+		}
+	}
 
 	//============================
 	// ImGui処理
