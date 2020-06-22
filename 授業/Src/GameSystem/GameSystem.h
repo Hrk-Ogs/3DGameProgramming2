@@ -22,6 +22,8 @@
 #include "Component/ModelComponent.h"
 #include "Component/InputComponent.h"
 #include "Component/SpriteComponent.h"
+#include "Component/CameraComponent.h"
+#include "Component/LightComponent.h"
 
 
 // レベル
@@ -53,6 +55,8 @@ public:
 	{
 		// エディターカメラ
 		EditorCamera		Camera;
+		bool				FreeCameraMode = false;		// 強制的にEditorのカメラを使用する。
+
 		// 現在選択しているGameObject
 		KdWptr<GameObject>	SelectObj;
 		// ログウィンドウ
@@ -61,6 +65,8 @@ public:
 
 	EditorData	m_editorData;
 
+	// デバッグ描画システム
+	KdDebugLineDraw& DebugLine() { return m_debugLineDraw; }
 
 private:
 
@@ -72,6 +78,8 @@ private:
 	// Level
 	KdSptr<Level>			m_level;
 
+	// デバッグ線秒がシステム
+	KdDebugLineDraw			m_debugLineDraw;
 
 	//============================
 	// シングルトンパターン

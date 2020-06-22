@@ -11,6 +11,8 @@ void GameSystem::Init()
 	ComponentClassMaker::GetInstance().Register<PlayerInputComponent>();
 	ComponentClassMaker::GetInstance().Register<SimpleAIInputComponent>();
 	ComponentClassMaker::GetInstance().Register<SpriteComponent>();
+	ComponentClassMaker::GetInstance().Register<CameraComponent>();
+	ComponentClassMaker::GetInstance().Register<LightComponent>();
 
 
 	// Level作成
@@ -19,6 +21,10 @@ void GameSystem::Init()
 
 void GameSystem::Run()
 {
+
+	// デバッグ線を全てクリアする
+	m_debugLineDraw.ResetLines();
+
 	//==========================
 	// ImGui開始
 	//==========================
@@ -39,7 +45,7 @@ void GameSystem::Run()
 
 	// LevelからGameObjectを収集
 	m_level->CollectGameObject(m_tempGameObjects);
-	
+
 	//==========================
 	//
 	// 更新処理
@@ -56,14 +62,25 @@ void GameSystem::Run()
 	}
 
 	// エディターカメラ処理
-	m_editorData.Camera.Update();
-	
+	if (m_editorData.FreeCameraMode) {
+		// どのウィンドウの上にもマウスがいないときのみ
+		if (ImGui::IsAnyWindowHovered() == false) {
+			m_editorData.Camera.Update();
+		}
+	}
+
 
 	//-----------------------
 	// 描画準備
 	//-----------------------
 	// レンダリングデータをリセット
 	m_tempRenderingDate.Reset();
+
+	// ライト数リセット
+	SHADER.m_cb8_Light.Work().DL_Cnt = 0;
+	SHADER.m_cb8_Light.Work().PL_Cnt = 0;
+	SHADER.m_cb8_Light.Work().SL_Cnt = 0;
+
 
 	// GameOvject描画準備処理
 	for (auto&& gameObj : m_tempGameObjects) {
@@ -72,6 +89,9 @@ void GameSystem::Run()
 			comp->PrepareDraw(m_tempRenderingDate);
 		}
 	}
+
+	// ライトデータ書き込み（GPUに転送され描画（シェーダー）で使用される）
+	SHADER.m_cb8_Light.Write();
 
 
 	//==========================
@@ -83,17 +103,19 @@ void GameSystem::Run()
 	// カメラ
 	//-----------
 	// カメラをシェーダーにセット
-	m_editorData.Camera.SetToShader();
+	if (m_tempRenderingDate.m_camera && m_editorData.FreeCameraMode == false) {	// カメラコンポーネントがある時
+		// カメラコンポーネントのカメラ情報をセットする
+		m_tempRenderingDate.m_camera->SetCamera();
+	}
+	else {	// ないとき
+		// Editorカメラセット
+		m_editorData.Camera.SetToShader();
+	}
+
 
 	//-----------
 	// ライト
 	//-----------
-	// 平行光
-	SHADER.m_cb8_Light.Work().DL[0].Dir = { 0, -1, 0 };	// 方向
-	SHADER.m_cb8_Light.Work().DL[0].Color = { 3,3,3 };	// 色
-	SHADER.m_cb8_Light.Work().DL_Cnt = 1;	// 使用数
-	// ライトデータをGPUバッファに書き込む
-	SHADER.m_cb8_Light.Write();
 
 
 	//-----------
@@ -112,7 +134,7 @@ void GameSystem::Run()
 	//++++++++++++++++++++
 	// 3D描画（半透明）
 	//++++++++++++++++++++
-	
+
 	for (auto&& comp : m_tempRenderingDate.m_drawTransparentList) {
 		comp->Draw(RenderingData::kTransparentPhase);
 	}
@@ -133,7 +155,7 @@ void GameSystem::Run()
 	// 2D描画
 	//++++++++++++++++++++
 	SHADER.m_spriteShader.Begin(true, false);
-	for (auto&& comp : m_tempRenderingDate.m_drawSpriteList){
+	for (auto&& comp : m_tempRenderingDate.m_drawSpriteList) {
 		comp->Draw(RenderingData::kSpritePhase);
 	}
 	SHADER.m_spriteShader.End();
@@ -143,6 +165,10 @@ void GameSystem::Run()
 	//===========================
 	Editor_ImGuiUpdate();
 
+	//-------------------
+	// デバッグ線描画
+	//-------------------
+	m_debugLineDraw.Draw();
 
 	//===========================
 	// ImGui描画
@@ -158,7 +184,15 @@ void GameSystem::Editor_ImGuiUpdate()
 	//===============================================
 	// Levelウィンドウ
 	//===============================================
-	if (ImGui::Begin("Level",0,ImGuiWindowFlags_MenuBar)) {
+	if (ImGui::Begin("Level", 0, ImGuiWindowFlags_MenuBar)) {
+
+		//---------------------
+		// エディター設定
+		//---------------------
+		ImGui::Checkbox("FreeCamer Mode", &m_editorData.FreeCameraMode);
+
+		ImGui::Separator();
+
 		//-------------------
 		// メインメニュー
 		//-------------------

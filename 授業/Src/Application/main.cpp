@@ -193,7 +193,7 @@ void Application::Execute()
 		//=========================================
 
 		// バックバッファをクリア
-		D3D.GetDevContext()->ClearRenderTargetView(D3D.GetBackBuffer()->GetRTView(), Math::Color(0, 0, 1, 1));
+		D3D.GetDevContext()->ClearRenderTargetView(D3D.GetBackBuffer()->GetRTView(), Math::Color(0.2f, 0.2f, 0.2f, 1));
 		// Zバッファをクリア
 		D3D.GetDevContext()->ClearDepthStencilView(D3D.GetZBuffer()->GetDSView(), D3D11_CLEAR_DEPTH, 1, 0);
 

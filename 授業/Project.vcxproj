@@ -167,7 +167,9 @@
     <ClInclude Include="Src\Application\main.h" />
     <ClInclude Include="Src\GameSystem\ComponentClassMaker.h" />
     <ClInclude Include="Src\GameSystem\Component\BaseComponent.h" />
+    <ClInclude Include="Src\GameSystem\Component\CameraComponent.h" />
     <ClInclude Include="Src\GameSystem\Component\InputComponent.h" />
+    <ClInclude Include="Src\GameSystem\Component\LightComponent.h" />
     <ClInclude Include="Src\GameSystem\Component\ModelComponent.h" />
     <ClInclude Include="Src\GameSystem\Component\SpriteComponent.h" />
     <ClInclude Include="Src\GameSystem\Component\TransformComponent.h" />
@@ -214,7 +216,9 @@
     <ClCompile Include="Src\Application\main.cpp" />
     <ClCompile Include="Src\GameSystem\ComponentClassMaker.cpp" />
     <ClCompile Include="Src\GameSystem\Component\BaseComponent.cpp" />
+    <ClCompile Include="Src\GameSystem\Component\CameraComponent.cpp" />
     <ClCompile Include="Src\GameSystem\Component\InputComponent.cpp" />
+    <ClCompile Include="Src\GameSystem\Component\LightComponent.cpp" />
     <ClCompile Include="Src\GameSystem\Component\ModelComponent.cpp" />
     <ClCompile Include="Src\GameSystem\Component\SpriteComponent.cpp" />
     <ClCompile Include="Src\GameSystem\Component\TransformComponent.cpp" />
