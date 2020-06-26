@@ -97,6 +97,8 @@ void GameObject::Deserialize(const json11::Json& jsonObj)
 	KdJsonGet(jsonObj["Enable"], m_enable);
 	// 名前
 	KdJsonGet(jsonObj["Name"], m_name);
+	// 質量
+	KdJsonGet(jsonObj["Mass"], m_mass);
 
 	// コンポーネント
 	m_components.clear();
@@ -129,6 +131,7 @@ void GameObject::Serialize(json11::Json::object& outJsonObj) const
 {
 	outJsonObj["Name"] = m_name;
 	outJsonObj["Enable"] = m_enable;
+	outJsonObj["Mass"] = m_mass;
 
 	// 子リストもシリアライズ
 	json11::Json::array jsonChildren;
@@ -165,6 +168,9 @@ void GameObject::Editor_ImGuiUpdate()
 
 	// 名前
 	ImGui::InputText("Name", &m_name);
+
+	// 質量
+	ImGui::InputFloat(u8"質量", &m_mass);
 
 	// 全コンポーネントを動作
 	//for (auto&& comp : m_components) {

@@ -20,6 +20,9 @@ public:
 		m_rootObject->Collect(gameObjectList);
 	}
 
+	// RootObject取得
+	KdSptr<GameObject> GetRootObject() const { return m_rootObject; }
+
 	//============================
 	// シリアライズ/デシリアライズ
 	//============================

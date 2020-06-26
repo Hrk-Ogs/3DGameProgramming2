@@ -21,6 +21,15 @@ public:
 	// 削除フラグ取得
 	bool IsDestory()const { return m_isDestroy; }
 
+	// 有効フラグの取得
+	void SetEnable(bool enable) { m_enable = enable; }
+
+	// 有効フラグの設定
+	bool IsEnable() const { return m_enable; }
+
+	// 質量取得
+	float GetMass() const { return m_mass; }
+
 
 	//=========================================
 	// コンポーネント
@@ -51,6 +60,29 @@ public:
 			}
 		}
 		return nullptr;
+	}
+
+	// 指定型のコンポーネントを全て取得
+	// ・result … 見つかったコンポーネントが全てここに入る
+	// ・withChild … 子GameObjectも検索する？
+	template<class T>
+	void GetComponents(std::vector<KdSptr<T>>& result, bool withChild = false)
+	{
+		// 検索
+		for (auto&& comp : m_components)
+		{
+			// ダウンキャストで型判定
+			auto p = std::dynamic_pointer_cast<T>(comp);
+			if (p)result.push_back(p);
+		}
+		// 子も検索する
+		if (withChild)
+		{
+			for (auto&& child : m_children)
+			{
+				child->GetComponents(result, withChild);
+			}
+		}
 	}
 
 	//=========================================
@@ -103,9 +135,12 @@ private:
 	bool				m_enable = true;
 	// 名前
 	std::string			m_name = "GameObject";
-	
+
 	// 削除フラグ
 	bool				m_isDestroy = false;
+
+	// 質量
+	float				m_mass = 1.0f;
 
 	//=========================================
 	// 親子
@@ -121,5 +156,5 @@ private:
 	//=========================================
 	std::list<KdSptr<BaseComponent>>	m_components;
 
-};
+	};
 

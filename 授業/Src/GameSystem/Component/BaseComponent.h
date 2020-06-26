@@ -76,6 +76,9 @@ public:
 	// 有効フラグの設定
 	bool IsEnable() const { return m_enable; }
 
+	// 持ち主存在チェック
+	//bool ExistOwner() const { return m_pOwner.expired() == false; }
+
 protected:
 
 	// 有効フラグ

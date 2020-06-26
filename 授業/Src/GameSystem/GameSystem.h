@@ -24,6 +24,10 @@
 #include "Component/SpriteComponent.h"
 #include "Component/CameraComponent.h"
 #include "Component/LightComponent.h"
+#include "Component/ParticleComponent.h"
+
+// 
+#include "Component/Collider/CollisionManager.h"
 
 
 // レベル
@@ -48,6 +52,9 @@ public:
 	// ImGui処理
 	void Editor_ImGuiUpdate();
 
+	// 実行中？
+	bool IsPlay() const { return m_isPlay; }
+
 	//================================================
 	// ！！ここからエディター専用データ！！！
 	//================================================
@@ -68,7 +75,13 @@ public:
 	// デバッグ描画システム
 	KdDebugLineDraw& DebugLine() { return m_debugLineDraw; }
 
+	// レベルの取得
+	KdSptr<Level> GetLevel() const { return m_level; }
+
 private:
+
+	// 実行フラグ
+	bool						m_isPlay = false;
 
 	// 収集GameObjectリスト
 	std::vector<GameObject*>	m_tempGameObjects;
@@ -80,6 +93,9 @@ private:
 
 	// デバッグ線秒がシステム
 	KdDebugLineDraw			m_debugLineDraw;
+
+	// コリジョン管理クラス
+	KdSptr<CollisionManager> m_collisionMgr = std::make_shared<CollisionManager>();
 
 	//============================
 	// シングルトンパターン

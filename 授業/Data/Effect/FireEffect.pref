@@ -1,0 +1,211 @@
+{
+  "Children": [
+    {
+      "Children": [],
+      "Components": [
+        {
+          "ClassName": "TransformComponent",
+          "Enable": true,
+          "FollowBoneName": "",
+          "Position": [0,0.15911388397216797,0],
+          "Rotation": [-0,0,-0,1],
+          "Scale": [1,1,1]
+        },
+        {
+          "ClassName": "ParticleComponent",
+          "Enable": true,
+          "Param.AngleRandom": [0,0,360],
+          "Param.AngleStart": [0,0,0],
+          "Param.BillboardType": 1,
+          "Param.BlendMode": 0,
+          "Param.Color": [0.25098040699958801,0.25098040699958801,0.25098040699958801,0.69411766529083252],
+          "Param.DelayTime": 0,
+          "Param.Duration": 300,
+          "Param.EndColor": [0.25098040699958801,0.25098040699958801,0.25098040699958801,0],
+          "Param.Flags": 0,
+          "Param.FollowTransform": false,
+          "Param.LifeTime": 60,
+          "Param.Loop": true,
+          "Param.MoveAccelRandom": [0,0,0],
+          "Param.MoveAccelStart": [0,-9.9999997473787516e-05,0],
+          "Param.MoveRandom": [0,0,0],
+          "Param.MoveStart": [0,0.0099999997764825821,0],
+          "Param.PopupInterval": 5,
+          "Param.PopupNum": 3,
+          "Param.PosRandom": [0.070000000298023224,0.05000000074505806,0.05000000074505806],
+          "Param.PosStart": [0,0,0],
+          "Param.RotateAccelRandom": [0,0,0],
+          "Param.RotateAccellStart": [0,0,0],
+          "Param.RotateRandom": [0,0,4.1500000953674316],
+          "Param.RotateStart": [0,0,0],
+          "Param.ScaleAccelRandom": [0,0,0],
+          "Param.ScaleAccelStart": [0,0,0],
+          "Param.ScaleRandom": [0,0,0],
+          "Param.ScaleStart": [0,0,0],
+          "Param.SizeRandom": [0,0,0],
+          "Param.SizeStart": [0.15299999713897705,0.14900000393390656,0.10000000149011612],
+          "Param.StopAction": 0,
+          "Param.Tex": "Data\\Texture\\Smoke.png",
+          "Param.UVAnim_Loop": false,
+          "Param.UVAnim_SliceNum": [1,1],
+          "Param.UVAnim_Speed": 0,
+          "Param.UVAnim_StartTime": 0
+        }
+      ],
+      "Enable": true,
+      "Mass": 1,
+      "Name": "Smoke"
+    },
+    {
+      "Children": [
+        {
+          "Children": [],
+          "Components": [
+            {
+              "ClassName": "TransformComponent",
+              "Enable": true,
+              "FollowBoneName": "",
+              "Position": [0,0.144486203789711,0],
+              "Rotation": [-0,0,-0,1],
+              "Scale": [1,1,1]
+            },
+            {
+              "ClassName": "LightComponent",
+              "Color": [1,0.47058820724487305,0],
+              "Enable": true,
+              "Intensity": 10,
+              "LightType": 1,
+              "Range": 8,
+              "SpotAngle": 30
+            }
+          ],
+          "Enable": true,
+          "Mass": 1,
+          "Name": "Light"
+        }
+      ],
+      "Components": [
+        {
+          "ClassName": "TransformComponent",
+          "Enable": true,
+          "FollowBoneName": "",
+          "Position": [0,0,0],
+          "Rotation": [-0,0,-0,1],
+          "Scale": [1,1,1]
+        },
+        {
+          "ClassName": "ParticleComponent",
+          "Enable": true,
+          "Param.AngleRandom": [0.10000000149011612,0.10000000149011612,0],
+          "Param.AngleStart": [0,0,0],
+          "Param.BillboardType": 1,
+          "Param.BlendMode": 1,
+          "Param.Color": [0.25098040699958801,0.25098040699958801,0.25098040699958801,1],
+          "Param.DelayTime": 0,
+          "Param.Duration": 300,
+          "Param.EndColor": [0.25098040699958801,0.25098040699958801,0.25098040699958801,0],
+          "Param.Flags": 0,
+          "Param.FollowTransform": false,
+          "Param.LifeTime": 60,
+          "Param.Loop": true,
+          "Param.MoveAccelRandom": [0,0,0],
+          "Param.MoveAccelStart": [0,-9.9999997473787516e-05,0],
+          "Param.MoveRandom": [0.0020000000949949026,0.0030000000260770321,0],
+          "Param.MoveStart": [0,0.0080000003799796104,0],
+          "Param.PopupInterval": 2,
+          "Param.PopupNum": 1,
+          "Param.PosRandom": [0.029999999329447746,0,0.029999999329447746],
+          "Param.PosStart": [0,0,0],
+          "Param.RotateAccelRandom": [0,0,0],
+          "Param.RotateAccellStart": [0,0,0],
+          "Param.RotateRandom": [0,0,0],
+          "Param.RotateStart": [0,0,0],
+          "Param.ScaleAccelRandom": [0,0,0],
+          "Param.ScaleAccelStart": [0,0,0],
+          "Param.ScaleRandom": [0,0,0],
+          "Param.ScaleStart": [-0.0034000000450760126,-0.0035000001080334187,0],
+          "Param.SizeRandom": [0,0,0],
+          "Param.SizeStart": [0.30000001192092896,0.30000001192092896,1],
+          "Param.StopAction": 0,
+          "Param.Tex": "Data\\Texture\\fire.png",
+          "Param.UVAnim_Loop": false,
+          "Param.UVAnim_SliceNum": [1,1],
+          "Param.UVAnim_Speed": 0,
+          "Param.UVAnim_StartTime": 0
+        }
+      ],
+      "Enable": true,
+      "Mass": 1,
+      "Name": "Fire"
+    },
+    {
+      "Children": [],
+      "Components": [
+        {
+          "ClassName": "TransformComponent",
+          "Enable": true,
+          "FollowBoneName": "",
+          "Position": [0,0.051812022924423218,0],
+          "Rotation": [-0,0,-0,1],
+          "Scale": [1,1,1]
+        },
+        {
+          "ClassName": "ParticleComponent",
+          "Enable": true,
+          "Param.AngleRandom": [0,0,0],
+          "Param.AngleStart": [0,0,0],
+          "Param.BillboardType": 2,
+          "Param.BlendMode": 1,
+          "Param.Color": [1,1,1,1],
+          "Param.DelayTime": 0,
+          "Param.Duration": 300,
+          "Param.EndColor": [1,1,1,0],
+          "Param.Flags": 1,
+          "Param.FollowTransform": true,
+          "Param.LifeTime": 60,
+          "Param.Loop": true,
+          "Param.MoveAccelRandom": [0.00019999999494757503,0.00030000001424923539,0.00019999999494757503],
+          "Param.MoveAccelStart": [0,9.9999997473787516e-05,0],
+          "Param.MoveRandom": [0.004999999888241291,0,0.0030000000260770321],
+          "Param.MoveStart": [0.0010000000474974513,0.0030000000260770321,0],
+          "Param.PopupInterval": 5,
+          "Param.PopupNum": 1,
+          "Param.PosRandom": [0.070000000298023224,0.079999998211860657,0],
+          "Param.PosStart": [0,0,0],
+          "Param.RotateAccelRandom": [0,0,0],
+          "Param.RotateAccellStart": [0,0,0],
+          "Param.RotateRandom": [0,0,0],
+          "Param.RotateStart": [0,0,0],
+          "Param.ScaleAccelRandom": [0,0,0],
+          "Param.ScaleAccelStart": [0,0,0],
+          "Param.ScaleRandom": [0,0,0],
+          "Param.ScaleStart": [0,0,0],
+          "Param.SizeRandom": [0,0,0],
+          "Param.SizeStart": [0.0070000002160668373,0.035000000149011612,1],
+          "Param.StopAction": 0,
+          "Param.Tex": "Data\\Texture\\fire.png",
+          "Param.UVAnim_Loop": false,
+          "Param.UVAnim_SliceNum": [1,1],
+          "Param.UVAnim_Speed": 0,
+          "Param.UVAnim_StartTime": 0
+        }
+      ],
+      "Enable": true,
+      "Mass": 1,
+      "Name": "Sparks"
+    }
+  ],
+  "Components": [
+    {
+      "ClassName": "TransformComponent",
+      "Enable": true,
+      "FollowBoneName": "",
+      "Position": [0,0,0],
+      "Rotation": [-0,0,-0,1],
+      "Scale": [1,1,1]
+    }
+  ],
+  "Enable": true,
+  "Mass": 1,
+  "Name": "FireEffect"
+}

@@ -10,9 +10,16 @@ void GameSystem::Init()
 	ComponentClassMaker::GetInstance().Register<InputComponent>();
 	ComponentClassMaker::GetInstance().Register<PlayerInputComponent>();
 	ComponentClassMaker::GetInstance().Register<SimpleAIInputComponent>();
+
 	ComponentClassMaker::GetInstance().Register<SpriteComponent>();
 	ComponentClassMaker::GetInstance().Register<CameraComponent>();
 	ComponentClassMaker::GetInstance().Register<LightComponent>();
+	ComponentClassMaker::GetInstance().Register<ParticleComponent>();
+
+	ComponentClassMaker::GetInstance().Register<SphereColliderComponent>();
+	ComponentClassMaker::GetInstance().Register<RayColliderComponent>();
+	ComponentClassMaker::GetInstance().Register<BoxColliderComponent>();
+	ComponentClassMaker::GetInstance().Register<MeshColliderComponent>();
 
 
 	// Level作成
@@ -52,17 +59,29 @@ void GameSystem::Run()
 	//
 	//==========================
 
+	// このコリジョン管理クラスを使用するようにセット
+	m_collisionMgr->SetManagerToDefault();
+
 	// 収集したGameObjectの更新処理
 	for (auto&& gameObj : m_tempGameObjects) {
 		// 全コンポーネント実行（直接コンポーネントリストを取得し、実行していく）
 		for (auto&& comp : gameObj->GetComponentList()) {
-			comp->CallStartOnce();
+			// Start実行
+			if (m_isPlay) {
+				comp->CallStartOnce();
+			}
 			comp->Update();
 		}
 	}
 
+	// 「停止」時は、コライダー情報の更新のみ実行する
+	// 「実行」時は、コライダー情報の更新とあたり判定を実行
+	bool onlyUpdateCollider = (m_isPlay == false);
+	// コリジョン処理、結果通知
+	m_collisionMgr->Run(onlyUpdateCollider);
+
 	// エディターカメラ処理
-	if (m_editorData.FreeCameraMode) {
+	if (m_isPlay == false || m_editorData.FreeCameraMode) {
 		// どのウィンドウの上にもマウスがいないときのみ
 		if (ImGui::IsAnyWindowHovered() == false) {
 			m_editorData.Camera.Update();
@@ -103,7 +122,7 @@ void GameSystem::Run()
 	// カメラ
 	//-----------
 	// カメラをシェーダーにセット
-	if (m_tempRenderingDate.m_camera && m_editorData.FreeCameraMode == false) {	// カメラコンポーネントがある時
+	if (m_tempRenderingDate.m_camera && m_editorData.FreeCameraMode == false&& m_isPlay) {	// カメラコンポーネントがある時
 		// カメラコンポーネントのカメラ情報をセットする
 		m_tempRenderingDate.m_camera->SetCamera();
 	}
@@ -189,8 +208,42 @@ void GameSystem::Editor_ImGuiUpdate()
 		//---------------------
 		// エディター設定
 		//---------------------
-		ImGui::Checkbox("FreeCamer Mode", &m_editorData.FreeCameraMode);
 
+		// 実行/停止
+		if (ImGui::Checkbox(u8"実行", &m_isPlay)) {
+			// 実行前Levelをシリアライズしたもの置き場
+			static json11::Json::object sSerialLevel;
+
+			// 実行
+			if (m_isPlay) {
+				// 現在Levelの状態をシリアライズしておく
+				m_level->Serialize(sSerialLevel);
+
+				// 読み込みなども再現するため、一度リソース関係を全解放
+				// （今回はすばやく実行したいので、ここはコメントにする）
+				//m_editorData.LogWindow.AddLog(u8"リソース全解放");
+				//KDResFactory.Clear():
+
+				// デシリアライズで初期化
+				m_level->Deserialize(sSerialLevel);
+			}
+			// 停止
+			else{
+				// 読み込みなども再現するため、一度リソースを全解放
+				//m_editorData.LogWindow.AddLog(u8"リソースを全解放");
+				//KDResFactory.Clear();
+
+				// 再生前の状態へ戻す
+				m_level->Deserialize(sSerialLevel);
+			}
+		}
+
+		// 実行時のみCheckBoxを表示する
+		if (m_isPlay) {
+			ImGui::Indent();
+			ImGui::Checkbox("FreeCamer Mode", &m_editorData.FreeCameraMode);
+			ImGui::Unindent();
+		}
 		ImGui::Separator();
 
 		//-------------------
@@ -277,11 +330,20 @@ void GameSystem::Editor_ImGuiUpdate()
 	}
 	ImGui::End();
 
-
 	//===============================================
 	// ログウィンドウ
 	//===============================================
 	m_editorData.LogWindow.ImGuiUpdate("Log");
+
+
+	//===============================================
+	// CollisionManagerウィンドウ
+	// ・動作設定やデバッグ表示・負荷表示などが出来る
+	//===============================================
+	if (ImGui::Begin("Collision")) {
+		m_collisionMgr->ImGuiUpdate();
+	}
+	ImGui::End();
 
 
 }

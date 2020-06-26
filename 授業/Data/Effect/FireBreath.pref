@@ -1,0 +1,123 @@
+{
+  "Children": [
+    {
+      "Children": [],
+      "Components": [
+        {
+          "ClassName": "TransformComponent",
+          "Enable": true,
+          "Position": [0,0,0],
+          "Rotation": [-0,0,-0,1],
+          "Scale": [1,1,1]
+        },
+        {
+          "ClassName": "ParticleComponent",
+          "Enable": true,
+          "Param.AngleRandom": [0,0,360],
+          "Param.AngleStart": [0,0,0],
+          "Param.BillboardType": 1,
+          "Param.BlendMode": 0,
+          "Param.Color": [1,1,1,1],
+          "Param.DelayTime": 0,
+          "Param.Duration": 300,
+          "Param.EndColor": [1,1,1,0],
+          "Param.Flags": 0,
+          "Param.FollowTransform": false,
+          "Param.LifeTime": 60,
+          "Param.Loop": true,
+          "Param.MoveAccelRandom": [0,0,0],
+          "Param.MoveAccelStart": [0,0,-0.0040000001899898052],
+          "Param.MoveRandom": [0.019999999552965164,0.019999999552965164,0.019999999552965164],
+          "Param.MoveStart": [0,0,0.18000000715255737],
+          "Param.PopupInterval": 2,
+          "Param.PopupNum": 2,
+          "Param.PosRandom": [0,0,0],
+          "Param.PosStart": [0,0,0],
+          "Param.RotateAccelRandom": [0,0,0],
+          "Param.RotateAccellStart": [0,0,0],
+          "Param.RotateRandom": [0,0,4.2600002288818359],
+          "Param.RotateStart": [0,0,0],
+          "Param.ScaleAccelRandom": [0,0,0],
+          "Param.ScaleAccelStart": [0,0,0],
+          "Param.ScaleRandom": [0,0,0],
+          "Param.ScaleStart": [0,0,0],
+          "Param.SizeRandom": [0,0,0],
+          "Param.SizeStart": [1,1,1],
+          "Param.StopAction": 0,
+          "Param.Tex": "Data\\Texture\\Explosion00.png",
+          "Param.UVAnim_Loop": false,
+          "Param.UVAnim_SliceNum": [5,5],
+          "Param.UVAnim_Speed": 0.5,
+          "Param.UVAnim_StartTime": 10
+        }
+      ],
+      "Enable": true,
+      "Name": "Smoke"
+    },
+    {
+      "Children": [],
+      "Components": [
+        {
+          "ClassName": "TransformComponent",
+          "Enable": true,
+          "Position": [0,0,0],
+          "Rotation": [-0,0,-0,1],
+          "Scale": [1,1,1]
+        },
+        {
+          "ClassName": "ParticleComponent",
+          "Enable": true,
+          "Param.AngleRandom": [0,0,360],
+          "Param.AngleStart": [0,0,0],
+          "Param.BillboardType": 1,
+          "Param.BlendMode": 1,
+          "Param.Color": [1,1,1,1],
+          "Param.DelayTime": 0,
+          "Param.Duration": 300,
+          "Param.EndColor": [1,1,1,0],
+          "Param.Flags": 0,
+          "Param.FollowTransform": false,
+          "Param.LifeTime": 60,
+          "Param.Loop": true,
+          "Param.MoveAccelRandom": [0,0,0],
+          "Param.MoveAccelStart": [0,0,-0.0040000001899898052],
+          "Param.MoveRandom": [0.019999999552965164,0.019999999552965164,0.019999999552965164],
+          "Param.MoveStart": [0,0,0.18000000715255737],
+          "Param.PopupInterval": 2,
+          "Param.PopupNum": 2,
+          "Param.PosRandom": [0,0,0],
+          "Param.PosStart": [0,0,0],
+          "Param.RotateAccelRandom": [0,0,0],
+          "Param.RotateAccellStart": [0,0,0],
+          "Param.RotateRandom": [0,0,4.2600002288818359],
+          "Param.RotateStart": [0,0,0],
+          "Param.ScaleAccelRandom": [0,0,0],
+          "Param.ScaleAccelStart": [0,0,0],
+          "Param.ScaleRandom": [0,0,0],
+          "Param.ScaleStart": [0,0,0],
+          "Param.SizeRandom": [0,0,0],
+          "Param.SizeStart": [2,2,2],
+          "Param.StopAction": 0,
+          "Param.Tex": "Data\\Texture\\Explosion00.png",
+          "Param.UVAnim_Loop": false,
+          "Param.UVAnim_SliceNum": [5,5],
+          "Param.UVAnim_Speed": 0.5,
+          "Param.UVAnim_StartTime": 0
+        }
+      ],
+      "Enable": true,
+      "Name": "Fire"
+    }
+  ],
+  "Components": [
+    {
+      "ClassName": "TransformComponent",
+      "Enable": true,
+      "Position": [0,0,0],
+      "Rotation": [-0,0,-0,1],
+      "Scale": [1,1,1]
+    }
+  ],
+  "Enable": true,
+  "Name": "FireBreath"
+}

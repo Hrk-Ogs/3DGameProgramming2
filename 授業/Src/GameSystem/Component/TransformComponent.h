@@ -109,7 +109,7 @@ public:
 		WorldToLocal();
 	}
 	// À•Wæ“¾
-	KdVec3 Getposition()
+	KdVec3 GetPosition()
 	{
 		return m_worldMatrix.Translation();
 	}

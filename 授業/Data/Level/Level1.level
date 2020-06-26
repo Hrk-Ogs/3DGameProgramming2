@@ -1,0 +1,87 @@
+{
+  "Enable": true,
+  "GameObject": {
+    "Children": [
+      {
+        "Children": [],
+        "Components": [
+          {
+            "ClassName": "TransformComponent",
+            "Enable": true,
+            "Position": [0,0,0],
+            "Rotation": [-0,0,-0,1],
+            "Scale": [1,1,1]
+          },
+          {
+            "AnimationSpeed": 1,
+            "ClassName": "ModelComponent",
+            "Enable": true,
+            "ModelFilename": "Data\\StageMap\\StageMap.gltf",
+            "StartAnimatioinLoop": true,
+            "StartAnimeName": "",
+            "Visible": true
+          }
+        ],
+        "Enable": true,
+        "Name": "Ground"
+      },
+      {
+        "Children": [],
+        "Components": [
+          {
+            "ClassName": "TransformComponent",
+            "Enable": true,
+            "Position": [0,0,0],
+            "Rotation": [0.66293901205062866,0.33477187156677246,-0.43849754333496094,0.5061221718788147],
+            "Scale": [0.99999511241912842,0.99999594688415527,0.99999505281448364]
+          },
+          {
+            "ClassName": "LightComponent",
+            "Color": [1,1,1],
+            "Enable": true,
+            "Intensity": 2,
+            "LightType": 0,
+            "Range": 5,
+            "SpotAngle": 30
+          }
+        ],
+        "Enable": true,
+        "Name": "Light"
+      },
+      {
+        "Children": [],
+        "Components": [
+          {
+            "ClassName": "TransformComponent",
+            "Enable": true,
+            "Position": [0,0,0],
+            "Rotation": [-0,0,-0,1],
+            "Scale": [0.17000000178813934,0.17000000178813934,0.17000000178813934]
+          },
+          {
+            "AnimationSpeed": 1,
+            "ClassName": "ModelComponent",
+            "Enable": true,
+            "ModelFilename": "Data\\Player\\Player.gltf",
+            "StartAnimatioinLoop": true,
+            "StartAnimeName": "Run",
+            "Visible": true
+          }
+        ],
+        "Enable": true,
+        "Name": "Player"
+      }
+    ],
+    "Components": [
+      {
+        "ClassName": "TransformComponent",
+        "Enable": true,
+        "Position": [0,0,0],
+        "Rotation": [-0,0,-0,1],
+        "Scale": [1,1,1]
+      }
+    ],
+    "Enable": true,
+    "Name": "Root"
+  }
+}

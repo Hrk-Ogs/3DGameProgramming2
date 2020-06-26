@@ -27,7 +27,9 @@ void ModelComponent::Update()
 	if (m_enable == false)return;
 
 	// アニメーション進行
-	m_animator.AdvanceTime(m_animationSpeed, m_nodeOL, nullptr);
+	if (GAMESYS.IsPlay()) {
+		m_animator.AdvanceTime(m_animationSpeed, m_nodeOL, nullptr);
+	}
 
 	// 全ノードの行列計算
 	m_nodeOL.CalcNodeMatrices();
@@ -115,6 +117,22 @@ void ModelComponent::Editor_ImGuiUpdate()
 				// アニメーションが指定されたときは、アニメーションを変更する
 				if (change >= 1) {
 					m_animator.SetAnimation(m_model->GetAnimation(m_startAnimeName), m_startAnimationLoop);
+				}
+
+				// このボタンの上にマウスを置いた時だけ再生する
+				ImGui::ButtonEx(u8"マウスオーバーで再生", ImVec2(0, 0), ImGuiButtonFlags_Disabled);
+				if (ImGui::IsItemHovered()) {
+					// アニメ進行
+					m_animator.AdvanceTime(m_animationSpeed, m_nodeOL, nullptr);
+				}
+				// それ以外の時はデフォルトボーズにする
+				else
+				{
+					for (UINT ni = 0; ni < m_nodeOL.GetAllNodes().size(); ni++)
+					{
+						m_nodeOL.GetAllNodes()[ni].LocalTransform =
+							m_model->GetNodeOutlinear().GetAllNodes()[ni].LocalTransform;
+					}
 				}
 
 				//

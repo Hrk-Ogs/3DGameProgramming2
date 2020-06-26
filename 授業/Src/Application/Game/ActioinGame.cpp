@@ -14,9 +14,11 @@ void CharacterController::Update()
 	if (input == nullptr)return;
 
 	if (m_enable == false)return;
+	// 停止時はスキップ
+	if (GAMESYS.IsPlay() == false)return;
 
 	// ワールド行列取得
-	KdVec3 pos = GetOwner()->Transform()->Getposition();
+	KdVec3 pos = GetOwner()->Transform()->GetPosition();
 	// 回転取得
 	KdQuaternion rotation = GetOwner()->Transform()->GetRotation();
 
