@@ -4,9 +4,40 @@
 
 void TransformComponent::Update()
 {
-	// ローカル行列からワールド行列を計算
-	LocalToWorld();
-
+	//-----------------
+// ボーン追従機能
+//-----------------
+	KdNodeOutliner::Node* boneNode = nullptr;
+	if (m_followBoneName.empty() == false)
+	{
+		// 親GameObject
+		auto parent = GetOwner()->GetParent();
+		if (parent)
+		{
+			// ModelComponentを検索
+			auto model = parent->GetComponent<ModelComponent>();
+			if (model)
+			{
+				// 指定名のボーンを検索
+				boneNode = model->NodeOutliner().FindNode(m_followBoneName);
+				if (boneNode)
+				{
+					// ノードのTransform * 親のワールド行列で、ノードのワールド行列が求まる
+					m_worldMatrix = boneNode->Transform * parent->Transform()->GetMatrix();
+				}
+			}
+		}
+	}
+	if (boneNode) // ボーン追従時
+	{
+		// ワールド行列からローカル行列を計算
+		WorldToLocal();
+	}
+	else
+	{
+		// ローカル行列からワールド行列を計算
+		LocalToWorld();
+	}
 }
 
 void TransformComponent::Editor_ImGuiUpdate()
@@ -47,6 +78,33 @@ void TransformComponent::Editor_ImGuiUpdate()
 	if (ImGui::Button(u8"単位行列化")) {
 		m_localMatrix.CreateIdentity();
 	}
+	// ボーン追従設定
+	ImGui::InputText(u8"ボーン追従", &m_followBoneName);
+	ImGuiShowHelp(u8"親GameObjectのModelComponentを参照し、\nそのボーンの行列をそのまま使用します。");
+	// 右クリックでボーン名選択リストを表示
+	if (ImGui::BeginPopupContextItem("FollowBonePopup"))
+	{
+		// 親GameObject
+		auto parent = GetOwner()->GetParent();
+		if (parent)
+		{
+			// ModelComponentを検索
+			auto model = parent->GetComponent<ModelComponent>();
+			if (model)
+			{
+				// 全ノードを表示
+				for (auto&& node : model->NodeOutliner().GetAllNodes())
+				{
+					if (ImGui::Selectable(node.Name.c_str()))
+					{
+						m_followBoneName = node.Name;
+					}
+				}
+			}
+		}
+		//
+		ImGui::EndPopup();
+	}
 
 }
 
@@ -62,6 +120,7 @@ void TransformComponent::Deserialize(const json11::Json& jsonObj)
 	KdJsonGet(jsonObj["Position"], pos);
 	KdJsonGet(jsonObj["Rotation"], rotation);
 	KdJsonGet(jsonObj["Scale"], scale);
+	KdJsonGet(jsonObj["FollowBoneName"], m_followBoneName);
 
 	m_localMatrix.CreateFromSRT(scale, rotation, pos);
 
@@ -80,6 +139,7 @@ void TransformComponent::Serialize(json11::Json::object& outJsonObj) const
 	outJsonObj["Position"] = pos.ToArray();
 	outJsonObj["Rotation"] = rotation.ToArray();
 	outJsonObj["Scale"] = scale.ToArray();
+	outJsonObj["FollowBoneName"] = m_followBoneName;
 }
 
 void TransformComponent::LocalToWorld()

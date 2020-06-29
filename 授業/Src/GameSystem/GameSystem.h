@@ -55,6 +55,12 @@ public:
 	// 実行中？
 	bool IsPlay() const { return m_isPlay; }
 
+	// レベル切り替え（予約）
+	void ChangeLevel(const std::string& levelFilename)
+	{
+		m_nextLevelFilename = levelFilename;
+	}
+
 	//================================================
 	// ！！ここからエディター専用データ！！！
 	//================================================
@@ -90,6 +96,9 @@ private:
 
 	// Level
 	KdSptr<Level>			m_level;
+
+	// 次のレベルのファイル名（予約）
+	std::string				m_nextLevelFilename;
 
 	// デバッグ線秒がシステム
 	KdDebugLineDraw			m_debugLineDraw;

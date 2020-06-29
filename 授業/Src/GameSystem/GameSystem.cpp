@@ -33,6 +33,32 @@ void GameSystem::Run()
 	m_debugLineDraw.ResetLines();
 
 	//==========================
+	// レベルの切り替え処理
+	//==========================
+	if (m_nextLevelFilename.empty() == false) {
+		// Level作成
+		m_level = std::make_shared<Level>();
+
+		// リソース管理クラス最適化
+		// ※どこからも参照されていない不必要なリソースのみを解放する
+		int cnt = KDResFactory.Optimize();
+		m_editorData.LogWindow.AddLog(u8"%d個のリソースを解放", cnt);
+
+		// JSON読み込み＆Levelのデシリアライズ
+		json11::Json jsn = KdLoadJSONFile(m_nextLevelFilename);
+		if (jsn.is_null() == false) {
+			// デシリアライズ
+			m_level->Deserialize(jsn);
+
+			// ファイルパス記憶
+			m_level->SetFilepath(m_nextLevelFilename);
+		}
+		// 予約をクリア
+		m_nextLevelFilename = "";
+	}
+
+	
+	//==========================
 	// ImGui開始
 	//==========================
 	ImGui_ImplDX11_NewFrame();

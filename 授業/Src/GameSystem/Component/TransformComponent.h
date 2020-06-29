@@ -138,6 +138,9 @@ private:
 	// ワールド行列
 	KdMatrix		m_worldMatrix;
 
+	// ボーン追従機能（1つ上の階層のGameObjectを参照する仕様）
+	std::string		m_followBoneName;
+
 	// ローカル行列からワールド行列を計算する
 	void LocalToWorld();
 	// ワールド行列からローカル行列を計算する

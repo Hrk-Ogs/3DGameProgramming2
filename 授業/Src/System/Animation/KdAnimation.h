@@ -167,6 +167,7 @@ public:
 
 			// 古いアニメは重みを0へ近づけていく
 			m_tracks[1].AddWeight = -duration;
+			m_tracks[1].Weight = 1.0f;	// 今回は簡易的に[1]の重みを1に
 		}
 		// 即座に変化
 		else

@@ -12,6 +12,15 @@ public:
 	// ノードアウトライナー初期化やアニメーター初期化なども行う
 	void SetModel(const KdSptr<KdModel>& model);
 
+	// モデルデータ取得
+	KdSptr<KdModel> GetModel()const { return m_model; }
+
+	// ノードアウトライナー取得
+	KdNodeOutliner& NodeOutliner() { return m_nodeOL; }
+
+	// アニメータ取得
+	KdAnimator& Animator() { return m_animator; }
+
 	//===============================
 	// 動作処理
 	//===============================

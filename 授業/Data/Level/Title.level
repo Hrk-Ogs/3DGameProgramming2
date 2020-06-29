@@ -1,0 +1,69 @@
+{
+  "Enable": true,
+  "GameObject": {
+    "Children": [
+      {
+        "Children": [
+          {
+            "Children": [],
+            "Components": [
+              {
+                "ClassName": "TransformComponent",
+                "Enable": true,
+                "FollowBoneName": "",
+                "Position": [0,0,0],
+                "Rotation": [-0,0,-0,1],
+                "Scale": [1,1,1]
+              },
+              {
+                "ClassName": "SpriteComponent",
+                "Color": [1,1,1,1],
+                "Enable": true,
+                "Pivot": [0.5,0.5],
+                "SrcRect": [0,0,1280,720],
+                "TexFilename": "Data\\Texture\\title.png"
+              }
+            ],
+            "Enable": true,
+            "Mass": 1,
+            "Name": "Image"
+          }
+        ],
+        "Components": [
+          {
+            "ClassName": "TransformComponent",
+            "Enable": true,
+            "FollowBoneName": "",
+            "Position": [0,0,0],
+            "Rotation": [-0,0,-0,1],
+            "Scale": [1,1,1]
+          },
+          {
+            "ClassName": "PlayerInputComponent",
+            "Enable": true
+          },
+          {
+            "ClassName": "TitleController",
+            "Enable": true
+          }
+        ],
+        "Enable": true,
+        "Mass": 1,
+        "Name": "Title"
+      }
+    ],
+    "Components": [
+      {
+        "ClassName": "TransformComponent",
+        "Enable": true,
+        "FollowBoneName": "",
+        "Position": [0,0,0],
+        "Rotation": [-0,0,-0,1],
+        "Scale": [1,1,1]
+      }
+    ],
+    "Enable": true,
+    "Mass": 1,
+    "Name": "Root"
+  }
+}

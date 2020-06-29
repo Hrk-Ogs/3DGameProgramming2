@@ -35,7 +35,7 @@ public:
 		KdJsonGet(jsonData["Color"], m_color);
 		KdJsonGet(jsonData["Pivot"], m_pivot);
 
-		auto& rectAry = jsonData["srcRect"].array_items();
+		auto& rectAry = jsonData["SrcRect"].array_items();
 		KdJsonGet(rectAry[0], m_srcRect.x);
 		KdJsonGet(rectAry[1], m_srcRect.y);
 		KdJsonGet(rectAry[2], m_srcRect.width);
