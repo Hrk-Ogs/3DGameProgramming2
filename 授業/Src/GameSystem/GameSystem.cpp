@@ -231,6 +231,51 @@ void GameSystem::Editor_ImGuiUpdate()
 	// GameSystem
 	//===============================================
 	if (ImGui::Begin("GameSystem")){
+
+		//---------------------
+// エディター設定
+//---------------------
+
+// 実行/停止
+		if (ImGui::Checkbox(u8"実行", &m_isPlay)) {
+			// 実行前Levelをシリアライズしたもの置き場
+			static json11::Json::object sSerialLevel;
+
+			// 実行
+			if (m_isPlay) {
+				// 現在Levelの状態をシリアライズしておく
+				m_level->Serialize(sSerialLevel);
+
+				// 読み込みなども再現するため、一度リソース関係を全解放
+				// （今回はすばやく実行したいので、ここはコメントにする）
+				//m_editorData.LogWindow.AddLog(u8"リソース全解放");
+				//KDResFactory.Clear():
+
+				// デシリアライズで初期化
+				m_level->Deserialize(sSerialLevel);
+			}
+			// 停止
+			else {
+				// 読み込みなども再現するため、一度リソースを全解放
+				//m_editorData.LogWindow.AddLog(u8"リソースを全解放");
+				//KDResFactory.Clear();
+
+				// 再生前の状態へ戻す
+				m_level->Deserialize(sSerialLevel);
+			}
+		}
+
+		// 実行時のみCheckBoxを表示する
+		if (m_isPlay) {
+			ImGui::Indent();
+			ImGui::Checkbox("FreeCamer Mode", &m_editorData.FreeCameraMode);
+			ImGui::Unindent();
+		}
+		ImGui::Separator();
+
+
+
+
 		//------------------
 		// ImGuizmoの操作設定
 		//------------------
@@ -262,47 +307,6 @@ void GameSystem::Editor_ImGuiUpdate()
 	// Levelウィンドウ
 	//===============================================
 	if (ImGui::Begin("Level", 0, ImGuiWindowFlags_MenuBar)) {
-
-		//---------------------
-		// エディター設定
-		//---------------------
-
-		// 実行/停止
-		if (ImGui::Checkbox(u8"実行", &m_isPlay)) {
-			// 実行前Levelをシリアライズしたもの置き場
-			static json11::Json::object sSerialLevel;
-
-			// 実行
-			if (m_isPlay) {
-				// 現在Levelの状態をシリアライズしておく
-				m_level->Serialize(sSerialLevel);
-
-				// 読み込みなども再現するため、一度リソース関係を全解放
-				// （今回はすばやく実行したいので、ここはコメントにする）
-				//m_editorData.LogWindow.AddLog(u8"リソース全解放");
-				//KDResFactory.Clear():
-
-				// デシリアライズで初期化
-				m_level->Deserialize(sSerialLevel);
-			}
-			// 停止
-			else{
-				// 読み込みなども再現するため、一度リソースを全解放
-				//m_editorData.LogWindow.AddLog(u8"リソースを全解放");
-				//KDResFactory.Clear();
-
-				// 再生前の状態へ戻す
-				m_level->Deserialize(sSerialLevel);
-			}
-		}
-
-		// 実行時のみCheckBoxを表示する
-		if (m_isPlay) {
-			ImGui::Indent();
-			ImGui::Checkbox("FreeCamer Mode", &m_editorData.FreeCameraMode);
-			ImGui::Unindent();
-		}
-		ImGui::Separator();
 
 		//-------------------
 		// メインメニュー

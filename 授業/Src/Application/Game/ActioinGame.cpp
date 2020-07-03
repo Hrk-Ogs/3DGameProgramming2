@@ -40,6 +40,24 @@ void CharacterController::Update()
 	if (m_nowState) {
 		m_nowState->Update();
 	}
+	
+	//--------------------------------
+	// 視点回転
+	//--------------------------------
+	{
+		const float kMaxAngle = 2;	// カメラの回転速度
+		
+		// 子GameObjectの”Camera”を回転させる
+		auto camObj = GetOwner()->Find("Camera");
+		if (camObj) {
+			// CharacterCamerControllerを取得
+			auto compCtrl = camObj->GetComponent<CharacteCameraController>();
+			if (compCtrl) {
+				// Y軸回転
+				compCtrl->CamAngles().y += input->GetAxis(GameAxes::R).x * kMaxAngle;
+			}
+		}
+	}
 
 }
 
@@ -94,9 +112,83 @@ void CharacterController::State_Run::Update()
 		model->Animator().CrossFade(anim, 0.2f, true);
 	}
 
-	// 移動処理
-	auto pos = m_chara->GetOwner()->Transform()->GetPosition();
-	pos.z += 0.02f;
-	m_chara->GetOwner()->Transform()->SetPosition(pos);
+	//--------------------------
+	// カメラベース移動
+	//--------------------------
+	auto camObj = m_chara->GetOwner()->Find("Camera");
+
+	KdVec3 vDir;
+	if (camObj) {
+		// カメラGameObjectの行列(ワールド行列）
+		KdMatrix mCamWorld = camObj->Transform()->GetMatrix();
+		// 方向キーの情報から、移動方向を決定する
+		vDir += mCamWorld.Forward() * input->GetAxis(GameAxes::L).y;
+		vDir += mCamWorld.Right() * input->GetAxis(GameAxes::L).x;
+		vDir.y = 0;
+		vDir.Normalize();
+
+		if (vDir.Length() > 0) {
+			// キャラのTransformを取得
+			auto charaTrans = m_chara->GetOwner()->Transform();
+			
+			//-------------
+			// 回転
+			//-------------
+			KdVec3 vCharaZ = charaTrans->GetRotation().Forward();
+			// Yを潰し、XZ平面に平行にする。
+			vCharaZ.y = 0;
+			vCharaZ.Normalize();
+
+			// キャラの向きベクトルを、指定方向に指定角度だけ向ける
+			constexpr float kMaxAngle = 15;	// 最大回転角度
+			vCharaZ.LookTo(vDir, kMaxAngle * KdToRadians);
+
+			// 自分の回転（クオータニオン）取得
+			KdQuaternion rota = charaTrans->GetRotation();
+			// 回転を指定方向へ向け、セットする
+			rota.LookTo(vCharaZ, { 0,1,0 });
+			charaTrans->SetRotation(rota);
+			
+			//-------------
+			// 移動
+			//-------------
+			const float kSpeed = 0.05f;	// 移動速度
+			
+			KdVec3 pos = charaTrans->GetPosition();
+			pos += vDir * kSpeed;
+			charaTrans->SetPosition(pos);
+		}
+
+
+	}
+}
+
+void CharacteCameraController::Update()
+{
+
+	if (m_enable == false)return;
+	//if (GAMESYS.IsPlay() == false)return;	// エディター時でも動作させる
+
+	// 親のGameObject
+	auto parent = GetOwner()->GetParent();
+	if (parent) {
+		// 親の変換行列
+		auto& parentTransform = parent->Transform();
+
+		// 親の行列から、カメラの行列を決定する
+		KdMatrix camMat;
+		// オフセット座標分移動
+		camMat.Move(m_camOffset);
+
+		// 回転
+		camMat.RotateX(m_camAngles.x * KdToRadians);
+		camMat.RotateY(m_camAngles.y * KdToRadians);
+
+		// 親の「座標のみ」を加算
+		camMat.Move(parentTransform->GetMatrix().Translation());
+
+		// セット
+		GetOwner()->Transform()->SetMatrix(camMat);
+	}
 
 }

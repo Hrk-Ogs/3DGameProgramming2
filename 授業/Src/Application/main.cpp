@@ -143,6 +143,7 @@ void Application::Execute()
 	// ゲーム用のコンポーネントクラス登録
 	ComponentClassMaker::GetInstance().Register<TitleController>();
 	ComponentClassMaker::GetInstance().Register<CharacterController>();
+	ComponentClassMaker::GetInstance().Register<CharacteCameraController>();
 
 	// 世界の初期設定をする
 	GAMESYS.Init();

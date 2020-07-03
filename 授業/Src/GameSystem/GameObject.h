@@ -95,6 +95,9 @@ public:
 	// 親を取得
 	KdSptr<GameObject> GetParent() const { return m_parent.lock(); }
 
+	// 指定した名前と一致するGameObjectを検索（自分以下を全て）
+	KdSptr<GameObject>Find(std::string_view name);
+
 
 	//=========================================
 	// シリアライズ/デシリアライズ

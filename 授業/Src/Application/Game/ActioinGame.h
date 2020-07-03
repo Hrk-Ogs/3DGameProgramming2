@@ -114,3 +114,59 @@ private:
 
 };
 
+//=================================================
+//
+// TPS系カメラの動きをするコンポーネント（CamerComponentではない）
+//
+//=================================================
+class CharacteCameraController : public BaseComponent
+{
+public:
+	// パラメータ取得・設定
+	KdVec2& CamAngles() { return m_camAngles; }
+	KdVec3& CamOffset() { return m_camOffset; }
+
+	// 更新処理
+	virtual void Update()override;
+
+	// ImGui処理
+	virtual void Editor_ImGuiUpdate()override
+	{
+		BaseComponent::Editor_ImGuiUpdate();
+
+		ImGui::DragFloat2(u8"カメラ角度", &m_camAngles.x, 0.1f);
+		ImGui::DragFloat3(u8"カメラオフセット", &m_camOffset.x, 0.01f);
+	}
+
+	//==============================
+	// Serialize/Deserialize
+	//==============================
+	// JSONデータから、クラスの内容を設定
+	virtual void Deserialize(const json11::Json& jsonData) 
+	{
+		BaseComponent::Deserialize(jsonData);
+
+		KdJsonGet(jsonData["CamAngles"], m_camAngles);
+		KdJsonGet(jsonData["CamOffset"], m_camOffset);
+	}
+
+	// このクラスの内容をJSONデータ化する
+	virtual void Serialize(json11::Json::object& outJsonObj)const
+	{
+		BaseComponent::Serialize(outJsonObj);
+
+		outJsonObj["CamAngles"] = m_camAngles.ToArray();
+		outJsonObj["CamOffset"] = m_camOffset.ToArray();
+	}
+
+private:
+
+	// カメラ角度
+	KdVec2 m_camAngles;
+	// 
+	KdVec3 m_camOffset;
+
+};
+
+
+

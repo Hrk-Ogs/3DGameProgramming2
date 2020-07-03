@@ -91,6 +91,21 @@ void GameObject::SetParent(const KdSptr<GameObject>& newParent)
 
 }
 
+KdSptr<GameObject> GameObject::Find(std::string_view name)
+{
+	// 名前を判定
+	if (m_name == name)return shared_from_this();
+
+	// 子も検索
+	for (auto&& child : m_children) {
+		auto ret = child->Find(name);
+		// 見つかったらそのまま返す
+		if (ret)return ret;
+	}
+
+	return nullptr;
+}
+
 void GameObject::Deserialize(const json11::Json& jsonObj)
 {
 	// 有効フラグ
