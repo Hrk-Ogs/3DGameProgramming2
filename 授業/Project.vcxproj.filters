@@ -255,6 +255,9 @@
     <ClInclude Include="Src\GameSystem\Component\Collider\SphereColliderComponent.h">
       <Filter>Src\GameSystem\Component\Collider</Filter>
     </ClInclude>
+    <ClInclude Include="..\Library\imgui\ImGuizmo.h">
+      <Filter>Library\imgui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -412,6 +415,9 @@
     </ClCompile>
     <ClCompile Include="Src\GameSystem\Component\Collider\SphereColliderComponent.cpp">
       <Filter>Src\GameSystem\Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Library\imgui\ImGuizmo.cpp">
+      <Filter>Library\imgui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

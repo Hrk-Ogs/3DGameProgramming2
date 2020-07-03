@@ -74,6 +74,10 @@ public:
 		KdWptr<GameObject>	SelectObj;
 		// ログウィンドウ
 		ImGuiLogWindow		LogWindow;
+
+		// ImGuizmo
+		ImGuizmo::MODE		GizmoMode = ImGuizmo::LOCAL;	// 座標系モード
+		ImGuizmo::OPERATION	GizmoOperation = ImGuizmo::TRANSLATE;	// 操作モード
 	};
 
 	EditorData	m_editorData;

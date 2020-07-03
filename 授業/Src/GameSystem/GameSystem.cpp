@@ -68,7 +68,8 @@ void GameSystem::Run()
 	// ImGui Demo ウィンドウ表示 ※すごく参考になるウィンドウです。imgui_demo.cpp参照。
 	ImGui::ShowDemoWindow(nullptr);
 
-
+	// ImGuizmo開始
+	ImGuizmo::BeginFrame();
 
 	//==========================
 	// GameObjectを収集
@@ -226,6 +227,37 @@ void GameSystem::Run()
 // ImGui系の処理
 void GameSystem::Editor_ImGuiUpdate()
 {
+	//===============================================
+	// GameSystem
+	//===============================================
+	if (ImGui::Begin("GameSystem")){
+		//------------------
+		// ImGuizmoの操作設定
+		//------------------
+		if (ImGui::CollapsingHeader("Gizmo", ImGuiTreeNodeFlags_DefaultOpen)){
+			if (ImGui::RadioButton("Local", m_editorData.GizmoMode == ImGuizmo::LOCAL)) {
+				m_editorData.GizmoMode = ImGuizmo::LOCAL;
+			}
+			ImGui::SameLine();
+			if (ImGui::RadioButton("World", m_editorData.GizmoMode == ImGuizmo::WORLD)) {
+				m_editorData.GizmoMode = ImGuizmo::WORLD;
+			}
+			if (ImGui::RadioButton(u8"移動", m_editorData.GizmoOperation == ImGuizmo::TRANSLATE)) {
+				m_editorData.GizmoOperation = ImGuizmo::TRANSLATE;
+			}
+			ImGui::SameLine();
+			if (ImGui::RadioButton(u8"回転", m_editorData.GizmoOperation == ImGuizmo::ROTATE)) {
+				m_editorData.GizmoOperation = ImGuizmo::ROTATE;
+			}
+			ImGui::SameLine();
+			if (ImGui::RadioButton(u8"拡大", m_editorData.GizmoOperation == ImGuizmo::SCALE)) {
+				m_editorData.GizmoOperation = ImGuizmo::SCALE;
+			}
+		}
+	}
+	ImGui::End();
+
+	
 	//===============================================
 	// Levelウィンドウ
 	//===============================================

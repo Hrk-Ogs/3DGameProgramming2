@@ -29,7 +29,7 @@ public:
 	void SetLocalMatrix(const KdMatrix& mat) 
 	{
 		m_worldMatrix = mat;
-		WorldToLocal();		// セットされたワールド行列からローカル行列を計算する
+		LocalToWorld();		// セットされたワールド行列からローカル行列を計算する
 	}
 
 	// ローカル拡縮セット
@@ -98,7 +98,7 @@ public:
 	void SetMatrix(const KdMatrix& mat) 
 	{
 		m_worldMatrix = mat;
-		LocalToWorld();			// セットされたローカル行列からワールド行列を計算する
+		WorldToLocal();			// セットされたワールド行列からローカル行列行列を計算する
 	}
 
 	// 座標セット

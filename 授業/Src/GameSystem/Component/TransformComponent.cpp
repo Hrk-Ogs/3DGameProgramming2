@@ -106,6 +106,21 @@ void TransformComponent::Editor_ImGuiUpdate()
 		ImGui::EndPopup();
 	}
 
+	//----------------------------
+	// ImGuizmo　マニピュレータ表示
+	//----------------------------
+	{
+		KdMatrix mWorld = GetMatrix();
+
+		ImGuiIO io = ImGui::GetIO();
+		ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+		ImGuizmo::Manipulate(&SHADER.m_cb7_Camera.GetWork().mV._11, &SHADER.m_cb7_Camera.GetWork().mP._11, GAMESYS.m_editorData.GizmoOperation, GAMESYS.m_editorData.GizmoMode, &mWorld._11);
+
+		if (ImGuizmo::IsUsing()) {
+			SetMatrix(mWorld);
+		}
+	}
+
 }
 
 void TransformComponent::Deserialize(const json11::Json& jsonObj)
