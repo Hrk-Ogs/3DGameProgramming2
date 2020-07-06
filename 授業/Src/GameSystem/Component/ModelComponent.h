@@ -21,6 +21,12 @@ public:
 	// アニメータ取得
 	KdAnimator& Animator() { return m_animator; }
 
+	// アニメーションスクリプト時に実行される関数をセット
+	void SetAnimationScriptProc(std::function<void(const KdKeyScript&)> scriptProc)
+	{
+		m_onAnimeScriptProc = scriptProc;
+	}
+
 	//===============================
 	// 動作処理
 	//===============================
@@ -79,6 +85,9 @@ private:
 
 	// ノードアウトライナー　ノード（ボーン）の扱い専門
 	KdNodeOutliner			m_nodeOL;
+
+	// アニメーションスクリプトコールバック関数オブジェクト
+	std::function<void(const KdKeyScript&)> m_onAnimeScriptProc;
 
 	// アニメーター
 	KdAnimator				m_animator;

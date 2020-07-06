@@ -11,6 +11,11 @@ void CharacterController::Start()
 	//============================
 	m_stateStorage["Stand"] = std::make_shared<State_Stand>();
 	m_stateStorage["Run"] = std::make_shared<State_Run>();
+	m_stateStorage["JumpStart"] = std::make_shared<State_JumpStart>();
+	m_stateStorage["Jump"] = std::make_shared<State_Jump>();
+	m_stateStorage["Landing"] = std::make_shared<State_Landing>();
+	m_stateStorage["Attack"] = std::make_shared<State_Attack>();
+
 	// 全行動クラスに持ち主キャラのアドレスを入れておく
 	for (auto&& state : m_stateStorage) {
 		// state.first;　→キーの名前が入っている
@@ -33,6 +38,24 @@ void CharacterController::Update()
 	auto input = GetOwner()->GetComponent<InputComponent>();
 	if (input == nullptr)return;
 
+	// スクリプトキーが来たときにこの関数を実行してもらう
+	auto onScript = [](const KdKeyScript& script) {
+		std::string type = script.JsonData["Type"].string_value();
+		if (type == "Attack") {
+			GAMESYS.m_editorData.LogWindow.AddLog("Attack!!");
+		}
+		else if (type == "AttackCancel") {
+			GAMESYS.m_editorData.LogWindow.AddLog("Cansel!!");
+		}
+
+	};
+
+	// スクリプト関数をModelComponentに渡す
+	auto model = GetOwner()->GetComponent<ModelComponent>();
+	if (model) {
+		model->SetAnimationScriptProc(onScript);
+	}
+
 	//-------------------------------
 	// 行動ステート処理実行
 	//-------------------------------
@@ -40,6 +63,54 @@ void CharacterController::Update()
 	if (m_nowState) {
 		m_nowState->Update();
 	}
+	
+	//--------------------------------
+	// 力による移動
+	//--------------------------------
+	KdVec3 pos = GetOwner()->Transform()->GetPosition();	// 座標取得
+	pos += m_vForce;		// 座標に力を加算
+	GetOwner()->Transform()->SetPosition(pos);		// 座標をセット
+	
+	//--------------------------------
+	// 地面の設置を検知する
+	//--------------------------------
+	{
+		// (仮）設置相手をリセット
+		m_wpGround.reset();
+
+		// レイコライダーを取得
+		auto ray = GetOwner()->GetComponent<RayColliderComponent>();
+		if (ray) {
+			// ヒット時に実行される関数
+			ray->m_onHitStay = [this](ColliderComponent* collider) {	// ラムダ式
+				// レイがヒットした
+
+				// 最も近いやつを探し
+				float closestDist = FLT_MAX;
+				KdSptr<GameObject> closestObj;
+				// ヒットしたもの全て
+				for (auto&& res : collider->GetResults()) {
+					// より近い距離でひっとしてる
+					if (res.Dist < closestDist) {
+						// 情報を記憶
+						closestDist = res.Dist;
+						closestObj = res.Collider->GetOwner();
+					}
+
+				}
+
+				// 下移動している時のみ
+				if (m_vForce.y <= 0) {
+					// 接地キャラを把握
+					m_wpGround = closestObj;
+				}
+
+				// Y方向の力をリセット
+				m_vForce.y = 0;
+			};
+		}
+	}
+	
 	
 	//--------------------------------
 	// 視点回転
@@ -71,9 +142,6 @@ void CharacterController::Editor_ImGuiUpdate()
 
 void CharacterController::State_Stand::Update()
 {
-	// 立ち状態の時のみの処理を書く
-	GAMESYS.m_editorData.LogWindow.AddLog("Stand!!");
-
 		// 入力コンポーネント取得
 	auto input = m_chara->GetOwner()->GetComponent<InputComponent>();
 
@@ -86,16 +154,59 @@ void CharacterController::State_Stand::Update()
 		auto model = m_chara->GetOwner()->GetComponent<ModelComponent>();
 		// 走りアニメーションデータを取得
 		auto anim = model->GetModel()->GetAnimation("Run");
+		// アニメーションへ切り替え
 		model->Animator().CrossFade(anim, 0.2f, true);
 	}
+
+	// ジャンプ
+	if (input->IsButtonPressed(GameButtons::B)) {
+		// 「ジャンプ」行動へ切り替える
+		auto state = std::dynamic_pointer_cast<State_JumpStart>(m_chara->m_stateStorage.at("JumpStart"));
+		state->m_force = { 0,0.2f,0 };	// 上方向
+		m_chara->m_nowState = state;
+
+		// 「ジャンプ」アニメーションへ変更
+		auto model = m_chara->GetOwner()->GetComponent<ModelComponent>();
+		// ジャンプアニメーションデータを取得
+		auto anim = model->GetModel()->GetAnimation("JumpStart");
+		// アニメーションへ切り替え
+		model->Animator().CrossFade(anim, 1.0f, false);
+	}
+
+	// いま空中か
+	if (m_chara->m_wpGround.expired() == true) {
+		// 行動ステート変更
+		m_chara->m_nowState = m_chara->m_stateStorage.at("Jump");
+
+		// アニメーション変更
+		auto model = m_chara->GetOwner()->GetComponent<ModelComponent>();
+		auto anim = model->GetModel()->GetAnimation("Jump");
+		model->Animator().CrossFade(anim, 0.1f, false);
+	}
+
+	// 攻撃
+	if (input->IsButtonPressed(GameButtons::A)) {
+		// 「攻撃」行動へ切り替える
+		m_chara->m_nowState = m_chara->m_stateStorage.at("Attack");
+
+		// 「攻撃」アニメーションへ変更
+		auto model = m_chara->GetOwner()->GetComponent<ModelComponent>();
+		// 攻撃アニメーションデータを取得
+		auto anim = model->GetModel()->GetAnimation("Attack_Slash1_Root");
+		// アニメーションへ切り替え
+		model->Animator().CrossFade(anim, 0.5f, false);
+	}
+
+	// 重力
+	m_chara->CalcGravity();
+	// 摩擦
+	m_chara->CalcFriction();
+
 
 }
 
 void CharacterController::State_Run::Update()
 {
-	// 走り状態の時のみの処理を書く
-	GAMESYS.m_editorData.LogWindow.AddLog("Run!!");
-
 	// 入力コンポーネント取得
 	auto input = m_chara->GetOwner()->GetComponent<InputComponent>();
 
@@ -111,6 +222,8 @@ void CharacterController::State_Run::Update()
 		// そのアニメーションへの切り替え
 		model->Animator().CrossFade(anim, 0.2f, true);
 	}
+
+
 
 	//--------------------------
 	// カメラベース移動
@@ -158,10 +271,153 @@ void CharacterController::State_Run::Update()
 			pos += vDir * kSpeed;
 			charaTrans->SetPosition(pos);
 		}
-
-
 	}
+
+	// ジャンプ
+	if (input->IsButtonPressed(GameButtons::B)) {
+		// 「ジャンプ」行動へ切り替える
+		auto state = std::dynamic_pointer_cast<State_JumpStart>(m_chara->m_stateStorage.at("JumpStart"));
+		state->m_force = { 0,0.2f,0 };	// 上方向
+		state->m_force += vDir * 0.1f;
+		m_chara->m_nowState = state;
+
+		// 「ジャンプ」アニメーションへ変更
+		auto model = m_chara->GetOwner()->GetComponent<ModelComponent>();
+		// ジャンプアニメーションデータを取得
+		auto anim = model->GetModel()->GetAnimation("JumpStart");
+		// アニメーションへ切り替え
+		model->Animator().CrossFade(anim, 1.0f, false);
+	}
+
+	// いま空中か
+	if (m_chara->m_wpGround.expired() == true) {
+		// 行動ステート変更
+		m_chara->m_nowState = m_chara->m_stateStorage.at("Jump");
+
+		// アニメーション変更
+		auto model = m_chara->GetOwner()->GetComponent<ModelComponent>();
+		auto anim = model->GetModel()->GetAnimation("Jump");
+		model->Animator().CrossFade(anim, 0.1f, false);
+	}
+
+	// 攻撃
+	if (input->IsButtonPressed(GameButtons::A)) {
+		// 「攻撃」行動へ切り替える
+		m_chara->m_nowState = m_chara->m_stateStorage.at("Attack");
+
+		// 「攻撃」アニメーションへ変更
+		auto model = m_chara->GetOwner()->GetComponent<ModelComponent>();
+		// 攻撃アニメーションデータを取得
+		auto anim = model->GetModel()->GetAnimation("Attack_Slash1_Root");
+		// アニメーションへ切り替え
+		model->Animator().CrossFade(anim, 0.5f, false);
+	}
+
+	// 重力
+	m_chara->CalcGravity();
+	// 摩擦
+	m_chara->CalcFriction();
 }
+
+
+void CharacterController::State_JumpStart::Update()
+{
+	// 
+	GAMESYS.m_editorData.LogWindow.AddLog("JumpStart!!");
+
+	// ModelComponent取得
+	auto model = m_chara->GetOwner()->GetComponent<ModelComponent>();
+
+	// アニメ終了した
+	if (model->Animator().IsAnimationEnd()) {
+		// 行動ステート変更
+		m_chara->m_nowState = m_chara->m_stateStorage.at("Jump");
+
+		// アニメーション変更
+		auto model = m_chara->GetOwner()->GetComponent<ModelComponent>();
+		auto anim = model->GetModel()->GetAnimation("Jump");
+		model->Animator().CrossFade(anim, 0.05f, true);
+
+		// 力を入れる
+		m_chara->m_vForce = m_force;
+	}
+	// 重力
+	m_chara->CalcGravity();
+	// 摩擦処理
+	m_chara->CalcFriction();
+}
+
+void CharacterController::State_Jump::Update()
+{
+	// 立ち状態の時のみの処理を書く
+	GAMESYS.m_editorData.LogWindow.AddLog("Jump!!");
+
+	// ModelComponent取得
+	auto model = m_chara->GetOwner()->GetComponent<ModelComponent>();
+
+	// 今地面か
+	if (m_chara->m_wpGround.expired() == false) {
+		// 行動ステートを変更
+		m_chara->m_nowState = m_chara->m_stateStorage.at("Landing");
+
+		// アニメーション変更
+		auto anim = model->GetModel()->GetAnimation("Landing");
+		model->Animator().CrossFade(anim, 1.0f, false);
+	}
+
+	// 重力
+	m_chara->CalcGravity();
+	// 摩擦
+	m_chara->CalcFriction();
+}
+
+void CharacterController::State_Landing::Update()
+{
+	// 立ち状態の時のみの処理を書く
+	GAMESYS.m_editorData.LogWindow.AddLog("Landing!!");
+
+	// ModelComponent取得
+	auto model = m_chara->GetOwner()->GetComponent<ModelComponent>();
+
+	// アニメ終了
+	if (model->Animator().IsAnimationEnd()) {
+		// 行動ステートを変更
+		m_chara->m_nowState = m_chara->m_stateStorage.at("Stand");
+
+		// アニメーション変更
+		auto anim = model->GetModel()->GetAnimation("Stand");
+		model->Animator().CrossFade(anim, 0.5f, true);
+	}
+
+	// 重力
+	m_chara->CalcGravity();
+	// 摩擦
+	m_chara->CalcFriction();
+}
+
+void CharacterController::State_Attack::Update()
+{
+	// ModelComponent取得
+	auto model = m_chara->GetOwner()->GetComponent<ModelComponent>();
+
+	// アニメ終了
+	if (model->Animator().IsAnimationEnd()) {
+		// 行動ステートを変更
+		m_chara->m_nowState = m_chara->m_stateStorage.at("Stand");
+
+		// アニメーション変更
+		auto anim = model->GetModel()->GetAnimation("Stand");
+		model->Animator().CrossFade(anim, 0.5f, true);
+	}
+
+	// 重力
+	m_chara->CalcGravity();
+	// 摩擦
+	m_chara->CalcFriction();
+
+}
+
+
 
 void CharacteCameraController::Update()
 {
@@ -192,3 +448,4 @@ void CharacteCameraController::Update()
 	}
 
 }
+

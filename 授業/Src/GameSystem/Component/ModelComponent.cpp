@@ -28,7 +28,8 @@ void ModelComponent::Update()
 
 	// アニメーション進行
 	if (GAMESYS.IsPlay()) {
-		m_animator.AdvanceTime(m_animationSpeed, m_nodeOL, nullptr);
+		// アニメーションを進める
+		m_animator.AdvanceTime(m_animationSpeed, m_nodeOL, m_onAnimeScriptProc);
 	}
 
 	// 全ノードの行列計算
