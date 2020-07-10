@@ -409,3 +409,22 @@ void GameSystem::Editor_ImGuiUpdate()
 
 
 }
+
+KdSptr<GameObject> GameSystem::Instantiate(const std::string& prefabFilename)
+{
+	// Prefabファイル読み込み
+	json11::Json jsn = KDResFactory.GetJSON(prefabFilename);
+	if (jsn.is_object()) {
+		// GameObject生成
+		KdSptr<GameObject> newObj = std::make_shared<GameObject>();
+		// JSONデータを流し込む
+		newObj->Deserialize(jsn);
+		// とりあえずルートの子にする
+		newObj->SetParent(m_level->GetRootObject());
+		// 生成したGameObjectを返す
+		return newObj;
+	}
+
+	// 失敗時はnullを返す
+	return nullptr;
+}

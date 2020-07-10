@@ -1,7 +1,7 @@
 {
 	"Animations":[
 		{
-			"Name":"Attack_Slash1_Root"
+			"Name":"Attack_Slash1_Root",
 			"Scripts":[
 				{
 					"Time": 15,
@@ -11,6 +11,11 @@
 					"Duration": 5,
 					"HitStop": 10,
 					"HitInterval": 10
+				},
+				{
+					"Time": 20,
+					"Type": "PopPrefab",
+					"PrefabFilename": "Data\\Effect\\HitEffect.pref"
 				},
 				{
 					"Time": 30,

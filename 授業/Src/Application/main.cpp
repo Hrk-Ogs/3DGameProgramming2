@@ -144,6 +144,7 @@ void Application::Execute()
 	ComponentClassMaker::GetInstance().Register<TitleController>();
 	ComponentClassMaker::GetInstance().Register<CharacterController>();
 	ComponentClassMaker::GetInstance().Register<CharacteCameraController>();
+	ComponentClassMaker::GetInstance().Register<WeaponScript>();
 
 	// 世界の初期設定をする
 	GAMESYS.Init();

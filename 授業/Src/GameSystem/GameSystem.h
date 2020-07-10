@@ -55,6 +55,9 @@ public:
 	// 実行中？
 	bool IsPlay() const { return m_isPlay; }
 
+	// Prefabファイルをインスタンス化しLevelに追加する
+	KdSptr<GameObject> Instantiate(const std::string& prefabFilename);
+
 	// レベル切り替え（予約）
 	void ChangeLevel(const std::string& levelFilename)
 	{

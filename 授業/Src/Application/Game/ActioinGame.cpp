@@ -15,6 +15,8 @@ void CharacterController::Start()
 	m_stateStorage["Jump"] = std::make_shared<State_Jump>();
 	m_stateStorage["Landing"] = std::make_shared<State_Landing>();
 	m_stateStorage["Attack"] = std::make_shared<State_Attack>();
+	m_stateStorage["Attack"] = std::make_shared<State_Stagger>();
+	m_stateStorage["Attack"] = std::make_shared<State_Die>();
 
 	// 全行動クラスに持ち主キャラのアドレスを入れておく
 	for (auto&& state : m_stateStorage) {
@@ -38,14 +40,30 @@ void CharacterController::Update()
 	auto input = GetOwner()->GetComponent<InputComponent>();
 	if (input == nullptr)return;
 
+
+	//------------------------
+	// アニメーションスクリプト関数
+	//------------------------
 	// スクリプトキーが来たときにこの関数を実行してもらう
-	auto onScript = [](const KdKeyScript& script) {
+	auto onScript = [this](const KdKeyScript& script) {
 		std::string type = script.JsonData["Type"].string_value();
+
 		if (type == "Attack") {
 			GAMESYS.m_editorData.LogWindow.AddLog("Attack!!");
 		}
 		else if (type == "AttackCancel") {
 			GAMESYS.m_editorData.LogWindow.AddLog("Cansel!!");
+		}
+		else if (type == "PopPrefab") {
+			std::string filename;
+			KdJsonGet(script.JsonData["PrefabFilename"], filename);
+
+			// Prefab生成
+			auto newObj = GAMESYS.Instantiate(filename);
+			// 座標をセットする
+			auto myPos = GetOwner()->Transform()->GetPosition();
+			newObj->Transform()->SetPosition(myPos);
+			
 		}
 
 	};
@@ -132,14 +150,68 @@ void CharacterController::Update()
 
 }
 
+bool CharacterController::OnDamage(const DamageArg& dmg, DamageReply& rep)
+{
+
+	// HPを減らす
+	m_hp -= dmg.AtkPower;
+
+	// 生きてる
+	if (m_hp > 0) {
+		// よろけへ
+		m_nowState = m_stateStorage.at("Stagger");
+
+		// アニメーション変更
+		auto model = GetOwner()->GetComponent<ModelComponent>();
+		auto anim = model->GetModel()->GetAnimation("KnockBack_Front_Root");
+		model->Animator().CrossFade(anim, 1.0f, false);
+	}
+	// HPが0を下回った
+	else {
+		m_hp = 0;
+
+		// 死亡行動へ切り替え
+		auto state = std::dynamic_pointer_cast<State_Die>(m_stateStorage.at("Die"));
+		state->Reset();
+		m_nowState = state;
+
+		// アニメーション変更
+		auto model = GetOwner()->GetComponent<ModelComponent>();
+		auto anim = model->GetModel()->GetAnimation("Die_Root");
+		model->Animator().CrossFade(anim, 1.0f, false);
+
+		// 力をリセット
+		m_vForce = { 0,0,0 };
+
+		// 全コライダーOFF（地面判定とかぶつかり判定とかを無効にする）
+		std::vector<KdSptr<ColliderComponent>> colliders;
+		GetOwner()->GetComponents(colliders);
+		for (auto&& collier : colliders) {
+			collier->SetEnable(false);
+		}
+	}
+
+	// 返信
+	rep.IsGuard = false;
+
+	return true;
+
+	// ログ
+	GAMESYS.m_editorData.LogWindow.AddLog("hitd");
+
+}
+
 void CharacterController::Editor_ImGuiUpdate()
 {
-	BaseComponent::Editor_ImGuiUpdate();
+	BaseCharacter::Editor_ImGuiUpdate();
 	// Hp設定
 	ImGui::InputInt("Hp", &m_hp);
 
 }
 
+//-----------------------------
+// 立ち
+//-----------------------------
 void CharacterController::State_Stand::Update()
 {
 		// 入力コンポーネント取得
@@ -205,6 +277,9 @@ void CharacterController::State_Stand::Update()
 
 }
 
+//-----------------------------
+// 走る
+//-----------------------------
 void CharacterController::State_Run::Update()
 {
 	// 入力コンポーネント取得
@@ -319,7 +394,9 @@ void CharacterController::State_Run::Update()
 	m_chara->CalcFriction();
 }
 
-
+//-----------------------------
+// ジャンプ開始
+//-----------------------------
 void CharacterController::State_JumpStart::Update()
 {
 	// 
@@ -347,6 +424,9 @@ void CharacterController::State_JumpStart::Update()
 	m_chara->CalcFriction();
 }
 
+//-----------------------------
+// ジャンプ
+//-----------------------------
 void CharacterController::State_Jump::Update()
 {
 	// 立ち状態の時のみの処理を書く
@@ -371,6 +451,9 @@ void CharacterController::State_Jump::Update()
 	m_chara->CalcFriction();
 }
 
+//-----------------------------
+// 着地
+//-----------------------------
 void CharacterController::State_Landing::Update()
 {
 	// 立ち状態の時のみの処理を書く
@@ -395,6 +478,9 @@ void CharacterController::State_Landing::Update()
 	m_chara->CalcFriction();
 }
 
+//-----------------------------
+// 攻撃
+//-----------------------------
 void CharacterController::State_Attack::Update()
 {
 	// ModelComponent取得
@@ -414,6 +500,45 @@ void CharacterController::State_Attack::Update()
 	m_chara->CalcGravity();
 	// 摩擦
 	m_chara->CalcFriction();
+
+}
+
+//-----------------------------
+// よろけ
+//-----------------------------
+void CharacterController::State_Stagger::Update()
+{
+	// ModelComponent取得
+	auto model = m_chara->GetOwner()->GetComponent<ModelComponent>();
+
+	// アニメ終了
+	if (model->Animator().IsAnimationEnd()) {
+		// 行動ステートを変更
+		m_chara->m_nowState = m_chara->m_stateStorage.at("Stand");
+
+		// アニメーション変更
+		auto model = m_chara->GetOwner()->GetComponent<ModelComponent>();
+		auto anim = model->GetModel()->GetAnimation("Stand");
+		model->Animator().CrossFade(anim, 0.5f, true);
+	}
+
+}
+
+//-----------------------------
+// 死亡
+//-----------------------------
+void CharacterController::State_Die::Update()
+{
+	// ModelComponent取得
+	auto model = m_chara->GetOwner()->GetComponent<ModelComponent>();
+
+	// アニメ終了
+	if (model->Animator().IsAnimationEnd()) {
+		m_cnt--;
+		if (m_cnt <= 0) {
+			m_chara->GetOwner()->Destroy();
+		}
+	}
 
 }
 
@@ -447,5 +572,91 @@ void CharacteCameraController::Update()
 		GetOwner()->Transform()->SetMatrix(camMat);
 	}
 
+}
+
+
+void WeaponScript::Update()
+{
+	// 無効時はスキップ
+	if (IsEnable() == false)return;
+	// 停止時はスキップ
+	if (GAMESYS.IsPlay() == false)return;
+
+
+	//--------------
+	// 無視リスト処理
+	//--------------
+	auto it = m_ignoreList.begin();
+	while (it != m_ignoreList.end()) {
+		// カウンタを減らす
+		(*it).second--;
+		// カウンタが0になったら、無視リストから削除
+		if ((*it).second <= 0) {
+			it = m_ignoreList.erase(it);
+		}
+		else {
+			++it;
+		}
+	}
+
+	// 有効カウンター
+	m_enableTime--;
+
+	if (m_enableTime < 0) {
+		m_enableTime = 0;
+	}
+	// 有工事のみヒット処理
+	else {
+		//-------------------
+		// ヒット処理
+		//-------------------
+		// 全コライダー達に、ヒット時処理をセット
+		std::vector<KdSptr<ColliderComponent>> colliders;
+		GetOwner()->GetComponents(colliders, true);
+		for (auto&& collider : colliders) {
+			// ヒット時処理を実行
+			collider->m_onHitStay = [this](ColliderComponent* collider) {
+				// 全ヒット情報
+				for (auto&& res : collider->GetResults()) {
+					// ヒット相手のBaseCharacterコンポーネントを取得
+					auto you = res.Collider->GetOwner()->GetComponent<BaseCharacter>();
+					// 相手はキャラではないので、ダメージ通知はしない
+					if (you == nullptr){
+						continue;
+					}
+
+					// 無視リストにいるキャラなら、ダメージ処理などはしない
+					if (m_ignoreList.count(res.Collider->GetOwner().get()) >= 1) {
+						continue;
+					}
+
+					//-----------------------
+					// ダメージ通知処理
+					//-----------------------
+					DamageArg dmg;	// 通知書
+					dmg.AtkPower = m_param.Power;
+
+					DamageReply rep;
+
+					if (you->OnDamage(dmg, rep)) {
+						// エフェクト
+						auto effectObj = GAMESYS.Instantiate("Data\\Effect\\HitEffect.pref");
+						if (effectObj) {
+							// 座標をヒット位置に変更
+							effectObj->Transform()->SetPosition(res.HitPosList.front());
+						}
+
+						// ヒットしたキャラを一定期間無視化するため、GameObjectのアドレスを登録
+						m_ignoreList[res.Collider->GetOwner().get()] = m_hitInterbal;
+
+						// ログ
+						GAMESYS.m_editorData.LogWindow.AddLog("hit");
+
+					}
+
+				}
+			};
+		}
+	}
 }
 

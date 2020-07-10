@@ -31,6 +31,216 @@
             "Enable": true,
             "Mass": 1,
             "Name": "Camera"
+          },
+          {
+            "Children": [
+              {
+                "Children": [
+                  {
+                    "Children": [],
+                    "Components": [
+                      {
+                        "ClassName": "TransformComponent",
+                        "Enable": true,
+                        "FollowBoneName": "",
+                        "Position": [0.00018465518951416016,2.3428487777709961,-0.00031042098999023438],
+                        "Rotation": [2.8627521686530599e-08,2.164365923817968e-06,2.7304620786594569e-08,1],
+                        "Scale": [0.42724943161010742,2.3913495540618896,0.32851889729499817]
+                      },
+                      {
+                        "AnimationSpeed": 1,
+                        "ClassName": "ModelComponent",
+                        "Enable": true,
+                        "ModelFilename": "Data\\Box\\Box.gltf",
+                        "StartAnimatioinLoop": true,
+                        "StartAnimeName": "",
+                        "Visible": true
+                      }
+                    ],
+                    "Enable": true,
+                    "Mass": 1,
+                    "Name": "Model"
+                  },
+                  {
+                    "Children": [
+                      {
+                        "Children": [],
+                        "Components": [
+                          {
+                            "ClassName": "TransformComponent",
+                            "Enable": true,
+                            "FollowBoneName": "",
+                            "Position": [0,0,0],
+                            "Rotation": [-0,0,-0,1],
+                            "Scale": [1,1,1]
+                          },
+                          {
+                            "ClassName": "ParticleComponent",
+                            "Enable": true,
+                            "Param.AngleRandom": [0,0,360],
+                            "Param.AngleStart": [0,0,0],
+                            "Param.BillboardType": 1,
+                            "Param.BlendMode": 0,
+                            "Param.Color": [1,1,1,1],
+                            "Param.DelayTime": 0,
+                            "Param.Duration": 300,
+                            "Param.EndColor": [1,1,1,0],
+                            "Param.Flags": 0,
+                            "Param.FollowTransform": false,
+                            "Param.LifeTime": 60,
+                            "Param.Loop": true,
+                            "Param.MoveAccelRandom": [0,0,0],
+                            "Param.MoveAccelStart": [0,0,-0.0040000001899898052],
+                            "Param.MoveRandom": [0.019999999552965164,0.019999999552965164,0.019999999552965164],
+                            "Param.MoveStart": [0,0,0.18000000715255737],
+                            "Param.PopupInterval": 2,
+                            "Param.PopupNum": 2,
+                            "Param.PosRandom": [0,0,0],
+                            "Param.PosStart": [0,0,0],
+                            "Param.RotateAccelRandom": [0,0,0],
+                            "Param.RotateAccellStart": [0,0,0],
+                            "Param.RotateRandom": [0,0,4.2600002288818359],
+                            "Param.RotateStart": [0,0,0],
+                            "Param.ScaleAccelRandom": [0,0,0],
+                            "Param.ScaleAccelStart": [0,0,0],
+                            "Param.ScaleRandom": [0,0,0],
+                            "Param.ScaleStart": [0,0,0],
+                            "Param.SizeRandom": [0,0,0],
+                            "Param.SizeStart": [1,1,1],
+                            "Param.StopAction": 0,
+                            "Param.Tex": "Data\\Texture\\Explosion00.png",
+                            "Param.UVAnim_Loop": false,
+                            "Param.UVAnim_SliceNum": [5,5],
+                            "Param.UVAnim_Speed": 0.5,
+                            "Param.UVAnim_StartTime": 10,
+                            "Parm.MoveAccelMultiply": [1,1,1]
+                          }
+                        ],
+                        "Enable": true,
+                        "Mass": 1,
+                        "Name": "Smoke"
+                      },
+                      {
+                        "Children": [],
+                        "Components": [
+                          {
+                            "ClassName": "TransformComponent",
+                            "Enable": true,
+                            "FollowBoneName": "",
+                            "Position": [0,0,0],
+                            "Rotation": [-0,0,-0,1],
+                            "Scale": [1,1,1]
+                          },
+                          {
+                            "ClassName": "ParticleComponent",
+                            "Enable": true,
+                            "Param.AngleRandom": [0,0,360],
+                            "Param.AngleStart": [0,0,0],
+                            "Param.BillboardType": 1,
+                            "Param.BlendMode": 1,
+                            "Param.Color": [1,1,1,1],
+                            "Param.DelayTime": 0,
+                            "Param.Duration": 300,
+                            "Param.EndColor": [1,1,1,0],
+                            "Param.Flags": 0,
+                            "Param.FollowTransform": false,
+                            "Param.LifeTime": 60,
+                            "Param.Loop": true,
+                            "Param.MoveAccelRandom": [0,0,0],
+                            "Param.MoveAccelStart": [0,0,-0.0040000001899898052],
+                            "Param.MoveRandom": [0.019999999552965164,0.019999999552965164,0.019999999552965164],
+                            "Param.MoveStart": [0,0,0.18000000715255737],
+                            "Param.PopupInterval": 2,
+                            "Param.PopupNum": 2,
+                            "Param.PosRandom": [0,0,0],
+                            "Param.PosStart": [0,0,0],
+                            "Param.RotateAccelRandom": [0,0,0],
+                            "Param.RotateAccellStart": [0,0,0],
+                            "Param.RotateRandom": [0,0,4.2600002288818359],
+                            "Param.RotateStart": [0,0,0],
+                            "Param.ScaleAccelRandom": [0,0,0],
+                            "Param.ScaleAccelStart": [0,0,0],
+                            "Param.ScaleRandom": [0,0,0],
+                            "Param.ScaleStart": [0,0,0],
+                            "Param.SizeRandom": [0,0,0],
+                            "Param.SizeStart": [2,2,2],
+                            "Param.StopAction": 0,
+                            "Param.Tex": "Data\\Texture\\Explosion00.png",
+                            "Param.UVAnim_Loop": false,
+                            "Param.UVAnim_SliceNum": [5,5],
+                            "Param.UVAnim_Speed": 0.5,
+                            "Param.UVAnim_StartTime": 0,
+                            "Parm.MoveAccelMultiply": [1,1,1]
+                          }
+                        ],
+                        "Enable": true,
+                        "Mass": 1,
+                        "Name": "Fire"
+                      }
+                    ],
+                    "Components": [
+                      {
+                        "ClassName": "TransformComponent",
+                        "Enable": true,
+                        "FollowBoneName": "",
+                        "Position": [0.00010907649993896484,1.9255094230175018e-06,-0.00015687942504882813],
+                        "Rotation": [-0.70710676908493042,1.7197230590682011e-06,4.9409329960781179e-09,0.70710676908493042],
+                        "Scale": [1,2.0339622497558594,0.99998050928115845]
+                      }
+                    ],
+                    "Enable": false,
+                    "Mass": 1,
+                    "Name": "FireBreath"
+                  }
+                ],
+                "Components": [
+                  {
+                    "ClassName": "TransformComponent",
+                    "Enable": true,
+                    "FollowBoneName": "",
+                    "Position": [0,0,0],
+                    "Rotation": [-0,0,-0,1],
+                    "Scale": [1,1,1]
+                  },
+                  {
+                    "Center": [0,2.5099999904632568,0],
+                    "ClassName": "SphereColliderComponent",
+                    "Enable": true,
+                    "GroupFilter": 2,
+                    "IsDoJudge": true,
+                    "IsTrigger": true,
+                    "MaskFilter": 327680,
+                    "MeshDetailHitPos": false,
+                    "Radius": 2.5999999046325684,
+                    "Tag": ""
+                  },
+                  {
+                    "ClassName": "WeaponScript",
+                    "Enable": true,
+                    "EnablieTime": 0,
+                    "HitInterval": 20,
+                    "Param_CrititalRate": 0,
+                    "Param_Power": 1
+                  }
+                ],
+                "Enable": true,
+                "Mass": 1,
+                "Name": "WeaponData"
+              }
+            ],
+            "Components": [
+              {
+                "ClassName": "TransformComponent",
+                "Enable": true,
+                "FollowBoneName": "Weapon_R",
+                "Position": [2.72381591796875,5.417302131652832,-0.0059392871335148811],
+                "Rotation": [0.32838073372840881,0.62487733364105225,0.6284223198890686,0.32677182555198669],
+                "Scale": [1.0000001192092896,1.0000003576278687,0.9999997615814209]
+              }
+            ],
+            "Enable": true,
+            "Mass": 1,
+            "Name": "WeaponJointR"
           }
         ],
         "Components": [
@@ -145,8 +355,8 @@
                 "Enable": true,
                 "FollowBoneName": "",
                 "Position": [0,0,0],
-                "Rotation": [0.66293901205062866,0.33477187156677246,-0.43849754333496094,0.5061221718788147],
-                "Scale": [0.99999511241912842,0.99999594688415527,0.99999505281448364]
+                "Rotation": [0.66293895244598389,0.33477184176445007,-0.43849754333496094,0.50612211227416992],
+                "Scale": [0.99999517202377319,0.99999606609344482,0.99999511241912842]
               },
               {
                 "ClassName": "LightComponent",
@@ -263,9 +473,9 @@
                     "ClassName": "TransformComponent",
                     "Enable": true,
                     "FollowBoneName": "",
-                    "Position": [0,7.5294113159179688,-12.529413223266602],
-                    "Rotation": [-0,0,-0,1],
-                    "Scale": [5.8823528289794922,5.8823528289794922,5.8823528289794922]
+                    "Position": [-0.89137637615203857,8.4155292510986328,11.919008255004883],
+                    "Rotation": [-0.016843007877469063,0.9988563060760498,-0.036817040294408798,0.025432975962758064],
+                    "Scale": [5.8823566436767578,5.8823528289794922,5.882357120513916]
                   },
                   {
                     "CamAngles": [0,0],
@@ -284,9 +494,9 @@
                 "ClassName": "TransformComponent",
                 "Enable": true,
                 "FollowBoneName": "",
-                "Position": [1.4207309484481812,0,-2.7085843086242676],
-                "Rotation": [-0,0,-0,1],
-                "Scale": [0.17000000178813934,0.17000000178813934,0.17000000178813934]
+                "Position": [-0.17357546091079712,0,2.5697648525238037],
+                "Rotation": [-0.016843007877469063,0.9988563060760498,-0.036817040294408798,-0.025432975962758064],
+                "Scale": [0.16999988257884979,0.16999998688697815,0.1699998676776886]
               },
               {
                 "AnimationSpeed": 1,
@@ -339,6 +549,18 @@
                 "MaskFilter": 1,
                 "MeshDetailHitPos": false,
                 "Radius": 2,
+                "Tag": ""
+              },
+              {
+                "Center": [0,5.570000171661377,0],
+                "ClassName": "SphereColliderComponent",
+                "Enable": true,
+                "GroupFilter": 262144,
+                "IsDoJudge": false,
+                "IsTrigger": true,
+                "MaskFilter": 2,
+                "MeshDetailHitPos": false,
+                "Radius": 1.7400000095367432,
                 "Tag": ""
               }
             ],

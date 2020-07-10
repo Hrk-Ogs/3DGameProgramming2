@@ -1,7 +1,38 @@
 #pragma once
 
 
-class CharacterController : public BaseComponent
+// ダメージ通知書
+struct DamageArg
+{
+	int AtkPower = 0;		// 攻撃の威力
+
+};
+
+// ダメージ結果返信書
+struct DamageReply
+{
+	bool	IsGuard = false;		// 防御したよ！
+};
+
+//=====================================
+// ゲームキャラクター基本クラス
+//=====================================
+class BaseCharacter : public BaseComponent
+{
+public:
+	// ダメージ通知
+	// ・dmg ……攻撃者から送られるダメージ通知データ
+	// ・rep ……攻撃者へ返信する内容
+	virtual bool OnDamage(const DamageArg& dmg, DamageReply& rep) { return false; }
+
+};
+
+
+
+//=====================================
+// キャラクター制御
+//=====================================
+class CharacterController : public BaseCharacter
 {
 public:
 	// 更新処理
@@ -9,6 +40,12 @@ public:
 
 	// 更新処理
 	virtual void Update() override;
+
+	// ダメージ通知
+// ・dmg ……攻撃者から送られるダメージ通知データ
+// ・rep ……攻撃者へ返信する内容
+	virtual bool OnDamage(const DamageArg& dmg, DamageReply& rep) override;
+
 
 	// ImGui処理
 	virtual void Editor_ImGuiUpdate() override;
@@ -19,12 +56,12 @@ public:
 	//===============================
 	virtual void Deserialize(const json11::Json& jsonObj)
 	{
-		BaseComponent::Deserialize(jsonObj);
+		BaseCharacter::Deserialize(jsonObj);
 		KdJsonGet(jsonObj["Hp"], m_hp);
 	}
 	virtual void Serialize(json11::Json::object& outJsonObj) const
 	{
-		BaseComponent::Serialize(outJsonObj);
+		BaseCharacter::Serialize(outJsonObj);
 		outJsonObj["Hp"] = m_hp;
 	}
 
@@ -124,6 +161,31 @@ private:
 	public:
 		// 行動処理
 		virtual void Update() override;
+	};
+
+	// よろけ
+	class State_Stagger :public State_Base
+	{
+	public:
+		// 行動処理
+		virtual void Update() override;
+	};
+
+	// 死亡
+	class State_Die :public State_Base
+	{
+	public:
+		// 行動処理
+		virtual void Update() override;
+
+		void Reset()
+		{
+			m_cnt = 0;
+		}
+
+	private:
+		// 削除までのカウンター
+		int m_cnt = 180;
 	};
 
 
@@ -232,5 +294,95 @@ private:
 
 };
 
+//=========================================
+//
+// 武器制御スクリプト
+//
+//=========================================
+class WeaponScript :public BaseComponent
+{
+	struct Parameter;
+public:
+	// 武器の性能取得
+	const Parameter& GetParameter()const { return m_param; }
+
+	// 有効時間を設定
+	void SetEnableTime(int count)
+	{
+		m_enableTime = count;
+	}
+
+	// ヒット間隔設定
+	void SetHitInterval(int value)
+	{
+		m_hitInterbal = value;
+	}
+
+	// 無視リストをクリアする
+	void ClearIgnoreList()
+	{
+		m_ignoreList.clear();
+	}
+
+	// 更新処理
+	virtual void Update() override;
+
+	//=============================
+	// Serialize/Deserialize
+	//=============================
+	// JSONデータから、クラスの内容を設定
+	virtual void Deserialize(const json11::Json& jsonData) 
+	{
+		BaseComponent::Deserialize(jsonData);
+
+		KdJsonGet(jsonData["Param_Power"], m_param.Power);
+		KdJsonGet(jsonData["Param_CrititalRate"], m_param.CrititalRate);
+		KdJsonGet(jsonData["HitInterval"], m_hitInterbal);
+		KdJsonGet(jsonData["EnablieTime"], m_enableTime);
+	}
+
+	// このクラスの内容をJSONデータ化する
+	virtual void Serialize(json11::Json::object& outJsonObj)const
+	{
+		BaseComponent::Serialize(outJsonObj);
+
+		outJsonObj["Param_Power"] = m_param.Power;
+		outJsonObj["Param_CrititalRate"] = m_param.CrititalRate;
+		outJsonObj["HitInterval"] = m_hitInterbal;
+		outJsonObj["EnablieTime"] = m_enableTime;
+	}
+
+	// 
+	virtual void Editor_ImGuiUpdate()override
+	{
+		BaseComponent::Editor_ImGuiUpdate();
+
+		ImGui::InputInt(u8"威力", &m_param.Power);
+		ImGui::InputInt(u8"クリティカル率", &m_param.CrititalRate);
+
+		ImGui::InputInt(u8"ヒットストップ間隔", &m_hitInterbal);
+		ImGui::InputInt(u8"有効時間", &m_enableTime);
+	}
 
 
+private:
+	// 固定の武器の性能
+	struct Parameter 
+	{
+		int Power = 1;			// 武器の威力
+		int CrititalRate = 0;	// クリティカル率
+	};
+	Parameter m_param;
+
+	// 動的な武器の性能
+	int m_hitInterbal = 0;	
+
+	// 実行時変数
+	int m_enableTime = 0;
+
+	// 無視リスト（個々に登録されているGameObjectはヒットしていても無視する）
+	std::unordered_map<const GameObject*, int> m_ignoreList;
+
+
+
+};
