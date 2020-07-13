@@ -28,9 +28,30 @@ void ModelComponent::Update()
 
 	// アニメーション進行
 	if (GAMESYS.IsPlay()) {
-		// アニメーションを進める
-		m_animator.AdvanceTime(m_animationSpeed, m_nodeOL, m_onAnimeScriptProc);
+		
+		// Rootモーション有効時
+		if (m_enableRootMotion) {
+			auto trans = GetOwner()->Transform();
+			// 現在の行列を拡大・回転・座標へ分解
+			KdVec3 scale = trans->GetLocalScale();
+			KdQuaternion rotate = trans->GetlocalRotation();
+			KdVec3 pos = trans->GetLocalPosition();
+
+			// アニメーションを進める
+			// ※Rootボーンの変化量をscale,rotate,posに適用する
+			m_animator.AdvanceTime(m_animationSpeed, m_nodeOL, m_onAnimeScriptProc, &scale, &rotate, &pos);
+
+			// 変化後のscale,rotate,posをセット
+			trans->SetLocalScale(scale);
+			trans->SetLocalRotation(rotate);
+			trans->SetLocalPosition(pos);
+		}
+		else {
+			// アニメーションを進める
+			m_animator.AdvanceTime(m_animationSpeed, m_nodeOL, m_onAnimeScriptProc);
+		}	
 	}
+
 
 	// 全ノードの行列計算
 	m_nodeOL.CalcNodeMatrices();
@@ -92,6 +113,9 @@ void ModelComponent::Editor_ImGuiUpdate()
 	if (ImGui::TreeNodeEx("Animation", ImGuiTreeNodeFlags_DefaultOpen)) {
 		// モデルを読み込んでいる時
 		if (m_model->IsValid()) {
+
+			ImGui::Checkbox(u8"RootMotion有効", &m_enableRootMotion);
+
 			if (ImGui::TreeNodeEx(u8"初期アニメーション", ImGuiTreeNodeFlags_DefaultOpen)) {
 				// パラメータが変更された？
 				int change = 0;

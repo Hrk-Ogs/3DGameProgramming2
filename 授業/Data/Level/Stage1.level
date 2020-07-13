@@ -51,6 +51,7 @@
                         "AnimationSpeed": 1,
                         "ClassName": "ModelComponent",
                         "Enable": true,
+                        "EnableRootMotion": false,
                         "ModelFilename": "Data\\Box\\Box.gltf",
                         "StartAnimatioinLoop": true,
                         "StartAnimeName": "",
@@ -184,8 +185,8 @@
                         "Enable": true,
                         "FollowBoneName": "",
                         "Position": [0.00010907649993896484,1.9255094230175018e-06,-0.00015687942504882813],
-                        "Rotation": [-0.70710676908493042,1.7197230590682011e-06,4.9409329960781179e-09,0.70710676908493042],
-                        "Scale": [1,2.0339622497558594,0.99998050928115845]
+                        "Rotation": [-0.70710676908493042,1.7197230590682011e-06,4.941415276960015e-09,0.70710676908493042],
+                        "Scale": [1,2.0339610576629639,0.99998021125793457]
                       }
                     ],
                     "Enable": false,
@@ -219,6 +220,7 @@
                     "Enable": true,
                     "EnablieTime": 0,
                     "HitInterval": 20,
+                    "HitStopValue": 0,
                     "Param_CrititalRate": 0,
                     "Param_Power": 1
                   }
@@ -233,9 +235,9 @@
                 "ClassName": "TransformComponent",
                 "Enable": true,
                 "FollowBoneName": "Weapon_R",
-                "Position": [2.72381591796875,5.417302131652832,-0.0059392871335148811],
-                "Rotation": [0.32838073372840881,0.62487733364105225,0.6284223198890686,0.32677182555198669],
-                "Scale": [1.0000001192092896,1.0000003576278687,0.9999997615814209]
+                "Position": [1.6402404308319092,4.4999160766601563,-1.6223602294921875],
+                "Rotation": [0.635914146900177,0.51286369562149048,0.57274967432022095,-0.067393414676189423],
+                "Scale": [1.0000015497207642,1.0000011920928955,1.0000007152557373]
               }
             ],
             "Enable": true,
@@ -256,6 +258,7 @@
             "AnimationSpeed": 1,
             "ClassName": "ModelComponent",
             "Enable": true,
+            "EnableRootMotion": true,
             "ModelFilename": "Data\\Player\\Player.gltf",
             "StartAnimatioinLoop": true,
             "StartAnimeName": "Stand",
@@ -327,6 +330,7 @@
                 "AnimationSpeed": 1,
                 "ClassName": "ModelComponent",
                 "Enable": true,
+                "EnableRootMotion": false,
                 "ModelFilename": "Data\\StageMap\\StageMap.gltf",
                 "StartAnimatioinLoop": true,
                 "StartAnimeName": "",
@@ -355,8 +359,8 @@
                 "Enable": true,
                 "FollowBoneName": "",
                 "Position": [0,0,0],
-                "Rotation": [0.66293895244598389,0.33477184176445007,-0.43849754333496094,0.50612211227416992],
-                "Scale": [0.99999517202377319,0.99999606609344482,0.99999511241912842]
+                "Rotation": [0.66293901205062866,0.33477187156677246,-0.43849754333496094,0.5061221718788147],
+                "Scale": [0.99999511241912842,0.99999594688415527,0.99999505281448364]
               },
               {
                 "ClassName": "LightComponent",
@@ -389,6 +393,7 @@
                     "AnimationSpeed": 1,
                     "ClassName": "ModelComponent",
                     "Enable": true,
+                    "EnableRootMotion": false,
                     "ModelFilename": "Data\\Box\\Box.gltf",
                     "StartAnimatioinLoop": true,
                     "StartAnimeName": "",
@@ -414,6 +419,7 @@
                     "AnimationSpeed": 1,
                     "ClassName": "ModelComponent",
                     "Enable": true,
+                    "EnableRootMotion": false,
                     "ModelFilename": "Data\\Box\\Box.gltf",
                     "StartAnimatioinLoop": true,
                     "StartAnimeName": "",
@@ -439,6 +445,7 @@
                     "AnimationSpeed": 1,
                     "ClassName": "ModelComponent",
                     "Enable": true,
+                    "EnableRootMotion": false,
                     "ModelFilename": "Data\\Box\\Box.gltf",
                     "StartAnimatioinLoop": true,
                     "StartAnimeName": "",
@@ -473,9 +480,9 @@
                     "ClassName": "TransformComponent",
                     "Enable": true,
                     "FollowBoneName": "",
-                    "Position": [-0.89137637615203857,8.4155292510986328,11.919008255004883],
-                    "Rotation": [-0.016843007877469063,0.9988563060760498,-0.036817040294408798,0.025432975962758064],
-                    "Scale": [5.8823566436767578,5.8823528289794922,5.882357120513916]
+                    "Position": [-0.89137697219848633,8.4155311584472656,11.919012069702148],
+                    "Rotation": [-0.016843004152178764,0.9988563060760498,-0.036817040294408798,0.025432979688048363],
+                    "Scale": [5.8823599815368652,5.8823537826538086,5.8823604583740234]
                   },
                   {
                     "CamAngles": [0,0],
@@ -495,13 +502,14 @@
                 "Enable": true,
                 "FollowBoneName": "",
                 "Position": [-0.17357546091079712,0,2.5697648525238037],
-                "Rotation": [-0.016843007877469063,0.9988563060760498,-0.036817040294408798,-0.025432975962758064],
-                "Scale": [0.16999988257884979,0.16999998688697815,0.1699998676776886]
+                "Rotation": [-0.016843004152178764,0.9988563060760498,-0.036817040294408798,-0.025432979688048363],
+                "Scale": [0.16999980807304382,0.16999998688697815,0.16999979317188263]
               },
               {
                 "AnimationSpeed": 1,
                 "ClassName": "ModelComponent",
                 "Enable": true,
+                "EnableRootMotion": false,
                 "ModelFilename": "Data\\Player\\Player.gltf",
                 "StartAnimatioinLoop": true,
                 "StartAnimeName": "Stand",

@@ -27,6 +27,12 @@ public:
 		m_onAnimeScriptProc = scriptProc;
 	}
 
+	// ルートモーションOn/Off設定
+	void SetEnableRootMotion(bool enable)
+	{
+		m_enableRootMotion = enable;
+	}
+
 	//===============================
 	// 動作処理
 	//===============================
@@ -51,6 +57,7 @@ public:
 		KdJsonGet(jsonObj["StartAnimeName"], m_startAnimeName);
 		KdJsonGet(jsonObj["StartAnimatioinLoop"], m_startAnimationLoop);
 		KdJsonGet(jsonObj["AnimationSpeed"], m_animationSpeed);
+		KdJsonGet(jsonObj["EnableRootMotion"], m_enableRootMotion);
 
 		KdJsonGet(jsonObj["Visible"], m_visible);
 
@@ -69,6 +76,7 @@ public:
 		outJsonObj["StartAnimeName"] = m_startAnimeName;
 		outJsonObj["StartAnimatioinLoop"] = m_startAnimationLoop;
 		outJsonObj["AnimationSpeed"] = m_animationSpeed;
+		outJsonObj["EnableRootMotion"] = m_enableRootMotion;
 		outJsonObj["Visible"] = m_visible;
 	}
 
@@ -94,6 +102,7 @@ private:
 	std::string				m_startAnimeName;
 	bool					m_startAnimationLoop = true;
 	float					m_animationSpeed = 1.0f;
+	bool					m_enableRootMotion = false;	// ルートモーション有効
 
 	// 描画設定
 	bool					m_visible = true;

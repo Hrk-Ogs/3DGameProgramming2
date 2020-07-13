@@ -15,8 +15,8 @@ void CharacterController::Start()
 	m_stateStorage["Jump"] = std::make_shared<State_Jump>();
 	m_stateStorage["Landing"] = std::make_shared<State_Landing>();
 	m_stateStorage["Attack"] = std::make_shared<State_Attack>();
-	m_stateStorage["Attack"] = std::make_shared<State_Stagger>();
-	m_stateStorage["Attack"] = std::make_shared<State_Die>();
+	m_stateStorage["Stagger"] = std::make_shared<State_Stagger>();
+	m_stateStorage["Die"] = std::make_shared<State_Die>();
 
 	// 全行動クラスに持ち主キャラのアドレスを入れておく
 	for (auto&& state : m_stateStorage) {
@@ -49,10 +49,52 @@ void CharacterController::Update()
 		std::string type = script.JsonData["Type"].string_value();
 
 		if (type == "Attack") {
-			GAMESYS.m_editorData.LogWindow.AddLog("Attack!!");
+			// 右手の武器装備ジョイントGameObjectを検索
+			auto joint = GetOwner()->Find("WeaponJointR");
+			if (joint == nullptr)return;
+			// そこから武器データGameObjectを検索
+			auto weaponObj = joint->Find("WeaponData");
+			if (weaponObj == nullptr)return;
+
+			// そこからWeaponScriptを取得
+			auto wpnScript = weaponObj->GetComponent<WeaponScript>();
+			if (wpnScript == nullptr)return;
+
+			//-------------------------
+			// 武器の攻撃パラメータ設定
+			//-------------------------
+			// 一度無視リストを全てクリアする
+			wpnScript->ClearIgnoreList();
+			// 有効時間設定
+			wpnScript->SetEnableTime(script.JsonData["Duration"].int_value());
+			// ヒット間隔
+			wpnScript->SetHitInterval(script.JsonData["HitInterval"].int_value());
+			// 装備者をセット
+			auto chara = std::static_pointer_cast<CharacterController>(shared_from_this());
+			wpnScript->SetChara(chara);
+			// ヒットストップ値セット
+			wpnScript->SetHitStopValue(script.JsonData["HitStop"].int_value());
+
+			// ヒット威力
+			float powerRate = (float)script.JsonData["PowerRate"].number_value();
+			// （キャラの攻撃力　*　武器の威力）* 倍率
+			int hitPower = (10 + wpnScript->GetParameter().Power) * powerRate;
+			wpnScript->SetHitPower(hitPower);
+
 		}
 		else if (type == "AttackCancel") {
-			GAMESYS.m_editorData.LogWindow.AddLog("Cansel!!");
+			auto input = GetOwner()->GetComponent<InputComponent>();
+
+			// 攻撃ボタンおしているか
+			if (input->IsButtonPressed(GameButtons::A)) {
+				// 変更先アニメ名
+				std::string nextAnimeName = script.JsonData["NextAnimeName"].string_value();
+				// アニメーション変更
+				auto model = GetOwner()->GetComponent<ModelComponent>();
+				auto anim = model->GetModel()->GetAnimation(nextAnimeName);
+				model->Animator().CrossFade(anim, 1.0f, false);
+			}
+
 		}
 		else if (type == "PopPrefab") {
 			std::string filename;
@@ -63,7 +105,7 @@ void CharacterController::Update()
 			// 座標をセットする
 			auto myPos = GetOwner()->Transform()->GetPosition();
 			newObj->Transform()->SetPosition(myPos);
-			
+
 		}
 
 	};
@@ -74,68 +116,85 @@ void CharacterController::Update()
 		model->SetAnimationScriptProc(onScript);
 	}
 
-	//-------------------------------
-	// 行動ステート処理実行
-	//-------------------------------
+	// ヒットストップ中でない場合
+	if (m_hitStopCnt <= 0) {
 
-	if (m_nowState) {
-		m_nowState->Update();
-	}
-	
-	//--------------------------------
-	// 力による移動
-	//--------------------------------
-	KdVec3 pos = GetOwner()->Transform()->GetPosition();	// 座標取得
-	pos += m_vForce;		// 座標に力を加算
-	GetOwner()->Transform()->SetPosition(pos);		// 座標をセット
-	
-	//--------------------------------
-	// 地面の設置を検知する
-	//--------------------------------
-	{
-		// (仮）設置相手をリセット
-		m_wpGround.reset();
+		// アニメーターを有効
+		model->Animator().NowPlayTrack().Enable = true;
 
-		// レイコライダーを取得
-		auto ray = GetOwner()->GetComponent<RayColliderComponent>();
-		if (ray) {
-			// ヒット時に実行される関数
-			ray->m_onHitStay = [this](ColliderComponent* collider) {	// ラムダ式
-				// レイがヒットした
+		//-------------------------------
+		// 行動ステート処理実行
+		//-------------------------------
 
-				// 最も近いやつを探し
-				float closestDist = FLT_MAX;
-				KdSptr<GameObject> closestObj;
-				// ヒットしたもの全て
-				for (auto&& res : collider->GetResults()) {
-					// より近い距離でひっとしてる
-					if (res.Dist < closestDist) {
-						// 情報を記憶
-						closestDist = res.Dist;
-						closestObj = res.Collider->GetOwner();
+		if (m_nowState) {
+			m_nowState->Update();
+		}
+
+		//--------------------------------
+		// 力による移動
+		//--------------------------------
+		KdVec3 pos = GetOwner()->Transform()->GetPosition();	// 座標取得
+		pos += m_vForce;		// 座標に力を加算
+		GetOwner()->Transform()->SetPosition(pos);		// 座標をセット
+
+		//--------------------------------
+		// 地面の設置を検知する
+		//--------------------------------
+		{
+			// (仮）設置相手をリセット
+			m_wpGround.reset();
+
+			// レイコライダーを取得
+			auto ray = GetOwner()->GetComponent<RayColliderComponent>();
+			if (ray) {
+				// ヒット時に実行される関数
+				ray->m_onHitStay = [this](ColliderComponent* collider) {	// ラムダ式
+					// レイがヒットした
+
+					// 最も近いやつを探し
+					float closestDist = FLT_MAX;
+					KdSptr<GameObject> closestObj;
+					// ヒットしたもの全て
+					for (auto&& res : collider->GetResults()) {
+						// より近い距離でひっとしてる
+						if (res.Dist < closestDist) {
+							// 情報を記憶
+							closestDist = res.Dist;
+							closestObj = res.Collider->GetOwner();
+						}
+
 					}
 
-				}
+					// 下移動している時のみ
+					if (m_vForce.y <= 0) {
+						// 接地キャラを把握
+						m_wpGround = closestObj;
+					}
 
-				// 下移動している時のみ
-				if (m_vForce.y <= 0) {
-					// 接地キャラを把握
-					m_wpGround = closestObj;
-				}
-
-				// Y方向の力をリセット
-				m_vForce.y = 0;
-			};
+					// Y方向の力をリセット
+					m_vForce.y = 0;
+				};
+			}
 		}
 	}
-	
-	
+	// ヒットストップ中の時
+	else {
+		// アニメーターを止める
+		model->Animator().NowPlayTrack().Enable = false;
+
+		// ヒットストップカウンターを減らす
+		m_hitStopCnt--;
+
+
+	}
+
+
 	//--------------------------------
 	// 視点回転
 	//--------------------------------
 	{
 		const float kMaxAngle = 2;	// カメラの回転速度
-		
+
 		// 子GameObjectの”Camera”を回転させる
 		auto camObj = GetOwner()->Find("Camera");
 		if (camObj) {
@@ -150,11 +209,15 @@ void CharacterController::Update()
 
 }
 
+
 bool CharacterController::OnDamage(const DamageArg& dmg, DamageReply& rep)
 {
 
 	// HPを減らす
 	m_hp -= dmg.AtkPower;
+
+	// ヒットストップ
+	m_hitStopCnt = dmg.HitStop;
 
 	// 生きてる
 	if (m_hp > 0) {
@@ -214,14 +277,14 @@ void CharacterController::Editor_ImGuiUpdate()
 //-----------------------------
 void CharacterController::State_Stand::Update()
 {
-		// 入力コンポーネント取得
+	// 入力コンポーネント取得
 	auto input = m_chara->GetOwner()->GetComponent<InputComponent>();
 
 	// 方向キーを押すと、「走り」に変更
 	if (input->GetAxis(GameAxes::L).Length() > 0.1f) {
 		// 「走り」行動へ切り替える
 		m_chara->m_nowState = m_chara->m_stateStorage.at("Run");
-		
+
 		// 「走り」アニメーションへ変更
 		auto model = m_chara->GetOwner()->GetComponent<ModelComponent>();
 		// 走りアニメーションデータを取得
@@ -318,7 +381,7 @@ void CharacterController::State_Run::Update()
 		if (vDir.Length() > 0) {
 			// キャラのTransformを取得
 			auto charaTrans = m_chara->GetOwner()->Transform();
-			
+
 			//-------------
 			// 回転
 			//-------------
@@ -336,12 +399,12 @@ void CharacterController::State_Run::Update()
 			// 回転を指定方向へ向け、セットする
 			rota.LookTo(vCharaZ, { 0,1,0 });
 			charaTrans->SetRotation(rota);
-			
+
 			//-------------
 			// 移動
 			//-------------
 			const float kSpeed = 0.05f;	// 移動速度
-			
+
 			KdVec3 pos = charaTrans->GetPosition();
 			pos += vDir * kSpeed;
 			charaTrans->SetPosition(pos);
@@ -582,6 +645,12 @@ void WeaponScript::Update()
 	// 停止時はスキップ
 	if (GAMESYS.IsPlay() == false)return;
 
+	// 装備者がヒットストップ中の場合、処理を中断
+	auto chara = m_wpChara.lock();
+	if (chara) {
+		if (chara->GetHitStopCnt() >= 1)return;
+	}
+
 
 	//--------------
 	// 無視リスト処理
@@ -621,7 +690,7 @@ void WeaponScript::Update()
 					// ヒット相手のBaseCharacterコンポーネントを取得
 					auto you = res.Collider->GetOwner()->GetComponent<BaseCharacter>();
 					// 相手はキャラではないので、ダメージ通知はしない
-					if (you == nullptr){
+					if (you == nullptr) {
 						continue;
 					}
 
@@ -634,7 +703,8 @@ void WeaponScript::Update()
 					// ダメージ通知処理
 					//-----------------------
 					DamageArg dmg;	// 通知書
-					dmg.AtkPower = m_param.Power;
+					dmg.AtkPower = m_hitPower;
+					dmg.HitStop = 10;
 
 					DamageReply rep;
 
@@ -644,6 +714,12 @@ void WeaponScript::Update()
 						if (effectObj) {
 							// 座標をヒット位置に変更
 							effectObj->Transform()->SetPosition(res.HitPosList.front());
+						}
+
+						// ヒットしたキャラ（装備者）を止める
+						auto chara = m_wpChara.lock();
+						if (chara) {
+							chara->SetHitStopCnt(dmg.HitStop);
 						}
 
 						// ヒットしたキャラを一定期間無視化するため、GameObjectのアドレスを登録

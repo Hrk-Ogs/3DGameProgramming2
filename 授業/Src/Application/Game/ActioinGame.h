@@ -5,6 +5,7 @@
 struct DamageArg
 {
 	int AtkPower = 0;		// 攻撃の威力
+	int HitStop = 0;		// ヒットストップさせる値
 
 };
 
@@ -24,6 +25,15 @@ public:
 	// ・dmg ……攻撃者から送られるダメージ通知データ
 	// ・rep ……攻撃者へ返信する内容
 	virtual bool OnDamage(const DamageArg& dmg, DamageReply& rep) { return false; }
+
+	// ヒットストップ値設定
+	void SetHitStopCnt(int cnt) { m_hitStopCnt = cnt; }
+	// ヒットストップ値取得
+	int GetHitStopCnt()const { return m_hitStopCnt; }
+
+protected:
+	// ヒットストップ値（カウンタ）
+	int		m_hitStopCnt = 0;	// 0：通常操作　1～：ヒットストップ
 
 };
 
@@ -188,8 +198,6 @@ private:
 		int m_cnt = 180;
 	};
 
-
-
 	// 現在の行動ステートへの参照
 	KdSptr<State_Base>	m_nowState;
 
@@ -306,6 +314,24 @@ public:
 	// 武器の性能取得
 	const Parameter& GetParameter()const { return m_param; }
 
+	// 装備者を設定
+	void SetChara(KdSptr<BaseCharacter> chara)
+	{
+		m_wpChara = chara;
+	}
+
+	// ヒットストップ値を設定
+	void SetHitStopValue(int value)
+	{
+		m_hitStopValue = value;
+	}
+
+	// ヒット時の威力設定
+	void SetHitPower(int power) 
+	{
+		m_hitPower = power;
+	}
+
 	// 有効時間を設定
 	void SetEnableTime(int count)
 	{
@@ -339,6 +365,10 @@ public:
 		KdJsonGet(jsonData["Param_CrititalRate"], m_param.CrititalRate);
 		KdJsonGet(jsonData["HitInterval"], m_hitInterbal);
 		KdJsonGet(jsonData["EnablieTime"], m_enableTime);
+		KdJsonGet(jsonData["HitStopValue"], m_hitStopValue);
+
+		// 武器の威力をヒット威力としていれておく
+		m_hitPower = m_param.Power;
 	}
 
 	// このクラスの内容をJSONデータ化する
@@ -350,6 +380,7 @@ public:
 		outJsonObj["Param_CrititalRate"] = m_param.CrititalRate;
 		outJsonObj["HitInterval"] = m_hitInterbal;
 		outJsonObj["EnablieTime"] = m_enableTime;
+		outJsonObj["HitStopValue"] = m_hitStopValue;
 	}
 
 	// 
@@ -362,6 +393,7 @@ public:
 
 		ImGui::InputInt(u8"ヒットストップ間隔", &m_hitInterbal);
 		ImGui::InputInt(u8"有効時間", &m_enableTime);
+		ImGui::InputInt(u8"ヒットストップ値", &m_hitStopValue);
 	}
 
 
@@ -376,9 +408,12 @@ private:
 
 	// 動的な武器の性能
 	int m_hitInterbal = 0;	
+	int m_hitPower = 1;
+	int m_hitStopValue = 0;
 
 	// 実行時変数
 	int m_enableTime = 0;
+	KdWptr<BaseCharacter> m_wpChara;		// 装備者へのアドレス
 
 	// 無視リスト（個々に登録されているGameObjectはヒットしていても無視する）
 	std::unordered_map<const GameObject*, int> m_ignoreList;
