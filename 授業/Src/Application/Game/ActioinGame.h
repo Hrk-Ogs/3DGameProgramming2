@@ -50,6 +50,8 @@ public:
 
 	// 更新処理
 	virtual void Update() override;
+	// 後更新処理
+	virtual void LateUpdate() override;
 
 	// ダメージ通知
 // ・dmg ……攻撃者から送られるダメージ通知データ
@@ -260,6 +262,24 @@ public:
 	KdVec2& CamAngles() { return m_camAngles; }
 	KdVec3& CamOffset() { return m_camOffset; }
 
+	// 指定方向dirになるように、カメラのY角度をセットする
+	void SetAngleYByDirection(const KdVec3& dir)
+	{
+		// Y角度を算出
+		KdVec3 normDir = dir;
+		normDir.y = 0;
+		normDir.Normalize();
+		if (normDir.z < 0)
+		{
+			m_camAngles.y = 180 - asin(normDir.x) * KdToDegrees;
+		}
+		else
+		{
+			m_camAngles.y = asin(normDir.x) * KdToDegrees;
+		}
+	}
+
+
 	// 更新処理
 	virtual void Update()override;
 
@@ -417,7 +437,69 @@ private:
 
 	// 無視リスト（個々に登録されているGameObjectはヒットしていても無視する）
 	std::unordered_map<const GameObject*, int> m_ignoreList;
+};
 
+//==================================================
+// ポータルギミック
+//==================================================
+class PortalGimmick :public BaseComponent
+{
+public:
+	// 更新処理
+	virtual void Update() override;
 
+	//===============================
+	// Serialize / Deserialize
+	//===============================
+	// JSONデータから、クラスの内容を設定
+	virtual void Deserialize(const json11::Json& jsonData)
+	{
+		BaseComponent::Deserialize(jsonData);
+		KdJsonGet(jsonData["LoadPrefabFile"], m_loadPrefabFile);
+		KdJsonGet(jsonData["DeleteGameObjectName"], m_deleteGameObjectName);
+		KdJsonGet(jsonData["WarpPointName"], m_warpPointName);
+	}
 
+	// このクラスの内容をJSONデータ化する
+	virtual void Serialize(json11::Json::object& outJsonObj) const
+	{
+		BaseComponent::Serialize(outJsonObj);
+		outJsonObj["LoadPrefabFile"] = m_loadPrefabFile;
+		outJsonObj["DeleteGameObjectName"] = m_deleteGameObjectName;
+		outJsonObj["WarpPointName"] = m_warpPointName;
+	}
+
+	//
+	virtual void Editor_ImGuiUpdate() override
+	{
+		BaseComponent::Editor_ImGuiUpdate();
+		ImGui::InputText(u8"追加するPrefabファイル名", &m_loadPrefabFile);
+		ImGui::InputText(u8"削除するGameObject名", &m_deleteGameObjectName);
+		ImGui::InputText(u8"ワープ先GameObject名", &m_warpPointName);
+	}
+
+private:
+	// 読み込むPrefabファイル名
+	std::string		m_loadPrefabFile;
+	// 削除するGameObject名
+	std::string		m_deleteGameObjectName = "StageMap";
+	// ワープ先のGameObject名
+	std::string		m_warpPointName;
+};
+
+//=================================================
+//
+// 敵AI入力コンポーネント
+//
+//=================================================
+class CharacterAIInput : public InputComponent
+{
+public:
+	// AI入力処理
+	virtual void Update() override;
+private:
+	// 標的となるキャラ
+	KdWptr<GameObject> m_lockOn;
+	// 経過カウント
+	int m_cnt = 0;
 };

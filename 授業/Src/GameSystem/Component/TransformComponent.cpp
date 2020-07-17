@@ -138,6 +138,7 @@ void TransformComponent::Deserialize(const json11::Json& jsonObj)
 	KdJsonGet(jsonObj["FollowBoneName"], m_followBoneName);
 
 	m_localMatrix.CreateFromSRT(scale, rotation, pos);
+	LocalToWorld();
 
 }
 

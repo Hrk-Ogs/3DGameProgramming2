@@ -17,6 +17,8 @@ public:
 	virtual void Start() {}
 	// 毎回実行される更新処理
 	virtual void Update() {}
+	// 後更新関数
+	virtual void LateUpdate() {}
 
 	// 描画準備処理
 	virtual void PrepareDraw(RenderingData& rdata) {}

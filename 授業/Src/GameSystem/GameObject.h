@@ -30,6 +30,14 @@ public:
 	// 質量取得
 	float GetMass() const { return m_mass; }
 
+	// タグ判定
+	bool ExistTag(std::string_view tag)const
+	{
+		// 検索
+		if (std::find(m_tags.begin(), m_tags.end() ,tag)!= m_tags.end())return true;
+		return false;
+	}
+
 
 	//=========================================
 	// コンポーネント
@@ -133,6 +141,8 @@ public:
 #endif
 	}
 
+
+
 private:
 	// 有効フラグ
 	bool				m_enable = true;
@@ -144,6 +154,9 @@ private:
 
 	// 質量
 	float				m_mass = 1.0f;
+
+	// タグ
+	std::vector<std::string>	m_tags;
 
 	//=========================================
 	// 親子

@@ -141,9 +141,6 @@ void CharacterController::Update()
 		// 地面の設置を検知する
 		//--------------------------------
 		{
-			// (仮）設置相手をリセット
-			m_wpGround.reset();
-
 			// レイコライダーを取得
 			auto ray = GetOwner()->GetComponent<RayColliderComponent>();
 			if (ray) {
@@ -207,6 +204,39 @@ void CharacterController::Update()
 		}
 	}
 
+}
+
+void CharacterController::LateUpdate()
+{
+	// 無効時はスキップ
+	if (m_enable == false)return;
+	// 停止時はスキップ
+	if (GAMESYS.IsPlay() == false)return;
+
+	//--------------------
+	// 地面との連動
+	//--------------------
+	auto ground = m_wpGround.lock();
+	if (ground) {
+		// 下にいる奴の変化量をもらう
+		KdMatrix mDelta;
+		ground->Transform()->GetDeltaMatrix(mDelta);
+		mDelta.NormalizeScale();
+
+		// 自分にこの変化量を適用する
+		auto m = GetOwner()->Transform()->GetMatrix() * mDelta;
+		
+		// キャラの行列のZ軸を平行にする
+		KdVec3 vZ = m.Forward();	// 行列のZ軸ベクトル取得
+		vZ.y = 0;					// Z軸ベクトルのY成分をつぶす
+		m.LookTo(vZ, { 0,1,0 });	// 行列をこのZ方向に向ける
+
+		// セット
+		GetOwner()->Transform()->SetMatrix(m);
+	}
+
+	// 設置相手をリセット
+	m_wpGround.reset();
 }
 
 
@@ -736,3 +766,54 @@ void WeaponScript::Update()
 	}
 }
 
+void PortalGimmick::Update()
+{
+	// 無効時はスキップ
+	if (IsEnable() == false)return;
+	// 停止時はスキップ
+	if (GAMESYS.IsPlay() == false)return;
+
+	// コライダーへのヒットを検知する
+	auto collider = GetOwner()->GetComponent<ColliderComponent>();
+	if (collider) {
+		// ヒット時に実行される関数
+		collider->m_onHitStay = [this](ColliderComponent* collider)
+		{
+			// ヒットしたプレイヤーを取得
+			KdSptr<GameObject> pPlayer;
+			for (auto&& res : collider->GetResults()) {
+				if (res.Collider->GetOwner()->ExistTag("Player")) {
+					// あたった奴を記憶
+					pPlayer = res.Collider->GetOwner();
+					break;
+				}
+			}
+			// プレイヤーがいなかった場合は終了
+			if (pPlayer == nullptr)return;
+
+			// 指定名のGameObjectを探し、消す
+			auto delObj = GAMESYS.GetLevel()->GetRootObject()->Find(m_deleteGameObjectName);
+			if (delObj) {
+				delObj->Destroy();
+			}
+
+			// 指定ファイルのPrefabを読み込み・追加
+			auto newGameObj = GAMESYS.Instantiate(m_loadPrefabFile);
+			if (newGameObj) {
+				// 移動先のGameObjectを検索
+				auto pointObj = newGameObj->Find(m_warpPointName);
+				if (pointObj) {
+					// ポイントの回転と座標をヒットした奴に入れる
+					pPlayer->Transform()->SetRotation(pointObj->Transform()->GetRotation());
+					pPlayer->Transform()->SetPosition(pointObj->Transform()->GetPosition());
+
+				}
+			}
+			
+		};
+	}
+}
+
+void CharacterAIInput::Update()
+{
+}

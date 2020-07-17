@@ -114,6 +114,11 @@ void GameObject::Deserialize(const json11::Json& jsonObj)
 	KdJsonGet(jsonObj["Name"], m_name);
 	// 質量
 	KdJsonGet(jsonObj["Mass"], m_mass);
+	auto& tagArray = jsonObj["Tags"].array_items();
+	m_tags.clear();
+	for (auto&& n : tagArray) {
+		m_tags.push_back(n.string_value());
+	}
 
 	// コンポーネント
 	m_components.clear();
@@ -147,6 +152,7 @@ void GameObject::Serialize(json11::Json::object& outJsonObj) const
 	outJsonObj["Name"] = m_name;
 	outJsonObj["Enable"] = m_enable;
 	outJsonObj["Mass"] = m_mass;
+	outJsonObj["Tags"] = m_tags;
 
 	// 子リストもシリアライズ
 	json11::Json::array jsonChildren;
@@ -186,6 +192,34 @@ void GameObject::Editor_ImGuiUpdate()
 
 	// 質量
 	ImGui::InputFloat(u8"質量", &m_mass);
+
+	// タグ
+	if (ImGui::ListBoxHeader("Tags", ImVec2(0, 60))) {
+		// 全アイテム
+		for (auto it = m_tags.begin(); it != m_tags.end();)
+		{
+			ImGui::PushID(&(*it));
+			// アイテム
+			ImGui::InputText("##Tag", &(*it));
+			// 削除ボタン
+			ImGui::SameLine();
+			if (ImGui::Button("-"))
+			{
+				it = m_tags.erase(it);
+				ImGui::PopID();
+				continue;
+			}
+			++it;
+			ImGui::PopID();
+		}
+		// 追加
+		if (ImGui::Button(u8"+"))
+		{
+			m_tags.emplace_back();
+		}
+		ImGui::ListBoxFooter();
+	}
+
 
 	// 全コンポーネントを動作
 	//for (auto&& comp : m_components) {

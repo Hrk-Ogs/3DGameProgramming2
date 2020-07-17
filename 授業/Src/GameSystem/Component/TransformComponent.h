@@ -130,6 +130,20 @@ public:
 		return KdQuaternion().CreateFromMatrix(m_worldMatrix);
 	}
 
+	// 現在のワールド行列をバックアップする
+	void BackupMatrix()
+	{
+		m_prevWorldMatrix = m_worldMatrix;
+	}
+
+	// 前回の行列と現在の行列から、その変化量を求め返す
+	void GetDeltaMatrix(KdMatrix& delta) const
+	{
+		auto mInv = m_prevWorldMatrix;
+		mInv.Inverse();
+		delta = mInv * m_worldMatrix;
+	}
+
 private:
 	
 	// ローカル行列
@@ -137,6 +151,9 @@ private:
 
 	// ワールド行列
 	KdMatrix		m_worldMatrix;
+
+	// 前回のワールド行列
+	KdMatrix		m_prevWorldMatrix;
 
 	// ボーン追従機能（1つ上の階層のGameObjectを参照する仕様）
 	std::string		m_followBoneName;

@@ -57,7 +57,7 @@ void GameSystem::Run()
 		m_nextLevelFilename = "";
 	}
 
-	
+
 	//==========================
 	// ImGui開始
 	//==========================
@@ -89,6 +89,11 @@ void GameSystem::Run()
 	// このコリジョン管理クラスを使用するようにセット
 	m_collisionMgr->SetManagerToDefault();
 
+	// 処理の前に、全TransformComponentに対して行列を記憶させておく
+	for (auto&& gameObj : m_tempGameObjects) {
+		gameObj->Transform()->BackupMatrix();
+	}
+
 	// 収集したGameObjectの更新処理
 	for (auto&& gameObj : m_tempGameObjects) {
 		// 全コンポーネント実行（直接コンポーネントリストを取得し、実行していく）
@@ -100,6 +105,16 @@ void GameSystem::Run()
 			comp->Update();
 		}
 	}
+
+	// 収集したGameObjectの更新処理
+	for (auto&& gameObj : m_tempGameObjects) {
+		// 全コンポーネント実行
+		for (auto&& comp : gameObj->GetComponentList()) {
+			// 更新処理
+			comp->LateUpdate();
+		}
+	}
+
 
 	// 「停止」時は、コライダー情報の更新のみ実行する
 	// 「実行」時は、コライダー情報の更新とあたり判定を実行
@@ -149,7 +164,7 @@ void GameSystem::Run()
 	// カメラ
 	//-----------
 	// カメラをシェーダーにセット
-	if (m_tempRenderingDate.m_camera && m_editorData.FreeCameraMode == false&& m_isPlay) {	// カメラコンポーネントがある時
+	if (m_tempRenderingDate.m_camera && m_editorData.FreeCameraMode == false && m_isPlay) {	// カメラコンポーネントがある時
 		// カメラコンポーネントのカメラ情報をセットする
 		m_tempRenderingDate.m_camera->SetCamera();
 	}
@@ -230,13 +245,13 @@ void GameSystem::Editor_ImGuiUpdate()
 	//===============================================
 	// GameSystem
 	//===============================================
-	if (ImGui::Begin("GameSystem")){
+	if (ImGui::Begin("GameSystem")) {
 
 		//---------------------
-// エディター設定
-//---------------------
+		// エディター設定
+		//---------------------
 
-// 実行/停止
+		// 実行/停止
 		if (ImGui::Checkbox(u8"実行", &m_isPlay)) {
 			// 実行前Levelをシリアライズしたもの置き場
 			static json11::Json::object sSerialLevel;
@@ -279,7 +294,7 @@ void GameSystem::Editor_ImGuiUpdate()
 		//------------------
 		// ImGuizmoの操作設定
 		//------------------
-		if (ImGui::CollapsingHeader("Gizmo", ImGuiTreeNodeFlags_DefaultOpen)){
+		if (ImGui::CollapsingHeader("Gizmo", ImGuiTreeNodeFlags_DefaultOpen)) {
 			if (ImGui::RadioButton("Local", m_editorData.GizmoMode == ImGuizmo::LOCAL)) {
 				m_editorData.GizmoMode = ImGuizmo::LOCAL;
 			}
@@ -302,7 +317,7 @@ void GameSystem::Editor_ImGuiUpdate()
 	}
 	ImGui::End();
 
-	
+
 	//===============================================
 	// Levelウィンドウ
 	//===============================================
