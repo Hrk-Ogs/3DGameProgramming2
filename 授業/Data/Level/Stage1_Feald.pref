@@ -1,0 +1,421 @@
+{
+  "Children": [
+    {
+      "Children": [],
+      "Components": [
+        {
+          "ClassName": "TransformComponent",
+          "Enable": true,
+          "FollowBoneName": "",
+          "Position": [0,0,0],
+          "Rotation": [-0,0,-0,1],
+          "Scale": [1,1,1]
+        },
+        {
+          "AnimationSpeed": 1,
+          "ClassName": "ModelComponent",
+          "Enable": true,
+          "EnableRootMotion": false,
+          "ModelFilename": "Data\\StageMap\\StageMap.gltf",
+          "StartAnimatioinLoop": true,
+          "StartAnimeName": "",
+          "Visible": true
+        },
+        {
+          "ClassName": "MeshColliderComponent",
+          "Enable": true,
+          "GroupFilter": 65536,
+          "IsDoJudge": false,
+          "IsTrigger": false,
+          "MaskFilter": 1,
+          "ModelFilename": "Data\\StageMap\\StageMap.gltf",
+          "Tag": ""
+        }
+      ],
+      "Enable": true,
+      "Mass": 0,
+      "Name": "Ground"
+    },
+    {
+      "Children": [],
+      "Components": [
+        {
+          "ClassName": "TransformComponent",
+          "Enable": true,
+          "FollowBoneName": "",
+          "Position": [0,0,0],
+          "Rotation": [0.66293901205062866,0.33477187156677246,-0.43849754333496094,0.5061221718788147],
+          "Scale": [0.99999511241912842,0.99999594688415527,0.99999505281448364]
+        },
+        {
+          "ClassName": "LightComponent",
+          "Color": [1,1,1],
+          "Enable": true,
+          "Intensity": 2,
+          "LightType": 0,
+          "Range": 5,
+          "SpotAngle": 30
+        }
+      ],
+      "Enable": true,
+      "Mass": 1,
+      "Name": "Light"
+    },
+    {
+      "Children": [
+        {
+          "Children": [],
+          "Components": [
+            {
+              "ClassName": "TransformComponent",
+              "Enable": true,
+              "FollowBoneName": "",
+              "Position": [-2.6629259586334229,0.28314727544784546,-2.0775473117828369],
+              "Rotation": [-0,0,-0,1],
+              "Scale": [0.35000002384185791,0.35000002384185791,0.35000002384185791]
+            },
+            {
+              "AnimationSpeed": 1,
+              "ClassName": "ModelComponent",
+              "Enable": true,
+              "EnableRootMotion": false,
+              "ModelFilename": "Data\\Box\\Box.gltf",
+              "StartAnimatioinLoop": true,
+              "StartAnimeName": "",
+              "Visible": true
+            }
+          ],
+          "Enable": true,
+          "Mass": 1,
+          "Name": "Box"
+        },
+        {
+          "Children": [],
+          "Components": [
+            {
+              "ClassName": "TransformComponent",
+              "Enable": true,
+              "FollowBoneName": "",
+              "Position": [-2.6629259586334229,0.28314727544784546,-2.8539552688598633],
+              "Rotation": [-0,0,-0,1],
+              "Scale": [0.35000002384185791,0.35000002384185791,0.35000002384185791]
+            },
+            {
+              "AnimationSpeed": 1,
+              "ClassName": "ModelComponent",
+              "Enable": true,
+              "EnableRootMotion": false,
+              "ModelFilename": "Data\\Box\\Box.gltf",
+              "StartAnimatioinLoop": true,
+              "StartAnimeName": "",
+              "Visible": true
+            }
+          ],
+          "Enable": true,
+          "Mass": 1,
+          "Name": "Box"
+        },
+        {
+          "Children": [],
+          "Components": [
+            {
+              "ClassName": "TransformComponent",
+              "Enable": true,
+              "FollowBoneName": "",
+              "Position": [-2.6498537063598633,0.99688088893890381,-2.461456298828125],
+              "Rotation": [-0,0.38790640234947205,-0,0.92169874906539917],
+              "Scale": [0.34999984502792358,0.35000002384185791,0.34999984502792358]
+            },
+            {
+              "AnimationSpeed": 1,
+              "ClassName": "ModelComponent",
+              "Enable": true,
+              "EnableRootMotion": false,
+              "ModelFilename": "Data\\Box\\Box.gltf",
+              "StartAnimatioinLoop": true,
+              "StartAnimeName": "",
+              "Visible": true
+            }
+          ],
+          "Enable": true,
+          "Mass": 1,
+          "Name": "Box"
+        }
+      ],
+      "Components": [
+        {
+          "ClassName": "TransformComponent",
+          "Enable": true,
+          "FollowBoneName": "",
+          "Position": [0,0,0],
+          "Rotation": [-0,0,-0,1],
+          "Scale": [1,1,1]
+        }
+      ],
+      "Enable": true,
+      "Mass": 1,
+      "Name": "BoxGroup"
+    },
+    {
+      "Children": [
+        {
+          "Children": [],
+          "Components": [
+            {
+              "ClassName": "TransformComponent",
+              "Enable": true,
+              "FollowBoneName": "",
+              "Position": [-0.89137864112854004,8.4155311584472656,11.919026374816895],
+              "Rotation": [-0.016843004152178764,0.9988563060760498,-0.036817040294408798,0.025432994589209557],
+              "Scale": [5.8823671340942383,5.8823537826538086,5.8823666572570801]
+            },
+            {
+              "CamAngles": [0,0],
+              "CamOffset": [0,1.2799999713897705,-2.130000114440918],
+              "ClassName": "CharacteCameraController",
+              "Enable": true
+            }
+          ],
+          "Enable": true,
+          "Mass": 1,
+          "Name": "Camera"
+        }
+      ],
+      "Components": [
+        {
+          "ClassName": "TransformComponent",
+          "Enable": true,
+          "FollowBoneName": "",
+          "Position": [-0.17357546091079712,0,2.5697648525238037],
+          "Rotation": [-0.016843004152178764,0.9988563060760498,-0.036817040294408798,-0.025432990863919258],
+          "Scale": [0.16999956965446472,0.16999998688697815,0.1699996143579483]
+        },
+        {
+          "AnimationSpeed": 1,
+          "ClassName": "ModelComponent",
+          "Enable": true,
+          "EnableRootMotion": false,
+          "ModelFilename": "Data\\Player\\Player.gltf",
+          "StartAnimatioinLoop": true,
+          "StartAnimeName": "Stand",
+          "Visible": true
+        },
+        {
+          "ClassName": "PlayerInputComponent",
+          "Enable": false
+        },
+        {
+          "ClassName": "CharacterController",
+          "Enable": true,
+          "Hp": 600
+        },
+        {
+          "ClassName": "RayColliderComponent",
+          "Enable": true,
+          "GroupFilter": 1,
+          "IsDoJudge": true,
+          "IsTrigger": false,
+          "MaskFilter": 458752,
+          "RayDir": [0,-5,0],
+          "RayPos": [0,5,0],
+          "Tag": ""
+        },
+        {
+          "Center": [0,5,0],
+          "ClassName": "SphereColliderComponent",
+          "Enable": true,
+          "GroupFilter": 1,
+          "IsDoJudge": true,
+          "IsTrigger": false,
+          "MaskFilter": 458752,
+          "MeshDetailHitPos": false,
+          "Radius": 2,
+          "Tag": ""
+        },
+        {
+          "Center": [0,5,0],
+          "ClassName": "SphereColliderComponent",
+          "Enable": true,
+          "GroupFilter": 131072,
+          "IsDoJudge": false,
+          "IsTrigger": false,
+          "MaskFilter": 1,
+          "MeshDetailHitPos": false,
+          "Radius": 2,
+          "Tag": ""
+        },
+        {
+          "Center": [0,5.570000171661377,0],
+          "ClassName": "SphereColliderComponent",
+          "Enable": true,
+          "GroupFilter": 262144,
+          "IsDoJudge": false,
+          "IsTrigger": true,
+          "MaskFilter": 2,
+          "MeshDetailHitPos": false,
+          "Radius": 1.7400000095367432,
+          "Tag": ""
+        }
+      ],
+      "Enable": true,
+      "Mass": 1,
+      "Name": "Player"
+    },
+    {
+      "Children": [],
+      "Components": [
+        {
+          "ClassName": "TransformComponent",
+          "Enable": true,
+          "FollowBoneName": "",
+          "Position": [-7.5183315277099609,0.042330674827098846,-2.8297622203826904],
+          "Rotation": [-0,0,-0,1],
+          "Scale": [1,1,1]
+        },
+        {
+          "AnimationSpeed": 1,
+          "ClassName": "ModelComponent",
+          "Enable": true,
+          "EnableRootMotion": true,
+          "ModelFilename": "Data\\Floor\\Floor.gltf",
+          "StartAnimatioinLoop": true,
+          "StartAnimeName": "Rotate",
+          "Visible": true
+        },
+        {
+          "ClassName": "MeshColliderComponent",
+          "Enable": true,
+          "GroupFilter": 65536,
+          "IsDoJudge": false,
+          "IsTrigger": false,
+          "MaskFilter": 1,
+          "ModelFilename": "Data\\Floor\\Floor.gltf",
+          "Tag": ""
+        }
+      ],
+      "Enable": true,
+      "Mass": 1,
+      "Name": "FloorGimmick"
+    },
+    {
+      "Children": [],
+      "Components": [
+        {
+          "ClassName": "TransformComponent",
+          "Enable": true,
+          "FollowBoneName": "",
+          "Position": [-0.66998797655105591,0,-1.9153354167938232],
+          "Rotation": [0,0.71248960494995117,0,0.70168262720108032],
+          "Scale": [0.99999982118606567,1,1.9349848031997681]
+        },
+        {
+          "AnimationSpeed": 1,
+          "ClassName": "ModelComponent",
+          "Enable": true,
+          "EnableRootMotion": true,
+          "ModelFilename": "Data\\Floor\\Floor2.gltf",
+          "StartAnimatioinLoop": true,
+          "StartAnimeName": "Rotate",
+          "Visible": true
+        },
+        {
+          "ClassName": "MeshColliderComponent",
+          "Enable": true,
+          "GroupFilter": 65536,
+          "IsDoJudge": false,
+          "IsTrigger": false,
+          "MaskFilter": 1,
+          "ModelFilename": "Data\\Floor\\Floor2.gltf",
+          "Tag": ""
+        }
+      ],
+      "Enable": true,
+      "Mass": 1,
+      "Name": "FloorGimmick"
+    },
+    {
+      "Children": [
+        {
+          "Children": [],
+          "Components": [
+            {
+              "ClassName": "TransformComponent",
+              "Enable": true,
+              "FollowBoneName": "",
+              "Position": [-2.9192094802856445,1.1069486141204834,2.2312393188476563],
+              "Rotation": [-0,0,-0,1],
+              "Scale": [1,1,1]
+            },
+            {
+              "Center": [0,0,0],
+              "ClassName": "BoxColliderComponent",
+              "Enable": true,
+              "Extents": [0.50999999046325684,1,0.18999999761581421],
+              "GroupFilter": 1,
+              "IsDoJudge": true,
+              "IsTrigger": true,
+              "MaskFilter": 131072,
+              "Tag": ""
+            },
+            {
+              "ClassName": "PortalGimmick",
+              "DeleteGameObjectName": "StageMap",
+              "Enable": true,
+              "LoadPrefabFile": "Data/Level/Stage1_inHouse.pref",
+              "WarpPointName": "Point1"
+            }
+          ],
+          "Enable": true,
+          "Mass": 1,
+          "Name": "Portal"
+        }
+      ],
+      "Components": [
+        {
+          "ClassName": "TransformComponent",
+          "Enable": true,
+          "FollowBoneName": "",
+          "Position": [-4.0686841011047363,0,8.4402284622192383],
+          "Rotation": [0,0.99995136260986328,0,0.0098630804568529129],
+          "Scale": [1.0000001192092896,1,1.0000001192092896]
+        },
+        {
+          "AnimationSpeed": 1,
+          "ClassName": "ModelComponent",
+          "Enable": true,
+          "EnableRootMotion": false,
+          "ModelFilename": "Data\\House\\house.gltf",
+          "StartAnimatioinLoop": true,
+          "StartAnimeName": "",
+          "Visible": true
+        },
+        {
+          "ClassName": "MeshColliderComponent",
+          "Enable": true,
+          "GroupFilter": 65536,
+          "IsDoJudge": false,
+          "IsTrigger": false,
+          "MaskFilter": 1,
+          "ModelFilename": "Data\\House\\house.gltf",
+          "Tag": ""
+        }
+      ],
+      "Enable": true,
+      "Mass": 1,
+      "Name": "House"
+    }
+  ],
+  "Components": [
+    {
+      "ClassName": "TransformComponent",
+      "Enable": true,
+      "FollowBoneName": "",
+      "Position": [0,0,0],
+      "Rotation": [-0,0,-0,1],
+      "Scale": [1,1,1]
+    }
+  ],
+  "Enable": true,
+  "Mass": 1,
+  "Name": "StageMap"
+}

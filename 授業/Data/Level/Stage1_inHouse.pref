@@ -1,0 +1,95 @@
+{
+  "Children": [
+    {
+      "Children": [],
+      "Components": [
+        {
+          "ClassName": "TransformComponent",
+          "Enable": true,
+          "FollowBoneName": "",
+          "Position": [0,0,0],
+          "Rotation": [-0,0,-0,1],
+          "Scale": [1,1,1]
+        },
+        {
+          "AnimationSpeed": 1,
+          "ClassName": "ModelComponent",
+          "Enable": true,
+          "EnableRootMotion": false,
+          "ModelFilename": "Data\\IroriRoom\\IroriRoom.gltf",
+          "StartAnimatioinLoop": true,
+          "StartAnimeName": "",
+          "Visible": true
+        }
+      ],
+      "Enable": true,
+      "Mass": 1,
+      "Name": "Room"
+    },
+    {
+      "Children": [],
+      "Components": [
+        {
+          "ClassName": "TransformComponent",
+          "Enable": true,
+          "FollowBoneName": "",
+          "Position": [0,0.54023462533950806,0],
+          "Rotation": [-0,0,-0,1],
+          "Scale": [1,1,1]
+        },
+        {
+          "ClassName": "LightComponent",
+          "Color": [0.97549021244049072,0.49196425080299377,0.062163572758436203],
+          "Enable": true,
+          "Intensity": 4.0300002098083496,
+          "LightType": 1,
+          "Range": 5,
+          "SpotAngle": 30
+        }
+      ],
+      "Enable": true,
+      "Mass": 1,
+      "Name": "Light"
+    },
+    {
+      "Children": [],
+      "Components": [
+        {
+          "ClassName": "TransformComponent",
+          "Enable": true,
+          "FollowBoneName": "",
+          "Position": [2.610210657119751,0,1.3898452520370483],
+          "Rotation": [-0,-0.69625270366668701,-0,0.71779680252075195],
+          "Scale": [1,1,1]
+        }
+      ],
+      "Enable": true,
+      "Mass": 1,
+      "Name": "Point1"
+    }
+  ],
+  "Components": [
+    {
+      "ClassName": "TransformComponent",
+      "Enable": true,
+      "FollowBoneName": "",
+      "Position": [0,0,0],
+      "Rotation": [-0,0,-0,1],
+      "Scale": [1,1,1]
+    },
+    {
+      "Center": [0,0,0],
+      "ClassName": "BoxColliderComponent",
+      "Enable": true,
+      "Extents": [3.440000057220459,0.070000000298023224,2.8599998950958252],
+      "GroupFilter": 65536,
+      "IsDoJudge": false,
+      "IsTrigger": false,
+      "MaskFilter": 1,
+      "Tag": ""
+    }
+  ],
+  "Enable": true,
+  "Mass": 1,
+  "Name": "StageMap"
+}
