@@ -20,6 +20,7 @@ void GameSystem::Init()
 	ComponentClassMaker::GetInstance().Register<RayColliderComponent>();
 	ComponentClassMaker::GetInstance().Register<BoxColliderComponent>();
 	ComponentClassMaker::GetInstance().Register<MeshColliderComponent>();
+	ComponentClassMaker::GetInstance().Register<GraphicsSettingComponent>();
 
 
 	// Levelì¬

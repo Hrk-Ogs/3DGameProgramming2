@@ -44,6 +44,20 @@ public:
 	{
 		m_buttonFlags[(int)button]++;
 	}
+
+	virtual void Editor_ImGuiUpdate()override
+	{
+		BaseComponent::Editor_ImGuiUpdate();
+
+		std::vector<KdSptr<InputComponent>> inputs;
+		GetOwner()->GetComponents<InputComponent>(inputs);
+		if (inputs.size() >= 2) {
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 0, 0, 1));
+			ImGui::Text(u8"※警告※InputComponentが複数存在している");
+			ImGui::PopStyleColor();
+		}
+	}
+
 protected:
 	// 軸
 	std::array<KdVec2, 2> m_axes;
@@ -66,6 +80,7 @@ public:
 		// リセット
 		m_axes.fill({ 0, 0 });
 		m_buttonFlags.fill(0);
+
 		// 無効の場合はスキップ
 		if (m_enable == false)return;
 		// 上下左右キーから軸を設定

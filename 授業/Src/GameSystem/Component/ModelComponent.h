@@ -60,6 +60,8 @@ public:
 		KdJsonGet(jsonObj["EnableRootMotion"], m_enableRootMotion);
 
 		KdJsonGet(jsonObj["Visible"], m_visible);
+		KdJsonGet(jsonObj["LightEnable"], m_lightEnable);
+		KdJsonGet(jsonObj["FogEnable"], m_fogEnable);
 
 		// モデルデータのセット
 		SetModel(m_model);
@@ -78,6 +80,8 @@ public:
 		outJsonObj["AnimationSpeed"] = m_animationSpeed;
 		outJsonObj["EnableRootMotion"] = m_enableRootMotion;
 		outJsonObj["Visible"] = m_visible;
+		outJsonObj["LightEnable"] = m_lightEnable;
+		outJsonObj["FogEnable"] = m_fogEnable;
 	}
 
 	//===============================
@@ -106,5 +110,7 @@ private:
 
 	// 描画設定
 	bool					m_visible = true;
+	bool					m_lightEnable = true;	// ライト有効
+	bool					m_fogEnable = true;		// フォグ有効
 
 };

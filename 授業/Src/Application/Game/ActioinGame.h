@@ -495,11 +495,56 @@ private:
 class CharacterAIInput : public InputComponent
 {
 public:
+	// 初期処理
+	virtual void Start() override;
+
 	// AI入力処理
 	virtual void Update() override;
+
 private:
 	// 標的となるキャラ
 	KdWptr<GameObject> m_lockOn;
 	// 経過カウント
 	int m_cnt = 0;
+
+	//---------------------------
+	// AIステート基本クラス
+	//---------------------------
+	class State_Base
+	{
+	public:
+		virtual ~State_Base(){}
+		// AI処理
+		virtual void Update(){}
+		// 持ち主へのアドレス
+		CharacterAIInput* m_input = nullptr;
+	};
+
+	// 待機
+	class State_Wait :public State_Base
+	{
+	public:
+		// AI処理
+		virtual void Update() override;
+	};
+	
+	// 追跡
+	class State_Chase :public State_Base
+	{
+		// AI処理
+		virtual void Update() override;
+	};
+
+	// 攻撃
+	class State_Attack :public State_Base
+	{
+		// AI処理
+		virtual void Update() override;
+	};
+
+	// 現在のAIステート
+	KdSptr<State_Base> m_nowState;
+	// 全AIクラスをあらかじめ作成して保管しておく場所
+	std::unordered_map<std::string, KdSptr<State_Base>> m_stateStorage;
+
 };

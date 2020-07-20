@@ -225,7 +225,7 @@ void CharacterController::LateUpdate()
 
 		// 自分にこの変化量を適用する
 		auto m = GetOwner()->Transform()->GetMatrix() * mDelta;
-		
+
 		// キャラの行列のZ軸を平行にする
 		KdVec3 vZ = m.Forward();	// 行列のZ軸ベクトル取得
 		vZ.y = 0;					// Z軸ベクトルのY成分をつぶす
@@ -809,11 +809,201 @@ void PortalGimmick::Update()
 
 				}
 			}
-			
+
 		};
 	}
 }
 
+void CharacterAIInput::Start()
+{
+	m_stateStorage["Wait"] = std::make_shared<State_Wait>();
+	m_stateStorage["Chase"] = std::make_shared<State_Chase>();
+	m_stateStorage["Attack"] = std::make_shared<State_Attack>();
+
+	for (auto&& state : m_stateStorage) {
+		state.second->m_input = this;
+	}
+
+	// 現在のステートをセット
+	m_nowState = m_stateStorage.at("Wait");
+}
+
 void CharacterAIInput::Update()
 {
+	// 無効時はスキップ
+	if (IsEnable() == false)return;
+	// 停止時はスキップ
+	if (GAMESYS.IsPlay() == false)return;
+
+	// 自分のカメラ
+	auto camObj = GetOwner()->Find("Camera");
+	if (camObj == nullptr)return;
+
+	/*
+	// ターゲットのキャラへ移動する
+	auto lockOnTarget = m_lockOn.lock();
+	if (lockOnTarget) {
+		// 相手のTransform
+		auto targetTrans = lockOnTarget->Transform();
+
+		// デバッグ線
+		GAMESYS.DebugLine().AddLine(targetTrans->GetPosition() + KdVec3(0, 1, 0), GetOwner()->Transform()->GetPosition() + KdVec3(0, 1, 0), { 1,1,0,1 });
+
+		//----------------------
+		// 相手の方へカメラを向ける
+		//----------------------
+		auto charaCamera = camObj->GetComponent<CharacteCameraController>();
+		if (charaCamera) {
+			KdVec3 vTarget = targetTrans->GetPosition() - camObj->Transform()->GetPosition();
+			vTarget.y = 0;
+			vTarget.Normalize();
+
+			charaCamera->SetAngleYByDirection(vTarget);
+		}
+
+		//-------------------------
+		// キャラを前進
+		//-------------------------
+		// 相手との距離
+		float distance = (targetTrans->GetPosition() - GetOwner()->Transform()->GetPosition()).Length();
+
+		if (distance < 2.0f) {
+			// 2ｍ以内なら、上を離す
+			m_axes[(int)GameAxes::L].y = 0;			
+			GAMESYS.m_editorData.LogWindow.AddLog(u8"2ｍ以内");
+		}
+		else {
+			// 2ｍ以上なら、上を押す
+			m_axes[(int)GameAxes:: L].y = 1;
+			GAMESYS.m_editorData.LogWindow.AddLog(u8"2ｍ以上");
+
+		}
+	}
+	else
+	{
+		// ターゲットしていない場合は、上を離す
+		m_axes[(int)GameAxes::L].y = 0;
+	}
+	*/
+
+	//----------------------
+	// AIステート実行
+	//----------------------
+	if (m_nowState) {
+		m_nowState->Update();
+	}
+	
+	//----------------------
+	// サーチ判定
+	//----------------------
+	if (m_cnt % 10 == 0) {
+		// 標的をリセット
+		m_lockOn.reset();
+
+		// 球で周囲を判定
+		KdSptr<SphereColliderComponent> serchCollider = std::make_shared<SphereColliderComponent>();
+		serchCollider->SetOwner(GetOwner());
+
+		// 情報の設定
+		serchCollider->Set(GetOwner()->Transform()->GetPosition(), 5, true, 1, 131072);
+		serchCollider->SetTrigger(true);
+		// 球の情報が、Transformによって変化しないようにする
+		serchCollider->SetUpdateCollisionData(false);
+
+		// CollisionManagerに登録
+		serchCollider->Register();
+
+		// ヒット時に実行される関数
+		serchCollider->m_onHitEnter = [this](ColliderComponent* collider)
+		{
+			for (auto&& res : collider->GetResults()) {
+				m_lockOn = res.Collider->GetOwner();
+			}
+		};
+	}
+	// カウンタ増加
+	m_cnt++;
+
+}
+
+void CharacterAIInput::State_Wait::Update()
+{
+	// ターゲット発見
+	auto target = m_input->m_lockOn.lock();
+	if (target)
+	{
+		// 「追跡」へ
+		m_input->m_nowState = m_input->m_stateStorage.at("Chase");
+	}
+	// 移動キーを離す
+	m_input->m_axes[(int)GameAxes::L] = { 0, 0 };
+}
+
+void CharacterAIInput::State_Chase::Update()
+{
+	// キーをクリア
+	m_input->m_buttonFlags.fill(0);
+
+	// 自分のカメラ
+	auto camObj = m_input->GetOwner()->Find("Camera");
+	if (camObj == nullptr)return;
+
+	// ターゲットのキャラへ移動する
+	auto lockOnTarget = m_input->m_lockOn.lock();
+	if (lockOnTarget)
+	{
+		// 相手のTransform
+		auto targetTrans = lockOnTarget->Transform();
+
+		// デバッグ線
+		GAMESYS.DebugLine().AddLine(targetTrans->GetPosition() + KdVec3(0, 1, 0), m_input->GetOwner()->Transform()->GetPosition() + KdVec3(0, 1, 0), { 1,1,0,1 });
+
+		//================================
+		// 相手の方へカメラを向ける
+		//================================
+		auto charaCamera = camObj->GetComponent<CharacteCameraController>();
+		if (charaCamera)
+		{
+			// 相手への方向
+			auto vTarget = targetTrans->GetPosition() - camObj->Transform()->GetPosition();
+			vTarget.y = 0;
+			vTarget.Normalize();
+			charaCamera->SetAngleYByDirection(vTarget);
+		}
+		
+		// 相手との距離
+		float distance = (targetTrans->GetPosition() - m_input->GetOwner()->Transform()->GetPosition()).Length();
+		if (distance < 2.0f)
+		{
+			// 2m以内なら、上を離す
+			m_input->m_axes[(int)GameAxes::L].y = 0;
+		}
+		else
+		{
+			// 2m以上なら、上を押す
+			m_input->m_axes[(int)GameAxes::L].y = 1;
+		}
+		
+		// 一定確率で攻撃
+		if (KdMTRand::s_rnd.GetInt(100) == 0)
+		{
+			// 「攻撃」へ
+			m_input->m_nowState = m_input->m_stateStorage.at("Attack");
+		}
+	}
+	else
+	{
+		// ターゲットがいないなら、待機へ
+		m_input->m_nowState = m_input->m_stateStorage.at("Wait");
+	}
+}
+
+void CharacterAIInput::State_Attack::Update()
+{
+	// 方向キーをクリア
+	m_input->m_axes[(int)GameAxes::L] = { 0, 0 };
+	// 攻撃ボタンを押す
+	m_input->PressButton(GameButtons::A);
+	// 追跡へ
+	m_input->m_nowState = m_input->m_stateStorage.at("Chase");
 }

@@ -80,7 +80,11 @@ void ModelComponent::Draw(int phaseID)
 	m_nodeOL.WriteToBoneBuffer();
 
 	// TransformComponentを取得
-	auto trans = GetOwner()->Transform();
+	auto trans = GetOwner()->GetComponent<TransformComponent>();
+
+	// 描画設定を変更する
+	SHADER.m_standardShader.SetLightEnable(m_lightEnable);
+	SHADER.m_standardShader.SetFogEnable(m_fogEnable);
 
 	// 行列をセット
 	SHADER.m_standardShader.SetToDevice();
@@ -105,6 +109,8 @@ void ModelComponent::Editor_ImGuiUpdate()
 	// 描画設定
 	if (ImGui::TreeNodeEx(u8"描画設定", ImGuiTreeNodeFlags_DefaultOpen)) {
 		ImGui::Checkbox(u8"表示", &m_visible);
+		ImGui::Checkbox(u8"ライト有効", &m_lightEnable);
+		ImGui::Checkbox(u8"フォグ有効", &m_fogEnable);
 
 		ImGui::TreePop();
 	}

@@ -25,6 +25,7 @@
 #include "Component/CameraComponent.h"
 #include "Component/LightComponent.h"
 #include "Component/ParticleComponent.h"
+#include "Component/GraphicsSettingComponent.h"
 
 // 
 #include "Component/Collider/CollisionManager.h"

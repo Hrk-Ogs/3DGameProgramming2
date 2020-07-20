@@ -146,6 +146,7 @@ void Application::Execute()
 	ComponentClassMaker::GetInstance().Register<CharacteCameraController>();
 	ComponentClassMaker::GetInstance().Register<WeaponScript>();
 	ComponentClassMaker::GetInstance().Register<PortalGimmick>();
+	ComponentClassMaker::GetInstance().Register<CharacterAIInput>();
 
 
 	// 世界の初期設定をする
