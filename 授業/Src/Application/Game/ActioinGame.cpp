@@ -107,6 +107,26 @@ void CharacterController::Update()
 			newObj->Transform()->SetPosition(myPos);
 
 		}
+		// カメラ演出モードへ
+		else if (type == "CameraEffect")
+		{
+			// カメラとなるボーン名を取得
+			std::string boneName = script.JsonData["BoneName"].string_value();
+			// 持続時間
+			m_cameraEffectTime = script.JsonData["Duration"].int_value();
+
+			// 子カメラを取得
+			auto camObj = GetOwner()->Find("Camera");
+			if (camObj)
+			{
+				// カメラコントロールは一時停止
+				auto camCtrl = camObj->GetComponent<CharacteCameraController>();
+				camCtrl->SetEnable(false);
+
+				// TransformComponentに、ボーン追従指定をする
+				camObj->Transform()->SetFollowBoneName(boneName);
+			}
+		}
 
 	};
 
@@ -173,6 +193,29 @@ void CharacterController::Update()
 				};
 			}
 		}
+		//--------------------------
+		// カメラ演出中
+		//--------------------------
+		if (m_cameraEffectTime > 0)
+		{
+			// 時間を減らす
+			m_cameraEffectTime--;
+			// 時間が来たら、カメラの設定を元に戻す
+			if (m_cameraEffectTime == 0)
+			{
+				auto camObj = GetOwner()->Find("Camera");
+				if (camObj)
+				{
+					// 追従解除
+					camObj->Transform()->SetFollowBoneName("");
+
+					// カメラコントローラーを復活
+					auto camCtrl = camObj->GetComponent<CharacteCameraController>();
+					camCtrl->SetEnable(true);
+				}
+			}
+		}
+
 	}
 	// ヒットストップ中の時
 	else {
@@ -299,6 +342,14 @@ void CharacterController::Editor_ImGuiUpdate()
 	BaseCharacter::Editor_ImGuiUpdate();
 	// Hp設定
 	ImGui::InputInt("Hp", &m_hp);
+
+	//DEBUG
+	if (ImGui::Button("Die"))
+	{
+		auto model = GetOwner()->GetComponent<ModelComponent>();
+		auto anim = model->GetModel()->GetAnimation("Die_Root");
+		model->Animator().CrossFade(anim, 1.0f, false);
+	}
 
 }
 

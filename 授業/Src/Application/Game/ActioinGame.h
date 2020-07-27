@@ -78,6 +78,8 @@ public:
 	}
 
 private:
+	// カメラ演出時間
+	int m_cameraEffectTime = 0;
 
 	// 体力
 	int m_hp = 600;
@@ -212,7 +214,7 @@ private:
 //=========================================
 // タイトル制御クラス
 //=========================================
-class TitleController :public BaseComponent
+class TitleController :public UIObserverComponent
 {
 public:
 	virtual void Update() override
@@ -236,7 +238,7 @@ public:
 	// ImGui処理
 	virtual void Editor_ImGuiUpdate()override
 	{
-		BaseComponent::Editor_ImGuiUpdate();
+		UIObserverComponent::Editor_ImGuiUpdate();
 
 		auto input = GetOwner()->GetComponent<InputComponent>();
 		if (input == nullptr) {
@@ -246,7 +248,19 @@ public:
 		}
 	}
 
-private:
+	// UIがクリックされたと通知される
+// ・gameObj … クリックされたやつ
+// ・message … 送られてくる文字列
+	virtual void NotifyClicked(KdSptr<GameObject> gameObj, const std::string& message) override
+	{
+		// messageを判定し、処理を行う
+		if (message == "GameStart")
+		{
+			// Level切り替え予約
+			GAMESYS.ChangeLevel("Data\\Level\\Stage1.level");
+		}
+	}
+
 
 };
 

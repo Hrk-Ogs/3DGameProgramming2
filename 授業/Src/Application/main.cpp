@@ -29,7 +29,7 @@ bool Application::Init(int w, int h)
 	//===================================================================
 	// ウィンドウ作成
 	//===================================================================
-	if (m_window.Create(w, h, "3D GameProgramming", "Window") == false) {
+	if (m_window.Create(w, h, "KDEngine Ver1.0", "Window") == false) {
 		MessageBoxA(nullptr, "ウィンドウ作成に失敗", "エラー", MB_OK);
 		return false;
 	}
@@ -76,7 +76,7 @@ bool Application::Init(int w, int h)
 		MessageBoxA(m_window.GetWndHandle(), errorMsg.c_str(), "サウンド初期化失敗", MB_OK | MB_ICONSTOP);
 		return false;
 	}
-
+#ifdef DEVELOPMENT_MODE
 	//===================================================================
 	// imgui
 	//===================================================================
@@ -99,6 +99,7 @@ bool Application::Init(int w, int h)
 	io.Fonts->AddFontDefault();
 	// 日本語対応
 	io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\msgothic.ttc", 13.0f, &config, glyphRangesJapanese);
+#endif
 
 	return true;
 }
@@ -106,10 +107,12 @@ bool Application::Init(int w, int h)
 // アプリケーション終了
 void Application::Release()
 {
+#ifdef DEVELOPMENT_MODE
 	// imgui解放
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
+#endif
 
 
 	// シェーダ解放

@@ -14,6 +14,43 @@ void SpriteComponent::SetTexture(const KdSptr<KdTexture>& tex)
 	}
 }
 
+bool SpriteComponent::IsHovered() const
+{
+	// 画像がない場合はスキップ
+	if (m_texture->IsValid() == false)return false;
+
+	// マウス座標を取得しクライアント領域へ
+	POINT curPos;
+	GetCursorPos(&curPos);
+	ScreenToClient(GetActiveWindow(), &curPos);
+	// -幅/2 ～ 幅/2 の2D座標系へ変換(Yは上が＋)
+	KdVec2 pos = { (float)curPos.x, (float)curPos.y };
+	pos.x -= D3D.GetBackBuffer()->GetWidth() / 2;
+	pos.y -= D3D.GetBackBuffer()->GetHeight() / 2;
+	pos.y *= -1;
+
+	// このTransformの座標系へ変換
+	KdMatrix mInv = GetOwner()->Transform()->GetMatrix();
+	mInv.Inverse();
+	pos.TransformCoord(mInv);
+
+	// 画像内かどうか判定
+	Math::Rectangle rect;
+	rect.x = -(long)(m_pivot.x * m_texture->GetWidth());
+	rect.y = -(long)(m_pivot.y * m_texture->GetHeight());
+	rect.width = (long)m_texture->GetWidth();
+	rect.height = (long)m_texture->GetHeight();
+
+	if (
+		pos.x >= rect.x && pos.x <= rect.x + rect.width &&
+		pos.y >= rect.y && pos.y <= rect.y + rect.height
+		)
+	{
+		return true;
+	}
+	return false;
+}
+
 void SpriteComponent::PrepareDraw(RenderingData& rdata)
 {
 	// 有効じゃない

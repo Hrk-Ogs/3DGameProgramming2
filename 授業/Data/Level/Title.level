@@ -26,7 +26,38 @@
             ],
             "Enable": true,
             "Mass": 1,
-            "Name": "Image"
+            "Name": "Image",
+            "Tags": []
+          },
+          {
+            "Children": [],
+            "Components": [
+              {
+                "ClassName": "TransformComponent",
+                "Enable": true,
+                "FollowBoneName": "",
+                "Position": [0,0,0],
+                "Rotation": [-0,0,-0,1],
+                "Scale": [1.0800000429153442,0.33317011594772339,1.0800000429153442]
+              },
+              {
+                "ClassName": "SpriteComponent",
+                "Color": [1,1,1,1],
+                "Enable": true,
+                "Pivot": [0.5,0.5],
+                "SrcRect": [0,0,256,256],
+                "TexFilename": "Data\\Box\\box.png"
+              },
+              {
+                "ClassName": "UIButtonComponent",
+                "Enable": true,
+                "OnClickedMessage": "GameStart"
+              }
+            ],
+            "Enable": true,
+            "Mass": 1,
+            "Name": "Image",
+            "Tags": []
           }
         ],
         "Components": [
@@ -49,7 +80,8 @@
         ],
         "Enable": true,
         "Mass": 1,
-        "Name": "Title"
+        "Name": "Title",
+        "Tags": []
       }
     ],
     "Components": [
@@ -64,6 +96,7 @@
     ],
     "Enable": true,
     "Mass": 1,
-    "Name": "Root"
+    "Name": "Root",
+    "Tags": []
   }
 }

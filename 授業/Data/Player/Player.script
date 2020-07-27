@@ -56,6 +56,17 @@
 					"HitInterval": 2
 				}
 			]
+		},
+		{
+			"Name": "Die_Root",
+			"Scripts": [
+				{
+					"Time": 1,
+					"Type": "CameraEffect",
+					"BoneName": "Camera",
+					"Duration": 120
+				}
+			]
 		}
 	]
 }

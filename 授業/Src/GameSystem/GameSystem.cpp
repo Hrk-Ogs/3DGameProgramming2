@@ -20,11 +20,23 @@ void GameSystem::Init()
 	ComponentClassMaker::GetInstance().Register<RayColliderComponent>();
 	ComponentClassMaker::GetInstance().Register<BoxColliderComponent>();
 	ComponentClassMaker::GetInstance().Register<MeshColliderComponent>();
+
 	ComponentClassMaker::GetInstance().Register<GraphicsSettingComponent>();
 
+	ComponentClassMaker::GetInstance().Register<UIButtonComponent>();
 
 	// Level作成
 	m_level = std::make_shared<Level>();
+
+	// リリース版
+#ifndef DEVELOPMENT_MODE
+	// 実行モード
+	m_isPlay = true;
+	// コリジョンのデバッグ線秒がをOFF
+	ColliderComponent::s_showDebugLine = false;
+	// 初期レベル
+	ChangeLevel("Data\\Level\\Title.level");
+#endif
 }
 
 void GameSystem::Run()
@@ -58,7 +70,7 @@ void GameSystem::Run()
 		m_nextLevelFilename = "";
 	}
 
-
+#ifdef DEVELOPMENT_MODE
 	//==========================
 	// ImGui開始
 	//==========================
@@ -71,6 +83,7 @@ void GameSystem::Run()
 
 	// ImGuizmo開始
 	ImGuizmo::BeginFrame();
+#endif
 
 	//==========================
 	// GameObjectを収集
@@ -123,6 +136,7 @@ void GameSystem::Run()
 	// コリジョン処理、結果通知
 	m_collisionMgr->Run(onlyUpdateCollider);
 
+#ifdef DEVELOPMENT_MODE
 	// エディターカメラ処理
 	if (m_isPlay == false || m_editorData.FreeCameraMode) {
 		// どのウィンドウの上にもマウスがいないときのみ
@@ -130,7 +144,7 @@ void GameSystem::Run()
 			m_editorData.Camera.Update();
 		}
 	}
-
+#endif
 
 	//-----------------------
 	// 描画準備
@@ -164,6 +178,7 @@ void GameSystem::Run()
 	//-----------
 	// カメラ
 	//-----------
+#ifdef DEVELOPMENT_MODE
 	// カメラをシェーダーにセット
 	if (m_tempRenderingDate.m_camera && m_editorData.FreeCameraMode == false && m_isPlay) {	// カメラコンポーネントがある時
 		// カメラコンポーネントのカメラ情報をセットする
@@ -173,6 +188,12 @@ void GameSystem::Run()
 		// Editorカメラセット
 		m_editorData.Camera.SetToShader();
 	}
+#else
+	if (m_tempRenderingDate.m_camera) {
+		// カメラコンポーネントのカメラ情報をセットする
+		m_tempRenderingDate.m_camera->SetCamera();
+	}
+#endif
 
 
 	//-----------
@@ -222,6 +243,7 @@ void GameSystem::Run()
 	}
 	SHADER.m_spriteShader.End();
 
+#ifdef DEVELOPMENT_MODE
 	//===========================
 	// GUI処理
 	//===========================
@@ -237,7 +259,7 @@ void GameSystem::Run()
 	//===========================
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-
+#endif
 }
 
 // ImGui系の処理

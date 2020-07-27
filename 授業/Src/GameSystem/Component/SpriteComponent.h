@@ -11,6 +11,9 @@ public:
 	// テクスチャをセット
 	void SetTexture(const KdSptr<KdTexture>& tex);
 
+	// マウスが画像の上にあるか？
+	bool IsHovered()const;
+
 	// 描画準備
 	virtual void PrepareDraw(RenderingData& rdata)override;
 

@@ -7,6 +7,12 @@
 class TransformComponent :public BaseComponent
 {
 public:
+	// 親GameObjectのModelComponentのノード（ボーン）に追従させる設定
+	void SetFollowBoneName(const std::string& boneName)
+	{
+		m_followBoneName = boneName;
+	}
+
 
 	// 更新処理
 	virtual void Update() override;

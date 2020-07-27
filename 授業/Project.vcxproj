@@ -183,6 +183,7 @@
     <ClInclude Include="Src\GameSystem\Component\ParticleComponent.h" />
     <ClInclude Include="Src\GameSystem\Component\SpriteComponent.h" />
     <ClInclude Include="Src\GameSystem\Component\TransformComponent.h" />
+    <ClInclude Include="Src\GameSystem\Component\UIComponent.h" />
     <ClInclude Include="Src\GameSystem\EditorCamera.h" />
     <ClInclude Include="Src\GameSystem\GameObject.h" />
     <ClInclude Include="Src\GameSystem\GameSystem.h" />
@@ -242,6 +243,7 @@
     <ClCompile Include="Src\GameSystem\Component\ParticleComponent.cpp" />
     <ClCompile Include="Src\GameSystem\Component\SpriteComponent.cpp" />
     <ClCompile Include="Src\GameSystem\Component\TransformComponent.cpp" />
+    <ClCompile Include="Src\GameSystem\Component\UIComponent.cpp" />
     <ClCompile Include="Src\GameSystem\EditorCamera.cpp" />
     <ClCompile Include="Src\GameSystem\GameObject.cpp" />
     <ClCompile Include="Src\GameSystem\GameSystem.cpp" />

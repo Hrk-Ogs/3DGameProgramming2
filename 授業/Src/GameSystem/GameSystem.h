@@ -26,6 +26,7 @@
 #include "Component/LightComponent.h"
 #include "Component/ParticleComponent.h"
 #include "Component/GraphicsSettingComponent.h"
+#include "Component/UIComponent.h"
 
 // 
 #include "Component/Collider/CollisionManager.h"
