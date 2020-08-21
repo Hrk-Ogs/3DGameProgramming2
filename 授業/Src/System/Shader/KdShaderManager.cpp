@@ -15,6 +15,8 @@ void KdShaderManager::Init()
 	m_effectShader.Init();
 	// 2Dスプライトシェーダ
 	m_spriteShader.Init();
+	// モデルシェーダー
+	m_modelShader.Init();
 
 
 	//============================================
@@ -80,6 +82,7 @@ void KdShaderManager::Release()
 	m_standardShader.Release();
 	m_effectShader.Release();
 	m_spriteShader.Release();
+	m_modelShader.Release();
 
 
 

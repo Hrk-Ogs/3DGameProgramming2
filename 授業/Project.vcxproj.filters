@@ -64,6 +64,9 @@
     <Filter Include="Src\GameSystem\Component\Collider">
       <UniqueIdentifier>{925c24d8-8b14-49c5-85ef-bc086e024e9a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\System\Shader\ModelShader">
+      <UniqueIdentifier>{1d7c9b77-a061-41f2-9c2c-6386cd87a182}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -264,6 +267,9 @@
     <ClInclude Include="Src\GameSystem\Component\UIComponent.h">
       <Filter>Src\GameSystem\Component</Filter>
     </ClInclude>
+    <ClInclude Include="Src\System\Shader\ModelShader\KdModelShader.h">
+      <Filter>Src\System\Shader\ModelShader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -431,6 +437,9 @@
     <ClCompile Include="Src\GameSystem\Component\UIComponent.cpp">
       <Filter>Src\GameSystem\Component</Filter>
     </ClCompile>
+    <ClCompile Include="Src\System\Shader\ModelShader\KdModelShader.cpp">
+      <Filter>Src\System\Shader\ModelShader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\System\Shader\EffectShader\inc_KdEffectShader.hlsli">
@@ -447,6 +456,9 @@
     </None>
     <None Include="Src\System\Math\KdMath.inl">
       <Filter>Src\System\Math</Filter>
+    </None>
+    <None Include="Src\System\Shader\ModelShader\inc_KdModelShader.hlsli">
+      <Filter>Src\System\Shader\ModelShader</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -470,6 +482,12 @@
     </FxCompile>
     <FxCompile Include="Src\System\Shader\StandardShader\KdStandardShader_VS_Skin.hlsl">
       <Filter>Src\System\Shader\StandardShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Src\System\Shader\ModelShader\KdModelShader_PS.hlsl">
+      <Filter>Src\System\Shader\ModelShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Src\System\Shader\ModelShader\KdModelShader_VS.hlsl">
+      <Filter>Src\System\Shader\ModelShader</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

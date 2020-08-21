@@ -184,6 +184,14 @@ private:
 		// s“®ˆ—
 		virtual void Update() override;
 	};
+	
+	// ‰ñ”ğ
+	class State_BackStep :public State_Base
+	{
+	public:
+		// s“®ˆ—
+		virtual void Update() override;
+	};
 
 	// €–S
 	class State_Die :public State_Base

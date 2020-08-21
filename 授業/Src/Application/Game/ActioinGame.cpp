@@ -17,6 +17,7 @@ void CharacterController::Start()
 	m_stateStorage["Attack"] = std::make_shared<State_Attack>();
 	m_stateStorage["Stagger"] = std::make_shared<State_Stagger>();
 	m_stateStorage["Die"] = std::make_shared<State_Die>();
+	m_stateStorage["BackStep"] = std::make_shared<State_BackStep>();
 
 	// 全行動クラスに持ち主キャラのアドレスを入れておく
 	for (auto&& state : m_stateStorage) {
@@ -429,6 +430,7 @@ void CharacterController::State_Run::Update()
 	// 入力コンポーネント取得
 	auto input = m_chara->GetOwner()->GetComponent<InputComponent>();
 
+
 	// 方向キーを話すと、「立ち」に変更
 	if (input->GetAxis(GameAxes::L).Length() <= 0.1f) {
 		// 「立ち」行動へ切り替える
@@ -630,6 +632,23 @@ void CharacterController::State_Attack::Update()
 	// ModelComponent取得
 	auto model = m_chara->GetOwner()->GetComponent<ModelComponent>();
 
+	// 入力コンポーネント取得
+	auto input = m_chara->GetOwner()->GetComponent<InputComponent>();
+
+	// Jumpボタンが推されたら回避行動へ偏移
+	if (input->IsButtonPressed(GameButtons::B)) {
+		// 「回避」行動へ切り替える
+		m_chara->m_nowState = m_chara->m_stateStorage.at("BackStep");
+
+		// 「回避」アニメーションへ変更
+		auto model = m_chara->GetOwner()->GetComponent<ModelComponent>();
+		// 回避アニメーションデータを取得
+		auto anim = model->GetModel()->GetAnimation("BackStep_Root");
+		// アニメーションへ切り替え
+		model->Animator().CrossFade(anim, 0.5f, false);
+
+	}
+
 	// アニメ終了
 	if (model->Animator().IsAnimationEnd()) {
 		// 行動ステートを変更
@@ -686,6 +705,24 @@ void CharacterController::State_Die::Update()
 
 }
 
+//-----------------------------
+// 回避
+//-----------------------------
+void CharacterController::State_BackStep::Update()
+{
+	// ModelComponent取得
+	auto model = m_chara->GetOwner()->GetComponent<ModelComponent>();
+
+	// アニメ終了
+	if (model->Animator().IsAnimationEnd()) {
+		// 行動ステートを変更
+		m_chara->m_nowState = m_chara->m_stateStorage.at("Stand");
+
+		// アニメーション変更
+		auto anim = model->GetModel()->GetAnimation("Stand");
+		model->Animator().CrossFade(anim, 0.5f, true);
+	}
+}
 
 
 void CharacteCameraController::Update()
@@ -1058,3 +1095,4 @@ void CharacterAIInput::State_Attack::Update()
 	// 追跡へ
 	m_input->m_nowState = m_input->m_stateStorage.at("Chase");
 }
+

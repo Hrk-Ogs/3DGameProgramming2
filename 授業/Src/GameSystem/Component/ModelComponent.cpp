@@ -83,17 +83,8 @@ void ModelComponent::Draw(int phaseID)
 	auto trans = GetOwner()->GetComponent<TransformComponent>();
 
 	// 描画設定を変更する
-	SHADER.m_standardShader.SetLightEnable(m_lightEnable);
-	SHADER.m_standardShader.SetFogEnable(m_fogEnable);
-
-	// 行列をセット
-	SHADER.m_standardShader.SetToDevice();
-	// 描画
-	SHADER.m_standardShader.Draw(
-		&m_nodeOL,					// 全ノード情報
-		m_model->GetMaterials(),	// 全マテリアル（材質）情報
-		GetOwner()->Transform()->GetMatrix()		// オブジェクトの行列
-	);
+	SHADER.m_modelShader.SetToDevice();
+	SHADER.m_modelShader.Draw(&m_nodeOL,m_model->GetMaterials(),trans->GetMatrix());
 }
 
 void ModelComponent::Editor_ImGuiUpdate()
