@@ -57,6 +57,7 @@ bool KdModelShader::Init()
 	// 定数バッファ作成
 	//--------------------------------
 	m_cb0.Create();
+	m_cb1_Material.Create();
 
 	return true;
 }
@@ -68,6 +69,7 @@ void KdModelShader::Release()
 	KdSafeRelease(m_PS);
 
 	m_cb0.Release();
+	m_cb1_Material.Release();
 }
 
 void KdModelShader::SetToDevice()
@@ -85,6 +87,9 @@ void KdModelShader::SetToDevice()
 	// オブジェクト定数バッファ（0番目にセット）
 	D3D.GetDevContext()->VSSetConstantBuffers(0, 1, m_cb0.GetAddress());
 	D3D.GetDevContext()->PSSetConstantBuffers(0, 1, m_cb0.GetAddress());
+	// マテリアル定数バッファ
+	D3D.GetDevContext()->VSSetConstantBuffers(1, 1, m_cb1_Material.GetAddress());
+	D3D.GetDevContext()->PSSetConstantBuffers(1, 1, m_cb1_Material.GetAddress());
 }
 
 void KdModelShader::DrawMesh(const KdMesh* mesh, const std::vector<KdSptr<KdMaterial>>& materials)
@@ -99,6 +104,41 @@ void KdModelShader::DrawMesh(const KdMesh* mesh, const std::vector<KdSptr<KdMate
 	{
 		// 面が１枚も無い場合はスキップ
 		if (mesh->GetSubsets()[subi].FaceCount == 0)continue;
+
+		// マテリアル
+		const KdMaterial& material = *materials[mesh->GetSubsets()[subi].MaterialNo];
+
+		//---------------------------
+		// マテリアル情報を定数バッファへ書き込む
+		//---------------------------
+		// 基本色
+		m_cb1_Material.Work().BaseColor = material.BaseColor;
+		// 発光色
+		m_cb1_Material.Work().Emissive = material.Emissive;
+		// 金属性
+		m_cb1_Material.Work().Matallic = material.Metallic;
+		// 粗さ
+		m_cb1_Material.Work().Roughness = material.Roughness;
+		// GPUへ転送
+		m_cb1_Material.Write();
+
+		//------------------------------
+		// テクスチャセット
+		//------------------------------
+		// 複数毎のテクスチャを一気に渡すように、配列を用意
+		std::array<ID3D11ShaderResourceView*, 4> srvs = {};
+
+		// BaseColorテクスチャ
+		srvs[0] = material.BaseColorTex->GetSRView();
+		// Emissiveテクスチャ
+		srvs[1] = material.EmissiveTex->GetSRView();
+		// Metallic Roughness
+		srvs[2] = material.MetallicRoughnessTex->GetSRView();
+		// NormalMap
+		srvs[3] = material.NormalTex->GetSRView();
+
+		// セット 0番目のスロットから4枚分セットする
+		D3D.GetDevContext()->PSSetShaderResources(0, srvs.size(), &srvs[0]);
 
 		// サブセット描画
 		mesh->DrawSubset(subi);
@@ -119,7 +159,7 @@ void KdModelShader::Draw(const KdNodeOutliner* nodeOL, const std::vector<KdSptr<
 		auto& node = nodeOL->GetAllNodes()[meshIdx];
 
 		// 定数バッファにデータを書き込む
-		m_cb0.Work.mW = node.Transform * worldTransform;
+		m_cb0.Work().mW = node.Transform * worldTransform;
 		// コレで実際にGPU側のバッファへ書き込まれ、シェーダーで使用出来るようになる
 		m_cb0.Write();
 
