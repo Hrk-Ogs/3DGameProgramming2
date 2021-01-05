@@ -33,6 +33,12 @@ public:
 		m_enableRootMotion = enable;
 	}
 
+	// 輪郭On/Off
+	void SetOutlineEnable(bool enable)
+	{
+		m_enableOutline = enable;
+	}
+
 	//===============================
 	// 動作処理
 	//===============================
@@ -62,6 +68,12 @@ public:
 		KdJsonGet(jsonObj["Visible"], m_visible);
 		KdJsonGet(jsonObj["LightEnable"], m_lightEnable);
 		KdJsonGet(jsonObj["FogEnable"], m_fogEnable);
+		KdJsonGet(jsonObj["EnableOutline"], m_enableOutline);
+		KdJsonGet(jsonObj["UseWaveNormalMap"], m_useWaveNormalMap);
+		KdJsonGet(jsonObj["MulMaterialColor"], m_mulMaterialColor);
+		KdJsonGet(jsonObj["UvOffset"], m_uvOffset);
+		KdJsonGet(jsonObj["UvTiling"], m_uvTiling);
+		KdJsonGet(jsonObj["RefractiveIndex"], m_refractiveIndex);
 
 		// モデルデータのセット
 		SetModel(m_model);
@@ -82,6 +94,12 @@ public:
 		outJsonObj["Visible"] = m_visible;
 		outJsonObj["LightEnable"] = m_lightEnable;
 		outJsonObj["FogEnable"] = m_fogEnable;
+		outJsonObj["EnableOutline"] = m_enableOutline;
+		outJsonObj["UseWaveNormalMap"] = m_useWaveNormalMap;
+		outJsonObj["MulMaterialColor"] = m_mulMaterialColor.ToArray();
+		outJsonObj["UvOffset"] = m_uvOffset.ToArray();
+		outJsonObj["UvTiling"] = m_uvTiling.ToArray();
+		outJsonObj["RefractiveIndex"] = m_refractiveIndex;
 	}
 
 	//===============================
@@ -110,7 +128,12 @@ private:
 
 	// 描画設定
 	bool					m_visible = true;
-	bool					m_lightEnable = true;	// ライト有効
-	bool					m_fogEnable = true;		// フォグ有効
-
+	bool					m_lightEnable = true;		// ライト有効
+	bool					m_fogEnable = true;			// フォグ有効
+	bool					m_enableOutline = false;	// 輪郭有効
+	bool m_useWaveNormalMap = false; // 波法線マップを使用する
+	KdVec4 m_mulMaterialColor = { 1,1,1,1 }; // 乗算色
+	KdVec2 m_uvOffset = { 0, 0 }; // UVオフセット
+	KdVec2 m_uvTiling = { 1, 1 }; // UVタイリング
+	float m_refractiveIndex = 1.0f; // 屈折率
 };

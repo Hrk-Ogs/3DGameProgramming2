@@ -37,6 +37,26 @@ void GameSystem::Init()
 	// 初期レベル
 	ChangeLevel("Data\\Level\\Title.level");
 #endif
+
+	// 結果用テクスチャ
+	m_texOpaqueWork = std::make_shared<KdTexture>();
+	m_texOpaqueWork->CreateRenderTarget(D3D.GetBackBuffer()->GetWidth(), D3D.GetBackBuffer()->GetHeight(), DXGI_FORMAT_R16G16B16A16_FLOAT);
+	m_texWork = std::make_shared<KdTexture>();
+	m_texWork->CreateRenderTarget(D3D.GetBackBuffer()->GetWidth(), D3D.GetBackBuffer()->GetHeight(), DXGI_FORMAT_R16G16B16A16_FLOAT);
+	// 高輝度用テクスチャ
+	m_texHighBrightness = std::make_shared<KdTexture>();
+	m_texHighBrightness->CreateRenderTarget(D3D.GetBackBuffer()->GetWidth(), D3D.GetBackBuffer()->GetHeight(), DXGI_FORMAT_R16G16B16A16_FLOAT);
+
+	// ブラーテクスチャ作成
+	m_texBlur.Create(D3D.GetBackBuffer()->GetWidth(), D3D.GetBackBuffer()->GetHeight());
+
+	// 波テクスチャ作成
+	m_texWave.Create(512, 512);
+	// 初期である程度波を進行させておく
+	for (int i = 0; i < 1000; i++)
+	{
+		SHADER.m_postProcessShader.AdvanceWave(m_texWave);
+	}
 }
 
 void GameSystem::Run()
@@ -136,6 +156,9 @@ void GameSystem::Run()
 	// コリジョン処理、結果通知
 	m_collisionMgr->Run(onlyUpdateCollider);
 
+	// 波
+	SHADER.m_postProcessShader.AdvanceWave(m_texWave);
+
 #ifdef DEVELOPMENT_MODE
 	// エディターカメラ処理
 	if (m_isPlay == false || m_editorData.FreeCameraMode) {
@@ -205,6 +228,16 @@ void GameSystem::Run()
 	// 描画
 	//-----------
 
+	//+++++++++++++++++++
+	// 不透明物結果用RTへ変更
+	//+++++++++++++++++++	
+// 結果用RTのクリア
+	D3D.GetDevContext()->ClearRenderTargetView(m_texOpaqueWork->GetRTView(), KdVec4(0, 0, 0, 1));
+	// RTの変更
+	D3D.GetDevContext()->OMSetRenderTargets(1, m_texOpaqueWork->GetRTViewAddress(), D3D.GetZBuffer()->GetDSView());
+	// ビューポートの設定
+	D3D.SetViewportFromRTV(m_texOpaqueWork->GetRTView());
+
 	//++++++++++++++++++++
 	// 3D描画（不透明）
 	//++++++++++++++++++++
@@ -214,6 +247,18 @@ void GameSystem::Run()
 		comp->Draw(RenderingData::kOpaquePhase);
 	}
 
+	//+++++++++++++++++++
+	// 結果用RTへ変更
+	//+++++++++++++++++++
+	// OPaqueWork -> Workへコピー
+	D3D.GetDevContext()->CopyResource(m_texWork->GetResource(), m_texOpaqueWork->GetResource());
+	// RTの変更
+	D3D.GetDevContext()->OMSetRenderTargets(1, m_texWork->GetRTViewAddress(), D3D.GetZBuffer()->GetDSView());
+	// ビューポートの設定
+	D3D.SetViewportFromRTV(m_texWork->GetRTView());
+	// 不透明物結果用RTをSRVとしてセット
+	D3D.GetDevContext()->PSSetShaderResources(10, 1, m_texOpaqueWork->GetSRViewAddress());
+
 	//++++++++++++++++++++
 	// 3D描画（半透明）
 	//++++++++++++++++++++
@@ -221,6 +266,9 @@ void GameSystem::Run()
 	for (auto&& comp : m_tempRenderingDate.m_drawTransparentList) {
 		comp->Draw(RenderingData::kTransparentPhase);
 	}
+
+	// セットしていた不透明物結果用RTを解除
+	D3D.GetDevContext()->PSSetShaderResources(10, 1, KdTexture().GetSRViewAddress());
 
 	//++++++++++++++++++++
 	// 3Dエフェクト描画（半透明）
@@ -233,6 +281,32 @@ void GameSystem::Run()
 	D3D.GetDevContext()->OMSetDepthStencilState(SHADER.m_ds_ZEnable_ZWriteEnable, 0);	 // Zbaffa no書き込みをON
 	D3D.GetDevContext()->RSSetState(SHADER.m_rs_CullBack);
 
+	//+++++++++++++++++++
+	// ポストプロセス
+	//+++++++++++++++++++
+	// 高輝度抽出
+	SHADER.m_postProcessShader.BrightFiltering(m_texHighBrightness.get(), m_texWork.get());
+
+	// MGF
+	SHADER.m_postProcessShader.GenerateBlur(m_texBlur, m_texHighBrightness.get());
+
+	// ライトブルーム表現
+	D3D.GetDevContext()->OMSetBlendState(SHADER.m_bs_Add, KdVec4(0, 0, 0, 0), 0xFFFFFFFF);
+	for (int i = 0; i < 5; i++)
+	{
+		SHADER.m_postProcessShader.ColorDraw(m_texBlur.m_rt[i][0].get(), { 0.2f,0.2f,0.2f, 1 });
+	}
+	D3D.GetDevContext()->OMSetBlendState(SHADER.m_bs_Alpha, KdVec4(0, 0, 0, 0), 0xFFFFFFFF);
+
+	//+++++++++++++++++++
+	// RTをバックバッファへ戻す
+	//+++++++++++++++++++
+	D3D.GetDevContext()->OMSetRenderTargets(1, D3D.GetBackBuffer()->GetRTViewAddress(), D3D.GetZBuffer()->GetDSView());
+	D3D.SetViewportFromRTV(D3D.GetBackBuffer()->GetRTView());
+
+	// 結果画像をバックバッファへ描画
+	//SHADER.m_postProcessShader.ColorDraw(m_texWork.get(), { 1,1,1,1 });
+	SHADER.m_postProcessShader.ToneMappingDraw(m_texWork.get());
 
 	//++++++++++++++++++++
 	// 2D描画
@@ -445,6 +519,19 @@ void GameSystem::Editor_ImGuiUpdate()
 	}
 	ImGui::End();
 
+	//===========================
+	// グラフィック
+	//===========================
+	if (ImGui::Begin("GraphicsDebug"))
+	{
+		if (ImGui::CollapsingHeader(u8"波マップ", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			ImGui::Image(m_texWave.m_rtHeight[0]->GetSRView(), ImVec2(100 * m_texWave.m_rtHeight[0] ->GetAspectRatio(), 100));
+			ImGui::SameLine();
+			ImGui::Image(m_texWave.m_rtNormal->GetSRView(), ImVec2(100 * m_texWave.m_rtNormal->GetAspectRatio(), 100));
+		}
+	}
+	ImGui::End();
 
 }
 

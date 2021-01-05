@@ -6,7 +6,6 @@
 
 // ImGuiヘルパー
 #include "ImGuiHelper.h"
-
 // エディターカメラ
 #include "EditorCamera.h"
 
@@ -44,6 +43,9 @@
 class GameSystem
 {
 public:
+
+	// 波法線マップ取得
+	KdSptr<KdTexture> GetWaveNormalMap() { return m_texWave.m_rtNormal; }
 
 	// 初期設定
 	void Init();
@@ -114,6 +116,13 @@ private:
 
 	// コリジョン管理クラス
 	KdSptr<CollisionManager> m_collisionMgr = std::make_shared<CollisionManager>();
+
+	// グラフィックス
+	KdSptr<KdTexture> m_texOpaqueWork; // 結果用(不透明物のみ)
+	KdSptr<KdTexture> m_texWork; // 結果用
+	KdSptr<KdTexture> m_texHighBrightness; // 高輝度用
+	KdBlurTexture m_texBlur; // ブラーテクスチャ
+	KdWaveTexture m_texWave;
 
 	//============================
 	// シングルトンパターン

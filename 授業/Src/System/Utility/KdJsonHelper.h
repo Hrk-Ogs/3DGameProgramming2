@@ -121,3 +121,8 @@ inline void KdJsonGet(const json11::Json& obj, long& result)
 	result = (long)obj.int_value();
 }
 
+inline void KdJsonGet(const json11::Json& obj, KdSptr<KdTexture>& result)
+{
+	if (obj.is_string() == false)return;
+	result = KDResFactory.GetTexture(obj.string_value());
+}

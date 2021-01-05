@@ -52,12 +52,18 @@
                         "AnimationSpeed": 1,
                         "ClassName": "ModelComponent",
                         "Enable": true,
+                        "EnableOutline": false,
                         "EnableRootMotion": false,
                         "FogEnable": true,
                         "LightEnable": true,
                         "ModelFilename": "Data\\Box\\Box.gltf",
+                        "MulMaterialColor": [1,1,1,1],
+                        "RefractiveIndex": 1,
                         "StartAnimatioinLoop": true,
                         "StartAnimeName": "",
+                        "UseWaveNormalMap": false,
+                        "UvOffset": [0,0],
+                        "UvTiling": [1,1],
                         "Visible": true
                       }
                     ],
@@ -191,8 +197,8 @@
                         "Enable": true,
                         "FollowBoneName": "",
                         "Position": [0.00010907649993896484,1.9255094230175018e-06,-0.00015687942504882813],
-                        "Rotation": [-0.70710676908493042,1.7197230590682011e-06,4.9430228798996723e-09,0.70710676908493042],
-                        "Scale": [1,2.0339562892913818,0.99997901916503906]
+                        "Rotation": [-0.70710676908493042,1.7197230590682011e-06,4.9431032600466551e-09,0.70710676908493042],
+                        "Scale": [1,2.0339555740356445,0.99997884035110474]
                       }
                     ],
                     "Enable": false,
@@ -267,12 +273,18 @@
             "AnimationSpeed": 1,
             "ClassName": "ModelComponent",
             "Enable": true,
+            "EnableOutline": false,
             "EnableRootMotion": true,
             "FogEnable": true,
             "LightEnable": true,
             "ModelFilename": "Data\\Player\\Player.gltf",
+            "MulMaterialColor": [1,1,1,1],
+            "RefractiveIndex": 1,
             "StartAnimatioinLoop": true,
             "StartAnimeName": "Stand",
+            "UseWaveNormalMap": false,
+            "UvOffset": [0,0],
+            "UvTiling": [1,1],
             "Visible": true
           },
           {
@@ -342,12 +354,18 @@
                 "AnimationSpeed": 1,
                 "ClassName": "ModelComponent",
                 "Enable": true,
+                "EnableOutline": false,
                 "EnableRootMotion": false,
                 "FogEnable": true,
                 "LightEnable": true,
                 "ModelFilename": "Data\\StageMap\\StageMap.gltf",
+                "MulMaterialColor": [1,1,1,1],
+                "RefractiveIndex": 1,
                 "StartAnimatioinLoop": true,
                 "StartAnimeName": "",
+                "UseWaveNormalMap": false,
+                "UvOffset": [0,0],
+                "UvTiling": [1,1],
                 "Visible": true
               },
               {
@@ -379,7 +397,7 @@
               },
               {
                 "ClassName": "LightComponent",
-                "Color": [1,1,1],
+                "Color": [1,0.99998998641967773,0.99998998641967773],
                 "Enable": true,
                 "Intensity": 2,
                 "LightType": 0,
@@ -409,12 +427,18 @@
                     "AnimationSpeed": 1,
                     "ClassName": "ModelComponent",
                     "Enable": true,
+                    "EnableOutline": false,
                     "EnableRootMotion": false,
                     "FogEnable": true,
                     "LightEnable": true,
                     "ModelFilename": "Data\\Box\\Box.gltf",
+                    "MulMaterialColor": [1,1,1,1],
+                    "RefractiveIndex": 1,
                     "StartAnimatioinLoop": true,
                     "StartAnimeName": "",
+                    "UseWaveNormalMap": false,
+                    "UvOffset": [0,0],
+                    "UvTiling": [1,1],
                     "Visible": true
                   }
                 ],
@@ -438,12 +462,18 @@
                     "AnimationSpeed": 1,
                     "ClassName": "ModelComponent",
                     "Enable": true,
+                    "EnableOutline": false,
                     "EnableRootMotion": false,
                     "FogEnable": true,
                     "LightEnable": true,
                     "ModelFilename": "Data\\Box\\Box.gltf",
+                    "MulMaterialColor": [1,1,1,1],
+                    "RefractiveIndex": 1,
                     "StartAnimatioinLoop": true,
                     "StartAnimeName": "",
+                    "UseWaveNormalMap": false,
+                    "UvOffset": [0,0],
+                    "UvTiling": [1,1],
                     "Visible": true
                   }
                 ],
@@ -467,12 +497,18 @@
                     "AnimationSpeed": 1,
                     "ClassName": "ModelComponent",
                     "Enable": true,
+                    "EnableOutline": false,
                     "EnableRootMotion": false,
                     "FogEnable": true,
                     "LightEnable": true,
                     "ModelFilename": "Data\\Box\\Box.gltf",
+                    "MulMaterialColor": [1,1,1,1],
+                    "RefractiveIndex": 1,
                     "StartAnimatioinLoop": true,
                     "StartAnimeName": "",
+                    "UseWaveNormalMap": false,
+                    "UvOffset": [0,0],
+                    "UvTiling": [1,1],
                     "Visible": true
                   }
                 ],
@@ -506,9 +542,9 @@
                     "ClassName": "TransformComponent",
                     "Enable": true,
                     "FollowBoneName": "",
-                    "Position": [-0.89138031005859375,8.4155311584472656,11.919035911560059],
-                    "Rotation": [-0.016842996701598167,0.9988563060760498,-0.036817040294408798,0.025433000177145004],
-                    "Scale": [5.8823733329772949,5.8823537826538086,5.8823704719543457]
+                    "Position": [-0.89138031005859375,8.4155311584472656,11.919040679931641],
+                    "Rotation": [-0.016842996701598167,0.9988563060760498,-0.036817040294408798,0.025433007627725601],
+                    "Scale": [5.8823752403259277,5.8823537826538086,5.8823719024658203]
                   },
                   {
                     "CamAngles": [0,0],
@@ -529,19 +565,25 @@
                 "Enable": true,
                 "FollowBoneName": "",
                 "Position": [-5.3629817962646484,-0.0038566403090953827,5.0525870323181152],
-                "Rotation": [-0.016843000426888466,0.9988563060760498,-0.036817040294408798,-0.025433000177145004],
-                "Scale": [0.16999940574169159,0.16999998688697815,0.16999949514865875]
+                "Rotation": [-0.016843000426888466,0.9988563060760498,-0.036817040294408798,-0.025433005765080452],
+                "Scale": [0.16999934613704681,0.16999998688697815,0.16999945044517517]
               },
               {
                 "AnimationSpeed": 1,
                 "ClassName": "ModelComponent",
                 "Enable": true,
+                "EnableOutline": false,
                 "EnableRootMotion": false,
                 "FogEnable": true,
                 "LightEnable": true,
                 "ModelFilename": "Data\\Player\\Player.gltf",
+                "MulMaterialColor": [1,1,1,1],
+                "RefractiveIndex": 1,
                 "StartAnimatioinLoop": true,
                 "StartAnimeName": "Stand",
+                "UseWaveNormalMap": false,
+                "UvOffset": [0,0],
+                "UvTiling": [1,1],
                 "Visible": true
               },
               {
@@ -621,12 +663,18 @@
                 "AnimationSpeed": 1,
                 "ClassName": "ModelComponent",
                 "Enable": true,
+                "EnableOutline": false,
                 "EnableRootMotion": true,
                 "FogEnable": true,
                 "LightEnable": true,
                 "ModelFilename": "Data\\Floor\\Floor.gltf",
+                "MulMaterialColor": [1,1,1,1],
+                "RefractiveIndex": 1,
                 "StartAnimatioinLoop": true,
                 "StartAnimeName": "Rotate",
+                "UseWaveNormalMap": false,
+                "UvOffset": [0,0],
+                "UvTiling": [1,1],
                 "Visible": true
               },
               {
@@ -654,18 +702,24 @@
                 "FollowBoneName": "",
                 "Position": [-0.66998797655105591,0,-1.9153354167938232],
                 "Rotation": [0,0.71248960494995117,0,0.70168262720108032],
-                "Scale": [0.99999934434890747,1,1.9349848031997681]
+                "Scale": [0.99999916553497314,1,1.9349848031997681]
               },
               {
                 "AnimationSpeed": 1,
                 "ClassName": "ModelComponent",
                 "Enable": true,
+                "EnableOutline": false,
                 "EnableRootMotion": true,
                 "FogEnable": true,
                 "LightEnable": true,
                 "ModelFilename": "Data\\Floor\\Floor2.gltf",
+                "MulMaterialColor": [1,1,1,1],
+                "RefractiveIndex": 1,
                 "StartAnimatioinLoop": true,
                 "StartAnimeName": "Rotate",
+                "UseWaveNormalMap": false,
+                "UvOffset": [0,0],
+                "UvTiling": [1,1],
                 "Visible": true
               },
               {
@@ -735,12 +789,18 @@
                 "AnimationSpeed": 1,
                 "ClassName": "ModelComponent",
                 "Enable": true,
+                "EnableOutline": false,
                 "EnableRootMotion": false,
                 "FogEnable": true,
                 "LightEnable": true,
                 "ModelFilename": "Data\\House\\house.gltf",
+                "MulMaterialColor": [1,1,1,1],
+                "RefractiveIndex": 1,
                 "StartAnimatioinLoop": true,
                 "StartAnimeName": "",
+                "UseWaveNormalMap": false,
+                "UvOffset": [0,0],
+                "UvTiling": [1,1],
                 "Visible": true
               },
               {
@@ -771,11 +831,12 @@
                 "Scale": [1,1,1]
               },
               {
-                "AmbientLight": [1,0.85247379541397095,0.68627452850341797],
+                "AmbientLight": [1,0.99999529123306274,0.99998998641967773],
                 "ClassName": "GraphicsSettingComponent",
                 "DistanceFogColor": [0.55267202854156494,0.61557513475418091,0.98039215803146362],
                 "DistanceFogDensity": 0.032099999487400055,
-                "Enable": true
+                "Enable": true,
+                "IBLTexFilename": ""
               }
             ],
             "Enable": true,
@@ -798,18 +859,59 @@
                 "AnimationSpeed": 1.3700000047683716,
                 "ClassName": "ModelComponent",
                 "Enable": true,
+                "EnableOutline": false,
                 "EnableRootMotion": false,
                 "FogEnable": false,
                 "LightEnable": true,
                 "ModelFilename": "Data\\Sky\\Sky.gltf",
+                "MulMaterialColor": [1,1,1,1],
+                "RefractiveIndex": 1,
                 "StartAnimatioinLoop": true,
                 "StartAnimeName": "",
+                "UseWaveNormalMap": false,
+                "UvOffset": [0,0],
+                "UvTiling": [1,1],
                 "Visible": true
               }
             ],
             "Enable": true,
             "Mass": 1,
             "Name": "Sky",
+            "Tags": []
+          },
+          {
+            "Children": [],
+            "Components": [
+              {
+                "ClassName": "TransformComponent",
+                "Enable": true,
+                "FollowBoneName": "",
+                "Position": [-2.1892786026000977,0.6169809103012085,0.92551028728485107],
+                "Rotation": [-0,0,-0,1],
+                "Scale": [2.4173033237457275,0.55510801076889038,2.4351868629455566]
+              },
+              {
+                "AnimationSpeed": 1,
+                "ClassName": "ModelComponent",
+                "Enable": true,
+                "EnableOutline": false,
+                "EnableRootMotion": false,
+                "FogEnable": true,
+                "LightEnable": true,
+                "ModelFilename": "Data\\Floor\\Floor.gltf",
+                "MulMaterialColor": [0.37647059559822083,0.81568628549575806,1,0.63921570777893066],
+                "RefractiveIndex": 0.75999999046325684,
+                "StartAnimatioinLoop": true,
+                "StartAnimeName": "",
+                "UseWaveNormalMap": true,
+                "UvOffset": [0,0],
+                "UvTiling": [1,1],
+                "Visible": true
+              }
+            ],
+            "Enable": true,
+            "Mass": 1,
+            "Name": "GameObject",
             "Tags": []
           }
         ],

@@ -17,6 +17,8 @@ void KdShaderManager::Init()
 	m_spriteShader.Init();
 	// モデルシェーダー
 	m_modelShader.Init();
+	//
+	m_postProcessShader.Init();
 
 
 	//============================================
@@ -83,7 +85,7 @@ void KdShaderManager::Release()
 	m_effectShader.Release();
 	m_spriteShader.Release();
 	m_modelShader.Release();
-
+	m_postProcessShader.Release();
 
 
 	m_cb7_Camera.Release();

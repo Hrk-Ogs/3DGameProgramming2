@@ -11,6 +11,9 @@ public:
 	// 描画準備処理
 	virtual void PrepareDraw(RenderingData& rData) override
 	{
+		// IBLテクスチャセット
+		D3D.GetDevContext()->PSSetShaderResources(11, 1, m_texIBL->GetSRViewAddress());
+
 		// 環境光設定
 		SHADER.m_cb8_Light.Work().AmbientLight = m_ambientLight;
 		
@@ -28,6 +31,14 @@ public:
 	virtual void Deserialize(const json11::Json& jsonData)
 	{
 		BaseComponent::Deserialize(jsonData);
+
+		KdJsonGet(jsonData["IBLTexFilename"], m_texIBL);
+		if (m_texIBL == nullptr)
+		{
+			// nullは避ける
+			m_texIBL = std::make_shared<KdTexture>();
+		}
+
 		KdJsonGet(jsonData["AmbientLight"], m_ambientLight);
 		KdJsonGet(jsonData["DistanceFogColor"], m_distanceFogColor);
 		KdJsonGet(jsonData["DistanceFogDensity"], m_distanceFogDensity);
@@ -37,6 +48,8 @@ public:
 	virtual void Serialize(json11::Json::object& outJsonObj) const
 	{
 		BaseComponent::Serialize(outJsonObj);
+
+		outJsonObj["IBLTexFilename"] = m_texIBL->GetFilepath();
 		outJsonObj["AmbientLight"] = m_ambientLight.ToArray();
 		outJsonObj["DistanceFogColor"] = m_distanceFogColor.ToArray();
 		outJsonObj["DistanceFogDensity"] = m_distanceFogDensity;
@@ -45,12 +58,23 @@ public:
 	virtual void Editor_ImGuiUpdate() override
 	{
 		BaseComponent::Editor_ImGuiUpdate();
+
+		ImGui::Text(u8"IBLテクスチャ");
+		ImGuiSelectTexture(m_texIBL);
+		if (m_texIBL == nullptr)
+		{
+			// 未選択時はnullオブジェクトを入れておく
+			m_texIBL = std::make_shared<KdTexture>();
+		}
 		ImGui::ColorEdit3(u8"環境光", &m_ambientLight.x);
 		ImGui::ColorEdit3(u8"フォグ色", &m_distanceFogColor.x);
 		ImGui::DragFloat(u8"フォグ密度", &m_distanceFogDensity, 0.0001f, 0, 1, "%.4f");
 	}
 
 private:
+	// IBLテクスチャ
+	KdSptr<KdTexture> m_texIBL = std::make_shared<KdTexture>();
+
 	// 環境光
 	KdVec3 m_ambientLight = { 0.1f, 0.1f, 0.1f };
 

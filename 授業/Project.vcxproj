@@ -207,6 +207,7 @@
     <ClInclude Include="Src\System\Shader\EffectShader\KdEffectShader.h" />
     <ClInclude Include="Src\System\Shader\KdShaderManager.h" />
     <ClInclude Include="Src\System\Shader\ModelShader\KdModelShader.h" />
+    <ClInclude Include="Src\System\Shader\PostProcessShader\KdPostProcessShader.h" />
     <ClInclude Include="Src\System\Shader\SpriteShader\KdSpriteShader.h" />
     <ClInclude Include="Src\System\Shader\StandardShader\KdStandardShader.h" />
     <ClInclude Include="src\System\KdSystem.h" />
@@ -270,6 +271,7 @@
     <ClCompile Include="Src\System\Shader\EffectShader\KdEffectShader.cpp" />
     <ClCompile Include="Src\System\Shader\KdShaderManager.cpp" />
     <ClCompile Include="Src\System\Shader\ModelShader\KdModelShader.cpp" />
+    <ClCompile Include="Src\System\Shader\PostProcessShader\KdPostProcessShader.cpp" />
     <ClCompile Include="Src\System\Shader\SpriteShader\KdSpriteShader.cpp" />
     <ClCompile Include="Src\System\Shader\StandardShader\KdStandardShader.cpp" />
     <ClCompile Include="Src\System\Utility\KdResourceFactory.cpp" />
@@ -281,6 +283,7 @@
     <None Include="Src\System\Shader\EffectShader\inc_KdEffectShader.hlsli" />
     <None Include="Src\System\Shader\inc_KdCommon.hlsli" />
     <None Include="Src\System\Shader\ModelShader\inc_KdModelShader.hlsli" />
+    <None Include="Src\System\Shader\PostProcessShader\inc_PostProcess.hlsli" />
     <None Include="Src\System\Shader\SpriteShader\inc_KdSpriteShader.hlsli" />
     <None Include="Src\System\Shader\StandardShader\inc_KdStandardShader.hlsli" />
   </ItemGroup>
@@ -293,6 +296,14 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
     </FxCompile>
+    <FxCompile Include="Src\System\Shader\ModelShader\KdModelShader_OutlinePS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\System\Shader\ModelShader\KdModelShader_OutlineVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+    </FxCompile>
     <FxCompile Include="Src\System\Shader\ModelShader\KdModelShader_PS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
@@ -300,6 +311,38 @@
     <FxCompile Include="Src\System\Shader\ModelShader\KdModelShader_VS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\System\Shader\ModelShader\KdModelShader_VS_Skin.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\System\Shader\PostProcessShader\KdPostProcess_Blue_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\System\Shader\PostProcessShader\KdPostProcess_BrightFiltering_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\System\Shader\PostProcessShader\KdPostProcess_Color_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\System\Shader\PostProcessShader\KdPostProcess_ToneMapping_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\System\Shader\PostProcessShader\KdPostProcess_VS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\System\Shader\PostProcessShader\KdPostProcess_WaveHeight_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\System\Shader\PostProcessShader\KdPostProcess_WaveNormal_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="Src\System\Shader\SpriteShader\KdSpriteShader_PS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
