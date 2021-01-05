@@ -1,8 +1,7 @@
 // ƒJƒƒ‰‚âƒ‰ƒCƒg‚Ìƒf[ƒ^‚ªg‚¦‚é‚æ‚¤‚É‚È‚é
 #include "../inc_KdCommon.hlsli"
-// ‹¤’Êƒf[ƒ^
-#include "inc_KdModelShader.hlsli"
 
+<<<<<<< HEAD
 // ƒeƒNƒXƒ`ƒƒit0‚Æ‚©t1‚Æ‚©‚ªAPSS‚¦‚”ShaderResources‚ÅƒZƒbƒg‚µ‚½‚Æ‚«‚ÌƒXƒƒbƒg”Ô†j
 Texture2D g_baseTex : register(t0);		// ƒx[ƒXƒJƒ‰[ƒeƒNƒXƒ`ƒƒ[
 Texture2D g_emissiveTex : register(t1);	// ƒGƒ~ƒbƒVƒuƒeƒNƒXƒ`ƒƒ
@@ -19,10 +18,13 @@ TextureCube g_IBLTex : register(t11); // IBLƒeƒNƒXƒ`ƒƒ
 // ƒTƒ“ƒvƒ‰(ƒeƒNƒXƒ`ƒƒ‚©‚çF‚ğæ“¾‚·‚é‚Æ‚«‚Ég‚¤j
 SamplerState g_ss : register(s0);
 SamplerState g_clampSS : register(s1); // Clampİ’è‚ÌƒTƒ“ƒvƒ‰(KdShaderManager‚Ås1‚ÉƒZƒbƒg‚µ‚Ä‚¢‚Ü‚·)
+=======
+>>>>>>> parent of fcd683a... ã€3Dpro2ã€‘
 
 //======================================
 // ƒsƒNƒZƒ‹ƒVƒF[ƒ_[
 //======================================
+<<<<<<< HEAD
 // BlinnPhong NDF
 // ElightDir c ƒ‰ƒCƒg‚Ì•ûŒü
 // EvCam c ƒsƒNƒZƒ‹‚©‚çƒJƒƒ‰‚Ö‚Ì•ûŒü
@@ -186,4 +188,9 @@ float4 main(VSOutput In) :SV_Target0
 	}
 
 	return float4(color, baseColor.a);
+=======
+float4 main() :SV_Target0
+{
+	return float4(1, 0, 0, 1);	//RGBA
+>>>>>>> parent of fcd683a... ã€3Dpro2ã€‘
 }

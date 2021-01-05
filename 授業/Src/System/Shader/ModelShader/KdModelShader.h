@@ -104,15 +104,4 @@ private:
 	};
 	// 定数バッファ
 	KdConstantBuffer<cbObject> m_cb0;
-
-	// 定数バッファ（マテリアル単位更新）
-	struct cbMaterial {
-		KdVec4			BaseColor;
-		KdVec3			Emissive;
-		float			Matallic;
-		float			Roughness;
-
-		float			tmp[3];
-	};
-	KdConstantBuffer<cbMaterial>	m_cb1_Material;
 };
