@@ -218,6 +218,25 @@ void GameSystem::Run()
 	}
 #endif
 
+	//------------------
+	// シャドウマップ生成描画
+	//------------------
+	for (auto&& lightComp : m_tempRenderingDate.m_shadowMapLight)
+	{
+		auto drawProc = [this]()
+		{
+			for (auto&& comp : m_tempRenderingDate.m_drawShadowList)
+			{
+				comp->Draw(RenderingData::kGenShadowMap);
+			}
+		};
+
+		// シャドウマップ生成描画
+		lightComp->GenerateShadowMap(drawProc);
+	}
+	// シャドウマップをセット
+	D3D.GetDevContext()->PSSetShaderResources(13, 1, SHADER.m_genShadowMapShader.GetSpotShadowMap()->GetSRViewAddress());
+	D3D.GetDevContext()->PSSetShaderResources(14, 1, SHADER.m_genShadowMapShader.GetDirShadowMap()->GetSRViewAddress());
 
 	//-----------
 	// ライト
@@ -269,6 +288,11 @@ void GameSystem::Run()
 
 	// セットしていた不透明物結果用RTを解除
 	D3D.GetDevContext()->PSSetShaderResources(10, 1, KdTexture().GetSRViewAddress());
+
+	// シャドウマップを解除
+	D3D.GetDevContext()->PSSetShaderResources(13, 1, KdTexture().GetSRViewAddress());
+	D3D.GetDevContext()->PSSetShaderResources(14, 1, KdTexture().GetSRViewAddress());
+
 
 	//++++++++++++++++++++
 	// 3Dエフェクト描画（半透明）

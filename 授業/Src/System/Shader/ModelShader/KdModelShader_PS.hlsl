@@ -1,7 +1,8 @@
 // ƒJƒƒ‰‚âƒ‰ƒCƒg‚Ìƒf[ƒ^‚ªg‚¦‚é‚æ‚¤‚É‚È‚é
 #include "../inc_KdCommon.hlsli"
+// ‹¤’Êƒf[ƒ^
+#include "inc_KdModelShader.hlsli"
 
-<<<<<<< HEAD
 // ƒeƒNƒXƒ`ƒƒit0‚Æ‚©t1‚Æ‚©‚ªAPSS‚¦‚”ShaderResources‚ÅƒZƒbƒg‚µ‚½‚Æ‚«‚ÌƒXƒƒbƒg”Ô†j
 Texture2D g_baseTex : register(t0);		// ƒx[ƒXƒJƒ‰[ƒeƒNƒXƒ`ƒƒ[
 Texture2D g_emissiveTex : register(t1);	// ƒGƒ~ƒbƒVƒuƒeƒNƒXƒ`ƒƒ
@@ -14,17 +15,18 @@ Texture2D g_sceneTex : register(t10);
 
 // IBL
 TextureCube g_IBLTex : register(t11); // IBLƒeƒNƒXƒ`ƒƒ
+// ƒVƒƒƒhƒEƒ}ƒbƒv
+Texture2DArray g_spotShadowMap : register(t13);
+Texture2DArray g_dirShadowMap : register(t14);
 
 // ƒTƒ“ƒvƒ‰(ƒeƒNƒXƒ`ƒƒ‚©‚çF‚ğæ“¾‚·‚é‚Æ‚«‚Ég‚¤j
 SamplerState g_ss : register(s0);
 SamplerState g_clampSS : register(s1); // Clampİ’è‚ÌƒTƒ“ƒvƒ‰(KdShaderManager‚Ås1‚ÉƒZƒbƒg‚µ‚Ä‚¢‚Ü‚·)
-=======
->>>>>>> parent of fcd683a... ã€3Dpro2ã€‘
+SamplerComparisonState g_comparisonSmp : register(s10); // ƒVƒƒƒhƒEƒ}ƒbƒsƒ“ƒO—p”äŠrƒTƒ“ƒvƒ‰
 
 //======================================
 // ƒsƒNƒZƒ‹ƒVƒF[ƒ_[
 //======================================
-<<<<<<< HEAD
 // BlinnPhong NDF
 // ElightDir c ƒ‰ƒCƒg‚Ì•ûŒü
 // EvCam c ƒsƒNƒZƒ‹‚©‚çƒJƒƒ‰‚Ö‚Ì•ûŒü
@@ -67,6 +69,7 @@ float4 main(VSOutput In) :SV_Target0
 	//----------------------------------------
 	// ƒeƒNƒXƒ`ƒƒF
 	float4 texColor = g_baseTex.Sample(g_ss,In.UV);
+	texColor.rgb = pow(texColor.rgb, 2.2); // sRGBF‹óŠÔ‚©‚çƒŠƒjƒAF‹óŠÔ‚Ö•ÏŠ·
 	// ƒ}ƒeƒŠƒAƒ‹‚ÌF‚Æ’¸“_F‚Æ‡¬
 	float4 baseColor = texColor * g_material.BaseColor * In.Color * g_mulMaterialColor;
 
@@ -101,6 +104,54 @@ float4 main(VSOutput In) :SV_Target0
 		// •½sŒõ‚Í•¡”‚ ‚é‚½‚ßAg—p‚µ‚Ä‚¢‚é‚Í‚¸‚¾‚¯ŒvZ‚·‚é
 		for (int di = 0; di < g_DL_Cnt; di++)
 		{
+			// ‰e”»’è
+			float shadow = 1;
+			if (g_DL[di].EnableShadow > 0)
+			{
+
+				//+++++++++++ ƒJƒXƒP[ƒhƒVƒƒƒhƒEƒ}ƒbƒv—p +++++++++++++++
+				// ƒJƒƒ‰‚©‚ç‚Ì‹——£
+				float4 dist = mul(float4(In.wPos, 1), g_mV).z;
+				// ƒJƒƒ‰‚©‚ç‚Ì‹——£‚ğ‚à‚Æ‚ÉA‰½–‡–Ú‚ÌƒVƒƒƒhƒEƒ}ƒbƒv‚©‚ğ‹‚ß‚é
+				int4 comparison = dist.xxxx > g_DL[di].CascadeDist;
+				int csmIdx = 0;
+				csmIdx = dot(comparison, 1);
+				csmIdx = min(g_DL[di].CascadeNum - 1, csmIdx);
+				//++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+				float4 liPos = mul(float4(In.wPos, 1), g_DL[di].mLightVP[csmIdx]);
+				liPos.xyz /= liPos.w;
+
+				// [“xƒ}ƒbƒv‚Ì”ÍˆÍ“à‚©
+				if (abs(liPos.x) <= 1 && abs(liPos.y) <= 1 && liPos.z <= 1)
+				{
+					// Ë‰eÀ•W -> UVÀ•W‚Ö•ÏŠ·
+					float2 uv = liPos.xy * float2(1, -1) * 0.5 + 0.5;
+					// ƒ‰ƒCƒgƒJƒƒ‰‚©‚ç‚Ì‹——£
+					float z = liPos.z - 0.002; // ƒVƒƒƒhƒEƒAƒNƒl‘Îô
+
+					// ‰e”»’è
+					shadow = 0;
+
+					// 1ƒsƒNƒZƒ‹‚ÌUVÀ•WŒn‚Å‚ÌƒTƒCƒY‚ğ‹‚ß‚é
+					float w, h, element;
+					g_spotShadowMap.GetDimensions(w, h, element);
+					float tw = 1.0 / w;// ƒsƒNƒZƒ‹ -> ƒeƒNƒZƒ‹•ÏŠ·
+					float th = 1.0 / h;// ƒsƒNƒZƒ‹ -> ƒeƒNƒZƒ‹•ÏŠ·
+
+					// ü•Ó3x3‚ğ”»’è‚µA‚»‚Ì•½‹Ï’l‚ğ‹‚ß‚é
+					for (int y = -1; y <= 1; y++)
+					{
+						for (int x = -1; x <= 1; x++)
+						{
+							shadow += g_dirShadowMap.SampleCmpLevelZero(g_comparisonSmp,
+								float3(uv + float2(x * tw, y * th), di * 4 + csmIdx), z);
+						}
+					}
+					shadow /= 9;
+				}
+			}
+
 			//--------------------------------------
 			// ŠgUŒõ
 			//--------------------------------------
@@ -116,19 +167,119 @@ float4 main(VSOutput In) :SV_Target0
 
 			// ”ò‚Ño‚éŒõ‚ğŒvZ‚µAŒ‹‰Ê‚É‰ÁZ‚·‚é
 			// (Œõ‚ÌF) * Ş¿‚ÌF * “§–¾—Í
-			color += (g_DL[di].Color * toonColor) * baseDiffuse * baseColor.a;
+			color += (g_DL[di].Color * toonColor) * baseDiffuse * baseColor.a * shadow;
 
 			//--------------------------------------
 			// ”½ËŒõ
 			//--------------------------------------
 			// Blinn-Phong
+
 			float spec = BlinnPhong(g_DL[di].Dir, vCam, wN, specPower);
 
 			// ”½Ë‚·‚éŒõ‚ğŒvZ‚µAŒ‹‰Ê‚É‰ÁZ‚·‚é
 			// (Œõ‚ÌF) * ”ñ‹à‘®‚Í4%”½Ë‚ç‚µ‚¢ * “§–¾—Í
-			color += (g_DL[di].Color * spec) * baseSpecular * baseColor.a;
-
+			color += (g_DL[di].Color * spec) * baseSpecular * baseColor.a * shadow;
 		}
+		//------------------
+		// W’†Œõ
+		//------------------
+		for (int si = 0; si < g_SL_Cnt; si++)
+		{
+			// ƒsƒNƒZƒ‹‚©‚çŒõŒ¹‚Ö‚Ì•ûŒü‚Æ‹——£‚ğ‹‚ß‚é
+			float3 dir = g_SL[si].Pos - In.wPos;
+			float dist = length(dir);
+			dir /= dist; // ³‹K‰»
+
+			// W’†Œõ‚Ì‹——£“à‚Ì‚Ì‚İŒvZ‚·‚é
+			if (dist < g_SL[si].Range)
+			{
+				// ‚±‚ÌƒsƒNƒZƒ‹‚ÌŠp“x(ƒ‰ƒWƒAƒ“)
+				float angle = acos(dot(-g_SL[si].Dir, dir));
+				// ŠO‘¤‚ÌŠp“x(ƒ‰ƒWƒAƒ“)
+				float outerAngle = (g_SL[si].OuterCorn / 2.0);
+
+				//W’†Œõ‚Ì‰~“à‚Ì‚Ì‚İŒvZ‚·‚é
+				if (angle < outerAngle)
+				{
+					// ‰e”»’è
+					float shadow = 1;
+					if (g_SL[si].EnableShadow > 0)
+					{
+						float4 liPos = mul(float4(In.wPos, 1), g_SL[si].mLightVP);
+						liPos.xyz /= liPos.w;
+
+						// [“xƒ}ƒbƒv‚Ì”ÍˆÍ“à‚©
+						if (abs(liPos.x) <= 1 && abs(liPos.y) <= 1 && liPos.z <= 1)
+						{
+							// Ë‰eÀ•W -> UVÀ•W‚Ö•ÏŠ·
+							float2 uv = liPos.xy * float2(1, -1) * 0.5 + 0.5;
+							// ƒ‰ƒCƒgƒJƒƒ‰‚©‚ç‚Ì‹——£
+							float z = liPos.z - 0.00001; // ƒVƒƒƒhƒEƒAƒNƒl‘Îô
+
+							// ‰e”»’è
+							shadow = 0;
+
+							// 1ƒsƒNƒZƒ‹‚ÌUVÀ•WŒn‚Å‚ÌƒTƒCƒY‚ğ‹‚ß‚é
+							float w, h, element;
+							g_spotShadowMap.GetDimensions(w, h, element);
+							float tw = 1.0 / w;// ƒsƒNƒZƒ‹ -> ƒeƒNƒZƒ‹•ÏŠ·
+							float th = 1.0 / h;// ƒsƒNƒZƒ‹ -> ƒeƒNƒZƒ‹•ÏŠ·
+
+							// ü•Ó3x3‚ğ”»’è‚µA‚»‚Ì•½‹Ï’l‚ğ‹‚ß‚é
+							for (int y = -1; y <= 1; y++)
+							{
+								for (int x = -1; x <= 1; x++)
+								{
+									shadow += g_spotShadowMap.SampleCmpLevelZero(g_comparisonSmp,
+										float3(uv + float2(x * tw, y * th), si),
+										z);
+								}
+							}
+							shadow /= 9;
+						}
+					}
+
+					// ‹——£‚ğ‚à‚Æ‚ÉA‹——£‚Ì”ä—¦‚ğ‹‚ß‚é
+					float atte = 1.0 - saturate(dist / g_SL[si].Range);
+					// ‹t‚Qæ‚Ì–@‘¥
+					atte *= atte;
+
+					// “à‘¤‚ÌŠp“x(ƒ‰ƒWƒAƒ“)
+					float innerAngle = (g_SL[si].InnerCorn / 2.0);
+					// “àŒa‚ÆŠOŒa‚ÌŒ¸Š
+					atte *= (outerAngle - angle) / (outerAngle - innerAngle);
+
+					//--------------------------------------
+					// ŠgUŒõ
+					//--------------------------------------
+					// Lambertƒ‚ƒfƒ‹
+					{
+						float lightDiffuse = dot(-g_DL[di].Dir, wN);	// “àÏ‚ÅŠp“x‚Ì·‚ğ‹‚ß‚é
+						lightDiffuse = saturate(lightDiffuse); // ƒ}ƒCƒiƒX‚Í‚Ü‚¸‚¢‚Ì‚ÅA0`1“à‚ÉØ‚è‹l‚ß‚é
+
+
+						// •¨—“I‚É³‚µ‚­‚·‚é‚½‚ßA³‹K‰»‚·‚é
+						lightDiffuse /= 3.1415926535;
+
+						// ”ò‚Ño‚éŒõ‚ğŒvZ‚µAŒ‹‰Ê‚É‰ÁZ‚·‚é
+						// (Œõ‚ÌF) * Ş¿‚ÌF * “§–¾—Í
+						color += (g_DL[di].Color * lightDiffuse) * baseDiffuse * shadow;
+					}
+					//--------------------------------------
+					// ”½ËŒõ
+					//--------------------------------------
+					// Blinn-Phong
+					{
+						float spec = BlinnPhong(g_DL[di].Dir, vCam, wN, specPower);
+
+						// ”½Ë‚·‚éŒõ‚ğŒvZ‚µAŒ‹‰Ê‚É‰ÁZ‚·‚é
+						// (Œõ‚ÌF) * ”ñ‹à‘®‚Í4%”½Ë‚ç‚µ‚¢ * “§–¾—Í
+						color += (g_DL[di].Color * spec) * baseSpecular * baseColor.a * shadow;
+					}
+				}
+			}
+		}
+
 
 		//----------------------------
 		// ŠÂ‹«Œõ
@@ -188,9 +339,4 @@ float4 main(VSOutput In) :SV_Target0
 	}
 
 	return float4(color, baseColor.a);
-=======
-float4 main() :SV_Target0
-{
-	return float4(1, 0, 0, 1);	//RGBA
->>>>>>> parent of fcd683a... ã€3Dpro2ã€‘
 }

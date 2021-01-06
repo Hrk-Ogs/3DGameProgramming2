@@ -19,6 +19,8 @@ void KdShaderManager::Init()
 	m_modelShader.Init();
 	//
 	m_postProcessShader.Init();
+	//
+	m_genShadowMapShader.Init();
 
 
 	//============================================
@@ -86,6 +88,7 @@ void KdShaderManager::Release()
 	m_spriteShader.Release();
 	m_modelShader.Release();
 	m_postProcessShader.Release();
+	m_genShadowMapShader.Release();
 
 
 	m_cb7_Camera.Release();

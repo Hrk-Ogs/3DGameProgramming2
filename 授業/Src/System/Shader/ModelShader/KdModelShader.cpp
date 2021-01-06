@@ -8,7 +8,7 @@ bool KdModelShader::Init()
 	// ’¸“_ƒVƒF[ƒ_[
 	//--------------------------------
 	{
-#include "KdModelShader_VS.inc"
+		#include "KdModelShader_VS.inc"
 
 		// ’¸“_ƒVƒF[ƒ_[ì¬
 		if (FAILED(D3D.GetDev()->CreateVertexShader(compiledBuffer, sizeof(compiledBuffer), nullptr, &m_VS))) {
@@ -127,6 +127,7 @@ bool KdModelShader::Init()
 	// ’è”ƒoƒbƒtƒ@ì¬
 	//--------------------------------
 	m_cb0.Create();
+	m_cb1_Material.Create();
 
 	//-------------------------------------
 	// ƒeƒNƒXƒ`ƒƒ“Ç‚İ‚İ
@@ -150,6 +151,7 @@ void KdModelShader::Release()
 	KdSafeRelease(m_outlinePS);
 
 	m_cb0.Release();
+	m_cb1_Material.Release();
 }
 
 void KdModelShader::SetToDevice_Outline()
@@ -248,6 +250,9 @@ void KdModelShader::SetToDevice()
 	// ƒIƒuƒWƒFƒNƒg’è”ƒoƒbƒtƒ@i0”Ô–Ú‚ÉƒZƒbƒgj
 	D3D.GetDevContext()->VSSetConstantBuffers(0, 1, m_cb0.GetAddress());
 	D3D.GetDevContext()->PSSetConstantBuffers(0, 1, m_cb0.GetAddress());
+	// ƒ}ƒeƒŠƒAƒ‹’è”ƒoƒbƒtƒ@
+	D3D.GetDevContext()->VSSetConstantBuffers(1, 1, m_cb1_Material.GetAddress());
+	D3D.GetDevContext()->PSSetConstantBuffers(1, 1, m_cb1_Material.GetAddress());
 }
 
 void KdModelShader::DrawMesh(const KdMesh* mesh, const std::vector<KdSptr<KdMaterial>>& materials)
@@ -279,7 +284,6 @@ void KdModelShader::DrawMesh(const KdMesh* mesh, const std::vector<KdSptr<KdMate
 		// –Ê‚ª‚P–‡‚à–³‚¢ê‡‚ÍƒXƒLƒbƒv
 		if (mesh->GetSubsets()[subi].FaceCount == 0)continue;
 
-<<<<<<< HEAD
 		// ƒ}ƒeƒŠƒAƒ‹
 		const KdMaterial& material = *materials[mesh->GetSubsets()[subi].MaterialNo];
 
@@ -321,8 +325,6 @@ void KdModelShader::DrawMesh(const KdMesh* mesh, const std::vector<KdSptr<KdMate
 		// ƒZƒbƒg 0”Ô–Ú‚ÌƒXƒƒbƒg‚©‚ç4–‡•ªƒZƒbƒg‚·‚é
 		D3D.GetDevContext()->PSSetShaderResources(0, srvs.size(), &srvs[0]);
 
-=======
->>>>>>> parent of fcd683a... ã€3Dpro2ã€‘
 		// ƒTƒuƒZƒbƒg•`‰æ
 		mesh->DrawSubset(subi);
 	}
@@ -350,7 +352,7 @@ void KdModelShader::Draw(const KdNodeOutliner* nodeOL, const std::vector<KdSptr<
 		auto& node = nodeOL->GetAllNodes()[meshIdx];
 
 		// ’è”ƒoƒbƒtƒ@‚Éƒf[ƒ^‚ğ‘‚«‚Ş
-		m_cb0.Work.mW = node.Transform * worldTransform;
+		m_cb0.Work().mW = node.Transform * worldTransform;
 		// ƒRƒŒ‚ÅÀÛ‚ÉGPU‘¤‚Ìƒoƒbƒtƒ@‚Ö‘‚«‚Ü‚êAƒVƒF[ƒ_[‚Åg—po—ˆ‚é‚æ‚¤‚É‚È‚é
 		m_cb0.Write();
 

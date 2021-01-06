@@ -74,6 +74,7 @@ public:
 		KdJsonGet(jsonObj["UvOffset"], m_uvOffset);
 		KdJsonGet(jsonObj["UvTiling"], m_uvTiling);
 		KdJsonGet(jsonObj["RefractiveIndex"], m_refractiveIndex);
+		KdJsonGet(jsonObj["CastShadow"], m_castShadow);
 
 		// モデルデータのセット
 		SetModel(m_model);
@@ -100,6 +101,7 @@ public:
 		outJsonObj["UvOffset"] = m_uvOffset.ToArray();
 		outJsonObj["UvTiling"] = m_uvTiling.ToArray();
 		outJsonObj["RefractiveIndex"] = m_refractiveIndex;
+		outJsonObj["CastShadow"] = m_castShadow;
 	}
 
 	//===============================
@@ -136,4 +138,5 @@ private:
 	KdVec2 m_uvOffset = { 0, 0 }; // UVオフセット
 	KdVec2 m_uvTiling = { 1, 1 }; // UVタイリング
 	float m_refractiveIndex = 1.0f; // 屈折率
+	bool m_castShadow = true; // 影を生成する
 };

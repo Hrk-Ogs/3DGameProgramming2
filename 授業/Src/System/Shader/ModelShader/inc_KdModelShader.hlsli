@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // ’è”ƒoƒbƒtƒ@
 cbuffer cb : register(b0)
 {
@@ -42,5 +41,3 @@ struct VSOutput
 	float3 wT : TEXCOORD4;	// ƒ[ƒ‹ƒhÚü
 	float3 wB : TEXCOORD5;	// ƒ[ƒ‹ƒh]–@ü
 };
-=======
->>>>>>> parent of fcd683a... ã€3Dpro2ã€‘

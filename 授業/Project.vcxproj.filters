@@ -70,6 +70,9 @@
     <Filter Include="Src\System\Shader\PostProcessShader">
       <UniqueIdentifier>{a9321fba-1786-4a30-910a-0af167aa0b89}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\System\Shader\GenShadowMapShader">
+      <UniqueIdentifier>{1d030780-99bc-4ece-8f20-ab93aaec7cee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -276,6 +279,9 @@
     <ClInclude Include="Src\System\Shader\PostProcessShader\KdPostProcessShader.h">
       <Filter>Src\System\Shader\PostProcessShader</Filter>
     </ClInclude>
+    <ClInclude Include="Src\System\Shader\GenShadowMapShader\KdGenShadowMapShader.h">
+      <Filter>Src\System\Shader\GenShadowMapShader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -449,6 +455,9 @@
     <ClCompile Include="Src\System\Shader\PostProcessShader\KdPostProcessShader.cpp">
       <Filter>Src\System\Shader\PostProcessShader</Filter>
     </ClCompile>
+    <ClCompile Include="Src\System\Shader\GenShadowMapShader\KdGenShadowMapShader.cpp">
+      <Filter>Src\System\Shader\GenShadowMapShader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\System\Shader\EffectShader\inc_KdEffectShader.hlsli">
@@ -471,6 +480,9 @@
     </None>
     <None Include="Src\System\Shader\PostProcessShader\inc_PostProcess.hlsli">
       <Filter>Src\System\Shader\PostProcessShader</Filter>
+    </None>
+    <None Include="Src\System\Shader\GenShadowMapShader\inc_KdGenShadowMap.hlsli">
+      <Filter>Src\System\Shader\GenShadowMapShader</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -530,6 +542,15 @@
     </FxCompile>
     <FxCompile Include="Src\System\Shader\PostProcessShader\KdPostProcess_WaveNormal_PS.hlsl">
       <Filter>Src\System\Shader\PostProcessShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Src\System\Shader\GenShadowMapShader\KdGenShadowMap_PS.hlsl">
+      <Filter>Src\System\Shader\GenShadowMapShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Src\System\Shader\GenShadowMapShader\KdGenShadowMap_VS.hlsl">
+      <Filter>Src\System\Shader\GenShadowMapShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Src\System\Shader\GenShadowMapShader\KdGenShadowMap_VS_Skin.hlsl">
+      <Filter>Src\System\Shader\GenShadowMapShader</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

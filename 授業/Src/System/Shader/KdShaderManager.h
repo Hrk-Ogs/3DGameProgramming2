@@ -6,6 +6,7 @@
 
 #include "ModelShader/KdModelShader.h"
 #include "PostProcessShader/KdPostProcessShader.h"
+#include "GenShadowMapShader/KdGenShadowMapShader.h"
 
 //==========================================================
 //
@@ -38,6 +39,7 @@ public:
 	KdSpriteShader			m_spriteShader;			// 2Dテクスチャ描画シェーダ
 	KdModelShader			m_modelShader;			// モデル描画シェ-ダー
 	KdPostProcessShader		m_postProcessShader;
+	KdGenShadowMapShader	m_genShadowMapShader;
 
 	//==========================
 	//
@@ -95,7 +97,11 @@ public:
 			KdVec3	Dir = { 0,-1,0 };    // 光の方向
 				float	tmp2;
 			KdVec3	Color = { 3,3,3 };  // 光の色
-				float	tmp3;
+			float EnableShadow; // シャドウマッピング有効
+			KdMatrix mLightVP[4]; // ライトカメラのビュー*射影行列
+			KdVec4 CascadeDist; // カスケード分割距離
+			int CascadeNum = 4; // カスケード分割数
+			float _space_[3];
 		};
 		std::array<DirectionalLight, 3>	DL;
 
@@ -122,6 +128,10 @@ public:
 			float InnerCorn;		// 内側の角度
 			KdVec3 Pos;				// 座標
 			float OuterCorn;		// 外側の角度
+
+			KdMatrix mLightVP;		// ライトカメラのビュー*射影行列
+			float EnableShadow; // シャドウマッピング有効
+			float _space_[3];
 		};
 		std::array<SpotLight, 30>	SL;
 

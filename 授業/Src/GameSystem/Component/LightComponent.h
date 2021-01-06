@@ -9,6 +9,9 @@ class LightComponent :public BaseComponent
 {
 public:
 
+	// シャドウマップ生成描画
+	void GenerateShadowMap(std::function<void()> proc);
+
 	//========================
 	// コンポーネント処理
 	//========================
@@ -32,6 +35,9 @@ public:
 		KdJsonGet(jsonData["Range"], m_range);
 		KdJsonGet(jsonData["SpotAngle"], m_spotAngle);
 		KdJsonGet(jsonData["Intensity"], m_intensity);
+		KdJsonGet(jsonData["IsGenerateShadowMap"], m_isGenerateShadowMap);
+		KdJsonGet(jsonData["CascadeNum"], m_cascadeNum);
+		KdJsonGet(jsonData["CascadeDist"], m_cascadeDist);
 	}
 
 	// このクラスの内容をJSONデータ化する
@@ -44,6 +50,9 @@ public:
 		outJsonObj["Range"] = m_range;
 		outJsonObj["SpotAngle"] = m_spotAngle;
 		outJsonObj["Intensity"] = m_intensity;
+		outJsonObj["IsGenerateShadowMap"] = m_isGenerateShadowMap;
+		outJsonObj["CascadeNum"] = m_cascadeNum;
+		outJsonObj["CascadeDist"] = m_cascadeDist.ToArray();
 
 	}
 
@@ -66,4 +75,9 @@ private:
 	
 	// 実行時、現在のライト番号
 	int		m_myLightIndex = -1;
+
+	// シャドウマップ用
+	bool m_isGenerateShadowMap = false;
+	int m_cascadeNum = 4;
+	KdVec4 m_cascadeDist = { 5, 20, 100, 300 };
 };

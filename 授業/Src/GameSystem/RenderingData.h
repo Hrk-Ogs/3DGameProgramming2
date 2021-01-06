@@ -20,6 +20,11 @@ struct RenderingData
 	std::vector<BaseComponent*>		m_drawEffectList;
 	// ２D描画収集リスト
 	std::vector<BaseComponent*>		m_drawSpriteList;
+	// シャドウマップ生成時に描画するリスト
+	std::vector<BaseComponent*> m_drawShadowList;
+
+	// シャドウマップを生成するライトリスト
+	std::vector<LightComponent*> m_shadowMapLight;
 
 	// Phase定数
 	enum
@@ -39,6 +44,8 @@ struct RenderingData
 		m_drawTransparentList.clear();
 		m_drawEffectList.clear();
 		m_drawSpriteList.clear();
+		m_drawShadowList.clear();
+		m_shadowMapLight.clear();
 	}
 };
 

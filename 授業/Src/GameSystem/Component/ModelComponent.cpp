@@ -77,6 +77,12 @@ void ModelComponent::PrepareDraw(RenderingData& rdate)
 		// 「3D半透明描画収集リスト」へ登録
 		rdate.m_drawTransparentList.push_back(this);
 	}
+
+	// シャドウマップ生成描画登録
+	if (m_castShadow)
+	{
+		rdate.m_drawShadowList.push_back(this);
+	}
 }
 
 void ModelComponent::Draw(int phaseID)
@@ -85,62 +91,75 @@ void ModelComponent::Draw(int phaseID)
 	if (m_enable == false)return;
 	if (m_visible == false)return;
 
-	// GPUのバッファに全ボーンノードの行列を書き込む
-	m_nodeOL.WriteToBoneBuffer();
-
-	// TransformComponentを取得
-	auto trans = GetOwner()->GetComponent<TransformComponent>();
-
-	// ライトOn/Off
-	SHADER.m_modelShader.SetLightEnable(m_lightEnable);
-	// フォグOn/Off
-	SHADER.m_modelShader.SetFogEnable(m_fogEnable);
-	// 乗算色
-	SHADER.m_modelShader.SetMulMaterialColor(m_mulMaterialColor);
-	// UV設定
-	SHADER.m_modelShader.SetUVOffset(m_uvOffset);
-	SHADER.m_modelShader.SetUVTiling(m_uvTiling);
-	// 屈折率設定
-	SHADER.m_modelShader.SetRefractiveIndex(m_refractiveIndex);
-
-	// 波表現
-	if (m_useWaveNormalMap)
+	// シャドウマップ生成描画時
+	if (phaseID == RenderingData::kGenShadowMap)
 	{
-		for (auto&& mate : m_model->GetMaterials())
-		{
-			// 強制的に使用する法線マップとしてセット
-			mate->ForceUseNormalTex = GAMESYS.GetWaveNormalMap();
-		}
+		m_nodeOL.WriteToBoneBuffer();
+
+		// 深度描画
+		SHADER.m_genShadowMapShader.Draw(&m_nodeOL,
+			m_model->GetMaterials(), GetOwner()->Transform()->GetMatrix());
 	}
-
-	// 描画設定を変更する
-	SHADER.m_modelShader.SetToDevice();
-	SHADER.m_modelShader.Draw(&m_nodeOL,m_model->GetMaterials(),trans->GetMatrix());
-
-	// 波表現
-	if (m_useWaveNormalMap)
+	// 通常描画時
+	else
 	{
-		for (auto&& mate : m_model->GetMaterials())
+		// GPUのバッファに全ボーンノードの行列を書き込む
+		m_nodeOL.WriteToBoneBuffer();
+
+		// TransformComponentを取得
+		auto trans = GetOwner()->GetComponent<TransformComponent>();
+
+		// ライトOn/Off
+		SHADER.m_modelShader.SetLightEnable(m_lightEnable);
+		// フォグOn/Off
+		SHADER.m_modelShader.SetFogEnable(m_fogEnable);
+		// 乗算色
+		SHADER.m_modelShader.SetMulMaterialColor(m_mulMaterialColor);
+		// UV設定
+		SHADER.m_modelShader.SetUVOffset(m_uvOffset);
+		SHADER.m_modelShader.SetUVTiling(m_uvTiling);
+		// 屈折率設定
+		SHADER.m_modelShader.SetRefractiveIndex(m_refractiveIndex);
+
+		// 波表現
+		if (m_useWaveNormalMap)
 		{
-			// 強制的に使用する法線マップを解除
-			mate->ForceUseNormalTex = nullptr;
+			for (auto&& mate : m_model->GetMaterials())
+			{
+				// 強制的に使用する法線マップとしてセット
+				mate->ForceUseNormalTex = GAMESYS.GetWaveNormalMap();
+			}
 		}
-	}
 
-	//------------------------
-	// 輪郭描画
-	//------------------------
-	if (m_enableOutline)
-	{
-		// 表面をカリング(非表示)にするラスタライザステートをセット
-		D3D.GetDevContext()->RSSetState(SHADER.m_rs_CullFront);
+		// 描画設定を変更する
+		SHADER.m_modelShader.SetToDevice();
+		SHADER.m_modelShader.Draw(&m_nodeOL, m_model->GetMaterials(), trans->GetMatrix());
 
-		// 描画
-		SHADER.m_modelShader.SetToDevice_Outline();
-		SHADER.m_modelShader.Draw_Outline(&m_nodeOL, trans->GetMatrix());
+		// 波表現
+		if (m_useWaveNormalMap)
+		{
+			for (auto&& mate : m_model->GetMaterials())
+			{
+				// 強制的に使用する法線マップを解除
+				mate->ForceUseNormalTex = nullptr;
+			}
+		}
 
-		// 裏面をカリング(非表示)にするラスタライザステートに戻す
-		D3D.GetDevContext()->RSSetState(SHADER.m_rs_CullBack);
+		//------------------------
+		// 輪郭描画
+		//------------------------
+		if (m_enableOutline)
+		{
+			// 表面をカリング(非表示)にするラスタライザステートをセット
+			D3D.GetDevContext()->RSSetState(SHADER.m_rs_CullFront);
+
+			// 描画
+			SHADER.m_modelShader.SetToDevice_Outline();
+			SHADER.m_modelShader.Draw_Outline(&m_nodeOL, trans->GetMatrix());
+
+			// 裏面をカリング(非表示)にするラスタライザステートに戻す
+			D3D.GetDevContext()->RSSetState(SHADER.m_rs_CullBack);
+		}
 	}
 }
 
@@ -163,6 +182,7 @@ void ModelComponent::Editor_ImGuiUpdate()
 		ImGui::Checkbox(u8"波表現", &m_useWaveNormalMap);
 		ImGui::ColorEdit4(u8"Material乗算色", &m_mulMaterialColor.x);
 		ImGui::DragFloat(u8"屈折率", &m_refractiveIndex, 0.01f);
+		ImGui::Checkbox(u8"影を生成", &m_castShadow);
 
 		ImGui::DragFloat2("UVOffset", &m_uvOffset.x, 0.001f);
 		ImGui::DragFloat2("UVTiling", &m_uvTiling.x, 0.001f);

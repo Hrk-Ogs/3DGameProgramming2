@@ -50,6 +50,7 @@
                       },
                       {
                         "AnimationSpeed": 1,
+                        "CastShadow": true,
                         "ClassName": "ModelComponent",
                         "Enable": true,
                         "EnableOutline": false,
@@ -197,8 +198,8 @@
                         "Enable": true,
                         "FollowBoneName": "",
                         "Position": [0.00010907649993896484,1.9255094230175018e-06,-0.00015687942504882813],
-                        "Rotation": [-0.70710676908493042,1.7197230590682011e-06,4.9431032600466551e-09,0.70710676908493042],
-                        "Scale": [1,2.0339555740356445,0.99997884035110474]
+                        "Rotation": [-0.70710676908493042,1.7197230590682011e-06,4.9436659210755352e-09,0.70710676908493042],
+                        "Scale": [1,2.0339539051055908,0.99997842311859131]
                       }
                     ],
                     "Enable": false,
@@ -271,11 +272,12 @@
           },
           {
             "AnimationSpeed": 1,
+            "CastShadow": true,
             "ClassName": "ModelComponent",
             "Enable": true,
             "EnableOutline": false,
             "EnableRootMotion": true,
-            "FogEnable": true,
+            "FogEnable": false,
             "LightEnable": true,
             "ModelFilename": "Data\\Player\\Player.gltf",
             "MulMaterialColor": [1,1,1,1],
@@ -352,11 +354,12 @@
               },
               {
                 "AnimationSpeed": 1,
+                "CastShadow": true,
                 "ClassName": "ModelComponent",
                 "Enable": true,
                 "EnableOutline": false,
                 "EnableRootMotion": false,
-                "FogEnable": true,
+                "FogEnable": false,
                 "LightEnable": true,
                 "ModelFilename": "Data\\StageMap\\StageMap.gltf",
                 "MulMaterialColor": [1,1,1,1],
@@ -392,14 +395,17 @@
                 "Enable": true,
                 "FollowBoneName": "",
                 "Position": [0,14.352519989013672,0],
-                "Rotation": [0.63519293069839478,0,-0,0.77235352993011475],
-                "Scale": [1,0.99999988079071045,0.99999988079071045]
+                "Rotation": [0.46857032179832458,0,-0,0.88342618942260742],
+                "Scale": [1,0.99999994039535522,0.99999994039535522]
               },
               {
+                "CascadeDist": [5,20,100,300],
+                "CascadeNum": 4,
                 "ClassName": "LightComponent",
                 "Color": [1,0.99998998641967773,0.99998998641967773],
                 "Enable": true,
                 "Intensity": 2,
+                "IsGenerateShadowMap": true,
                 "LightType": 0,
                 "Range": 5,
                 "SpotAngle": 30
@@ -425,11 +431,12 @@
                   },
                   {
                     "AnimationSpeed": 1,
+                    "CastShadow": true,
                     "ClassName": "ModelComponent",
                     "Enable": true,
                     "EnableOutline": false,
                     "EnableRootMotion": false,
-                    "FogEnable": true,
+                    "FogEnable": false,
                     "LightEnable": true,
                     "ModelFilename": "Data\\Box\\Box.gltf",
                     "MulMaterialColor": [1,1,1,1],
@@ -460,11 +467,12 @@
                   },
                   {
                     "AnimationSpeed": 1,
+                    "CastShadow": true,
                     "ClassName": "ModelComponent",
                     "Enable": true,
                     "EnableOutline": false,
                     "EnableRootMotion": false,
-                    "FogEnable": true,
+                    "FogEnable": false,
                     "LightEnable": true,
                     "ModelFilename": "Data\\Box\\Box.gltf",
                     "MulMaterialColor": [1,1,1,1],
@@ -495,11 +503,12 @@
                   },
                   {
                     "AnimationSpeed": 1,
+                    "CastShadow": true,
                     "ClassName": "ModelComponent",
                     "Enable": true,
                     "EnableOutline": false,
                     "EnableRootMotion": false,
-                    "FogEnable": true,
+                    "FogEnable": false,
                     "LightEnable": true,
                     "ModelFilename": "Data\\Box\\Box.gltf",
                     "MulMaterialColor": [1,1,1,1],
@@ -542,9 +551,9 @@
                     "ClassName": "TransformComponent",
                     "Enable": true,
                     "FollowBoneName": "",
-                    "Position": [-0.89138031005859375,8.4155311584472656,11.919040679931641],
-                    "Rotation": [-0.016842996701598167,0.9988563060760498,-0.036817040294408798,0.025433007627725601],
-                    "Scale": [5.8823752403259277,5.8823537826538086,5.8823719024658203]
+                    "Position": [-0.89138031005859375,8.4155292510986328,11.919041633605957],
+                    "Rotation": [-0.016842996701598167,0.9988563060760498,-0.036817044019699097,0.025433013215661049],
+                    "Scale": [5.882380485534668,5.8823528289794922,5.8823747634887695]
                   },
                   {
                     "CamAngles": [0,0],
@@ -565,16 +574,17 @@
                 "Enable": true,
                 "FollowBoneName": "",
                 "Position": [-5.3629817962646484,-0.0038566403090953827,5.0525870323181152],
-                "Rotation": [-0.016843000426888466,0.9988563060760498,-0.036817040294408798,-0.025433005765080452],
-                "Scale": [0.16999934613704681,0.16999998688697815,0.16999945044517517]
+                "Rotation": [-0.016843000426888466,0.9988563060760498,-0.036817040294408798,-0.02543300949037075],
+                "Scale": [0.16999919712543488,0.16999998688697815,0.16999934613704681]
               },
               {
                 "AnimationSpeed": 1,
+                "CastShadow": true,
                 "ClassName": "ModelComponent",
                 "Enable": true,
                 "EnableOutline": false,
                 "EnableRootMotion": false,
-                "FogEnable": true,
+                "FogEnable": false,
                 "LightEnable": true,
                 "ModelFilename": "Data\\Player\\Player.gltf",
                 "MulMaterialColor": [1,1,1,1],
@@ -661,11 +671,12 @@
               },
               {
                 "AnimationSpeed": 1,
+                "CastShadow": true,
                 "ClassName": "ModelComponent",
                 "Enable": true,
                 "EnableOutline": false,
                 "EnableRootMotion": true,
-                "FogEnable": true,
+                "FogEnable": false,
                 "LightEnable": true,
                 "ModelFilename": "Data\\Floor\\Floor.gltf",
                 "MulMaterialColor": [1,1,1,1],
@@ -702,15 +713,16 @@
                 "FollowBoneName": "",
                 "Position": [-0.66998797655105591,0,-1.9153354167938232],
                 "Rotation": [0,0.71248960494995117,0,0.70168262720108032],
-                "Scale": [0.99999916553497314,1,1.9349848031997681]
+                "Scale": [0.99999874830245972,1,1.9349848031997681]
               },
               {
                 "AnimationSpeed": 1,
+                "CastShadow": true,
                 "ClassName": "ModelComponent",
                 "Enable": true,
                 "EnableOutline": false,
                 "EnableRootMotion": true,
-                "FogEnable": true,
+                "FogEnable": false,
                 "LightEnable": true,
                 "ModelFilename": "Data\\Floor\\Floor2.gltf",
                 "MulMaterialColor": [1,1,1,1],
@@ -787,11 +799,12 @@
               },
               {
                 "AnimationSpeed": 1,
+                "CastShadow": true,
                 "ClassName": "ModelComponent",
                 "Enable": true,
                 "EnableOutline": false,
                 "EnableRootMotion": false,
-                "FogEnable": true,
+                "FogEnable": false,
                 "LightEnable": true,
                 "ModelFilename": "Data\\House\\house.gltf",
                 "MulMaterialColor": [1,1,1,1],
@@ -857,6 +870,7 @@
               },
               {
                 "AnimationSpeed": 1.3700000047683716,
+                "CastShadow": true,
                 "ClassName": "ModelComponent",
                 "Enable": true,
                 "EnableOutline": false,
@@ -886,12 +900,13 @@
                 "ClassName": "TransformComponent",
                 "Enable": true,
                 "FollowBoneName": "",
-                "Position": [-2.1892786026000977,0.6169809103012085,0.92551028728485107],
+                "Position": [-6.6181545257568359,0.6169809103012085,0.92551028728485107],
                 "Rotation": [-0,0,-0,1],
                 "Scale": [2.4173033237457275,0.55510801076889038,2.4351868629455566]
               },
               {
                 "AnimationSpeed": 1,
+                "CastShadow": true,
                 "ClassName": "ModelComponent",
                 "Enable": true,
                 "EnableOutline": false,
@@ -907,6 +922,64 @@
                 "UvOffset": [0,0],
                 "UvTiling": [1,1],
                 "Visible": true
+              }
+            ],
+            "Enable": true,
+            "Mass": 1,
+            "Name": "GameObject",
+            "Tags": []
+          },
+          {
+            "Children": [],
+            "Components": [
+              {
+                "ClassName": "TransformComponent",
+                "Enable": true,
+                "FollowBoneName": "",
+                "Position": [1.3080688714981079,1.4760245084762573,-0.99434882402420044],
+                "Rotation": [-0,-0.41876021027565002,-0,0.90809690952301025],
+                "Scale": [1.0000002384185791,1,1.0000002384185791]
+              },
+              {
+                "CascadeDist": [5,20,100,300],
+                "CascadeNum": 4,
+                "ClassName": "LightComponent",
+                "Color": [1,0.99998998641967773,0.99998998641967773],
+                "Enable": true,
+                "Intensity": 2.2599999904632568,
+                "IsGenerateShadowMap": true,
+                "LightType": 2,
+                "Range": 10.600000381469727,
+                "SpotAngle": 51.599998474121094
+              }
+            ],
+            "Enable": true,
+            "Mass": 1,
+            "Name": "GameObject",
+            "Tags": []
+          },
+          {
+            "Children": [],
+            "Components": [
+              {
+                "ClassName": "TransformComponent",
+                "Enable": true,
+                "FollowBoneName": "",
+                "Position": [0.72407364845275879,1.6259368658065796,1.0615429878234863],
+                "Rotation": [0.17625485360622406,-0.41876521706581116,0.082001753151416779,0.88704317808151245],
+                "Scale": [0.9999997615814209,0.99999994039535522,0.99999988079071045]
+              },
+              {
+                "CascadeDist": [5,20,100,300],
+                "CascadeNum": 4,
+                "ClassName": "LightComponent",
+                "Color": [1,0.99998998641967773,0.99998998641967773],
+                "Enable": true,
+                "Intensity": 1.6100000143051147,
+                "IsGenerateShadowMap": true,
+                "LightType": 2,
+                "Range": 20.620000839233398,
+                "SpotAngle": 40.799999237060547
               }
             ],
             "Enable": true,

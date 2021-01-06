@@ -30,5 +30,8 @@ float4 main(VSOutput In) : SV_Target0
 	float4 texColor = g_inputTex.Sample(g_ss, In.UV);
 	texColor.rgb = ACESFilmicToneMapping(texColor.rgb * linearExposure);
 
+	// デガンマ(リニア色空間からsRGB色空間へ変換)
+	texColor.rgb = pow(texColor.rgb, 1.0 / 2.2);
+
 	return texColor;
 }
